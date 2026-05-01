@@ -2,7 +2,7 @@
 
 > 生成时间：2026-05-01 21:51 GMT+8
 > 分析者：QClaw / mercury-lab skill
-> 状态：待处理
+> 状态：已处理（2026-05-01）
 
 ---
 
@@ -10,14 +10,14 @@
 
 | 优先级 | 问题 | 改动量 | 状态 |
 |--------|------|--------|------|
-| 🔴 P0 | 加载状态不明确（"JavaScript is not started yet." 对用户无效） | 小 | 待处理 |
-| 🔴 P0 | 提交结果后无下一步 CTA（用户看完结果不知道该做什么） | 小 | 待处理 |
-| 🟡 P1 | System surfaces 默认折叠（入口不可见） | 小 | 待处理 |
-| 🟡 P1 | 执行按钮无运行状态（点 Doctor 无反馈感） | 中 | 待处理 |
-| 🟡 P1 | Artifact 工作台入口太深（新用户需要滚动到页面底部才能看到） | 小 | 待处理 |
-| 🟢 P2 | Build badge 位置太隐蔽 | 小 | 待处理 |
-| 🟢 P2 | 语言切换按钮不明显 | 小 | 待处理 |
-| 🟢 P2 | 暗色 "What happens next" 卡片视觉跳跃大 | 小 | 待处理 |
+| 🔴 P0 | 加载状态不明确（"JavaScript is not started yet." 对用户无效） | 小 | 已处理 |
+| 🔴 P0 | 提交结果后无下一步 CTA（用户看完结果不知道该做什么） | 小 | 已处理 |
+| 🟡 P1 | System surfaces 默认折叠（入口不可见） | 小 | 已处理 |
+| 🟡 P1 | 执行按钮无运行状态（点 Doctor 无反馈感） | 中 | 已处理 |
+| 🟡 P1 | Artifact 工作台入口太深（新用户需要滚动到页面底部才能看到） | 小 | 已处理 |
+| 🟢 P2 | Build badge 位置太隐蔽 | 小 | 已处理 |
+| 🟢 P2 | 语言切换按钮不明显 | 小 | 已处理 |
+| 🟢 P2 | 暗色 "What happens next" 卡片视觉跳跃大 | 小 | 已处理 |
 
 ---
 
@@ -190,6 +190,23 @@ button.addEventListener('click', async () => {
 | 🔴 P0 | 加载状态 + 提交结果 CTA |
 | 🟡 P1 | System surfaces 展开 + 执行按钮 loading 状态 |
 | 🟢 P2 | 排期优化 |
+
+---
+
+## 处理记录
+
+2026-05-01 已在 `dashboard/index.html`、`dashboard/styles.css`、`dashboard/app.js` 中完成本轮修复：
+
+- 首屏状态改为“正在初始化...”，加载成功/失败继续由 `#appStatus` 显示明确状态。
+- 提交结果底部新增“继续处理 / 再次提交”CTA，“继续处理”会跳转到 Artifact 工作台并选中 raw artifact。
+- System surfaces 默认展开，并用 `localStorage` 记住用户后续折叠/展开选择。
+- 执行命令按钮新增运行中禁用态、`aria-busy` 和失败反馈，避免长命令无响应感。
+- 提交卡片新增 Artifact 工作台快捷入口。
+- Build badge 移到 topbar 右侧并改为 `v2026.05.01-a`。
+- 语言切换移到 topbar，提升可见性。
+- What happens next 卡片改为浅色说明卡，降低与主界面的视觉断层。
+- 修复命令执行输出会被刷新流程覆盖回“等待执行...”的问题。
+- 增加空 favicon，避免 dashboard 首屏产生无意义的 404 控制台噪音。
 
 ---
 
