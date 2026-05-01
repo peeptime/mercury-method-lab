@@ -24,6 +24,7 @@ Route by:
 | High-risk audit | Money, law, trust, irreversible direction | `redteam-auditor` | Audit report exists |
 | Memory migration | Approved knowledge needs runtime recall | migration envelope | Rollback path exists |
 | Publication | GitHub or bilingual reader support | publication plan | License/source clean |
+| Agent submission intake | User markdown or agent queue envelope arrives | `submissions/` protocol | Raw artifact promotion only, no truth approval |
 
 ## Risk Escalation
 
@@ -54,3 +55,12 @@ content-diagnostics
 
 No dbskill text, atoms, naming, or structure should be imported.
 
+## Agent-First Intake
+
+When an OpenClaw-like or Hermes-like agent sees a queue envelope in `submissions/agent-queue/`, it should:
+
+1. validate the referenced markdown file exists
+2. check frontmatter and source policy
+3. run `npm run import:viewpoint -- <path>` when promotion is allowed
+4. recommend a route from this document
+5. stop before memory import unless a reviewed artifact exists

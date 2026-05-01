@@ -22,7 +22,9 @@ Recommended public files:
 - `docs/upstream-mercury-agent-compatibility.md`
 - `docs/rule-routing.md`
 - `docs/memory-architecture-migration.md`
+- `docs/agent-first-submission-layer.md`
 - `examples/`
+- `submissions/`
 
 ## Reader Tracks
 
@@ -33,6 +35,7 @@ Recommended public files:
 | Mercury Agent user | compatibility doc -> skill sync -> memory migration | Reuse runtime without forking |
 | Self-media creator | content diagnostics examples | Turn ideas into publishable experiments |
 | Auditor/reviewer | audit docs -> state machine -> examples | Inspect evidence and failure modes |
+| OpenClaw/Hermes agent user | agent-first submission layer -> queue envelopes | Automate intake without a traditional app backend |
 
 ## Open Surface
 
@@ -45,6 +48,8 @@ Publish:
 - migration envelopes
 - original skills
 - validation scripts
+- submission templates
+- agent queue examples
 
 Keep private:
 
@@ -77,4 +82,3 @@ Mercury Method Lab 0.2.0 establishes the upstream-compatible architecture bounda
 it is a method, evidence, audit, and migration companion for Mercury Agent-compatible runtimes,
 not a fork, prompt pack, or dbskill derivative.
 ```
-

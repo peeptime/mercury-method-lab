@@ -14,6 +14,9 @@ Architecture hardening release.
 - Agile roadmap, publication plan, and source/license policy.
 - Public `.gitignore` guardrails for secrets, logs, generated indexes, and local state.
 - English reader entrypoint in `README.en.md`.
+- Agent-first submission layer for markdown viewpoints and OpenClaw/Hermes-like agent queue envelopes.
+- GitHub Issue and PR templates for public intake.
+- `npm run import:viewpoint` to promote user viewpoint markdown into raw artifacts without approving it as truth.
 
 ### Changed
 

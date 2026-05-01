@@ -47,12 +47,15 @@ Deliverables:
 - examples
 - quickstart
 - release notes
+- agent-first submission layer
+- GitHub Issue and PR templates
 
 Acceptance:
 
 - Chinese and English readers can understand the same project
 - no private material or API key is exposed
 - public scope is clearly narrower than private workspace scope
+- OpenClaw/Hermes-like agents can consume submission envelopes without a custom web backend
 
 ## Sprint 2 — Rule Router MVP
 
@@ -83,4 +86,3 @@ Acceptance:
 - approved candidates can be exported without deleting artifacts
 - migration can be reviewed before import
 - upstream schema changes do not silently corrupt local memory
-

@@ -42,6 +42,24 @@ Open the local dashboard at:
 http://127.0.0.1:4788
 ```
 
+## Submission Layer
+
+Users do not need to touch internal directories such as `00_raw/`.
+
+Public intake paths:
+
+- GitHub Issues for non-Git users.
+- `submissions/viewpoints/*.md` for markdown/Git users.
+- `submissions/agent-queue/*.json` for OpenClaw-like, Hermes-like, or future agents.
+
+Promote a viewpoint into raw evidence:
+
+```powershell
+npm run import:viewpoint -- submissions/viewpoints/2026-05-01-example-viewpoint.md
+```
+
+See [docs/agent-first-submission-layer.md](docs/agent-first-submission-layer.md).
+
 ## Core Loop
 
 ```text
@@ -59,6 +77,8 @@ The project keeps Markdown/YAML artifacts as the source of truth. JSON and SQLit
 - Agile roadmap: [docs/agile-roadmap.md](docs/agile-roadmap.md)
 - Publication plan: [docs/publication-plan.md](docs/publication-plan.md)
 - License/source policy: [docs/license-and-source-policy.md](docs/license-and-source-policy.md)
+- Agent-first submission layer: [docs/agent-first-submission-layer.md](docs/agent-first-submission-layer.md)
+- User submission guide: [docs/user-submission-guide.en.md](docs/user-submission-guide.en.md)
 
 ## Third-Party Skill Pack Boundary
 

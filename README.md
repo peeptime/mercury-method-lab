@@ -22,6 +22,22 @@ npm run test:llm
 npm run dashboard
 ```
 
+## 用户提交层
+
+普通用户不需要接触 `00_raw/` 等内部目录。公开提交入口是：
+
+- GitHub Issue：适合不会 Git 的用户。
+- `submissions/viewpoints/*.md`：适合会 Git 或本地写 markdown 的用户。
+- `submissions/agent-queue/*.json`：适合 OpenClaw、爱马仕类智能体或未来 runtime 直接读取。
+
+将观点提交转入内部原始证据层：
+
+```powershell
+npm run import:viewpoint -- submissions/viewpoints/2026-05-01-example-viewpoint.md
+```
+
+协议见 [docs/agent-first-submission-layer.md](docs/agent-first-submission-layer.md)。
+
 如需接入火山方舟 Coding Plan：
 
 ```powershell
@@ -92,6 +108,7 @@ npm run start:ark
 - `npm run doctor`：检查目录、脚本和运行环境。
 - `npm run dashboard`：启动本地 Web GUI，默认地址 `http://127.0.0.1:4788`。
 - `npm run index`：重建 JSON / SQLite 索引，供 GUI 和后续检索使用。
+- `npm run import:viewpoint -- <文件>`：把 `submissions/viewpoints/*.md` 提升为 `00_raw/` 原始 artifact。
 - `npm run ingest:doc -- <文件或URL> [输出名]`：可选入口，默认关闭；仅在 `MERCURY_MARKITDOWN_ENABLED=true` 时用 MarkItDown 转换外部材料并写入 `00_raw/`。
 - `npm run validate`：审计 artifact 结构、必填字段和 secret 风险。
 - `npm run sync:skills`：把仓库里的 `08_skills/` 同步到 Mercury 运行目录。
@@ -121,3 +138,5 @@ npm run start:ark
 - 敏捷路线：[docs/agile-roadmap.md](docs/agile-roadmap.md)
 - 公开发布：[docs/publication-plan.md](docs/publication-plan.md)
 - 授权与来源：[docs/license-and-source-policy.md](docs/license-and-source-policy.md)
+- Agent-first 提交层：[docs/agent-first-submission-layer.md](docs/agent-first-submission-layer.md)
+- 用户提交指南：[docs/user-submission-guide.zh-CN.md](docs/user-submission-guide.zh-CN.md)

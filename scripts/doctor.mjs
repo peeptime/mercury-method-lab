@@ -59,7 +59,7 @@ for (const path of requiredPaths) {
 }
 
 const packageJson = JSON.parse(await readFile(join(root, "package.json"), "utf8"));
-for (const scriptName of ["dashboard", "doctor", "index", "ingest:doc", "sync:skills", "validate", "test:llm", "test:ark", "start:llm", "start:ark"]) {
+for (const scriptName of ["dashboard", "doctor", "index", "import:viewpoint", "ingest:doc", "sync:skills", "validate", "test:llm", "test:ark", "start:llm", "start:ark"]) {
   checks.push({
     name: `package script: ${scriptName}`,
     ok: Boolean(packageJson.scripts?.[scriptName])

@@ -1,0 +1,56 @@
+name: Viewpoint Submission
+description: Submit a viewpoint, claim, essay, or argument for review.
+title: "[Viewpoint] "
+labels:
+  - viewpoint
+  - intake
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Submit original material or clearly cite the source. Submission does not mean acceptance as truth.
+  - type: input
+    id: title
+    attributes:
+      label: Viewpoint title
+      description: Short title for the viewpoint.
+    validations:
+      required: true
+  - type: dropdown
+    id: routing_hint
+    attributes:
+      label: Routing hint
+      options:
+        - factual-cleaning
+        - structural-judgment
+        - content-commercial-diagnosis
+        - action-translation
+    validations:
+      required: true
+  - type: dropdown
+    id: source_kind
+    attributes:
+      label: Source kind
+      options:
+        - original
+        - cited-public-source
+        - private-note
+        - unknown
+    validations:
+      required: true
+  - type: textarea
+    id: content
+    attributes:
+      label: Viewpoint markdown
+      description: Paste the viewpoint or a link to the source.
+    validations:
+      required: true
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Submission checks
+      options:
+        - label: I understand this is an intake submission, not accepted project memory.
+          required: true
+        - label: I have not included secrets, private credentials, or material I cannot submit for review.
+          required: true

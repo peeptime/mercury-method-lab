@@ -9,6 +9,7 @@
     "dashboard": "node scripts/dashboard_server.mjs",
     "doctor": "node scripts/doctor.mjs",
     "index": "node scripts/rebuild_index.mjs",
+    "import:viewpoint": "node scripts/import_viewpoint.mjs",
     "ingest:doc": "node scripts/ingest_document.mjs",
     "sync:skills": "node scripts/sync_skills.mjs",
     "validate": "node scripts/validate_artifacts.mjs",

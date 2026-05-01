@@ -1,0 +1,11 @@
+{
+  "schema_version": "0.1",
+  "task_type": "promote-submission",
+  "source_path": "submissions/viewpoints/2026-05-01-example-viewpoint.md",
+  "preferred_route": "factual-cleaning",
+  "requested_outputs": [
+    "raw_artifact",
+    "routing_recommendation"
+  ],
+  "human_review_required": true
+}
