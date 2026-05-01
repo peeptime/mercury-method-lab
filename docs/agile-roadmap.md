@@ -86,3 +86,26 @@ Acceptance:
 - approved candidates can be exported without deleting artifacts
 - migration can be reviewed before import
 - upstream schema changes do not silently corrupt local memory
+
+## Next Version Discussion Backlog
+
+These items are intentionally recorded as discussion topics for the next iteration, not as current-sprint commitments.
+
+### System Wiki Strategy
+
+Question:
+
+- Should Mercury Method Lab keep `docs/` as the versioned system wiki, or open a separate GitHub Wiki / documentation site for readers?
+
+Context:
+
+- Current recommendation: keep the system wiki inside `docs/` until interfaces and user flows stabilize.
+- Revisit after the next public iteration, especially if external users need a cleaner reading surface.
+
+Decision criteria:
+
+- repeated external usage questions
+- stable tutorials that do not change every commit
+- tagged releases with stable behavior
+- non-developer readers needing a simpler entrypoint
+- `docs/` becoming too dense for onboarding

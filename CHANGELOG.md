@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- Recorded system wiki strategy as a next-version discussion topic instead of opening a separate GitHub Wiki immediately.
+
 ## 0.2.0 — Open Orbit
 
 Architecture hardening release.
