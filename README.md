@@ -140,3 +140,5 @@ npm run start:ark
 - 授权与来源：[docs/license-and-source-policy.md](docs/license-and-source-policy.md)
 - Agent-first 提交层：[docs/agent-first-submission-layer.md](docs/agent-first-submission-layer.md)
 - 用户提交指南：[docs/user-submission-guide.zh-CN.md](docs/user-submission-guide.zh-CN.md)
+- GUI 入库工作流：[docs/gui-intake-workflow.md](docs/gui-intake-workflow.md)
+- 系统 Wiki 判断：[docs/system-wiki-decision.md](docs/system-wiki-decision.md)

@@ -79,6 +79,8 @@ The project keeps Markdown/YAML artifacts as the source of truth. JSON and SQLit
 - License/source policy: [docs/license-and-source-policy.md](docs/license-and-source-policy.md)
 - Agent-first submission layer: [docs/agent-first-submission-layer.md](docs/agent-first-submission-layer.md)
 - User submission guide: [docs/user-submission-guide.en.md](docs/user-submission-guide.en.md)
+- GUI intake workflow: [docs/gui-intake-workflow.md](docs/gui-intake-workflow.md)
+- System wiki decision: [docs/system-wiki-decision.md](docs/system-wiki-decision.md)
 
 ## Third-Party Skill Pack Boundary
 

@@ -328,14 +328,14 @@ h3 {
 }
 
 .viewpoint-form textarea {
-  min-height: 190px;
+  min-height: 132px;
   line-height: 1.6;
 }
 
 .file-drop {
   display: grid;
   gap: 6px;
-  padding: 14px;
+  padding: 12px;
   border: 1px dashed rgba(36, 91, 69, 0.34);
   border-radius: 18px;
   background: #fbfcf7;

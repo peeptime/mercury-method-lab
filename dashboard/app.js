@@ -84,8 +84,10 @@ const translations = {
     noSubmissions: "\u8fd8\u6ca1\u6709\u6750\u6599\u3002\u5148\u5728\u4e0a\u65b9\u7c98\u8d34\u6587\u672c\u6216\u4e0a\u4f20\u6587\u4ef6\u3002",
     cleanStatement: "\u5e72\u51c0\u9648\u8ff0",
     systemQuestions: "\u7cfb\u7edf\u95ee\u9898",
+    noOpenQuestions: "\u6682\u65e0\u8ffd\u95ee\uff0c\u53ef\u76f4\u63a5\u8fdb\u5165\u4e0b\u4e00\u6b65\u3002",
     nextStep: "\u4e0b\u4e00\u6b65",
     storedAt: "\u5df2\u5b58\u50a8",
+    intakeReady: "\u5165\u53e3\u5224\u65ad\u5df2\u751f\u6210",
     executionTitle: "\u6267\u884c",
     executionDesc: "\u8fd0\u884c\u9879\u76ee\u767d\u540d\u5355\u5185\u7684\u7ef4\u62a4\u547d\u4ee4\u3002",
     waitingExecution: "\u7b49\u5f85\u6267\u884c...",
@@ -183,8 +185,10 @@ const translations = {
     noSubmissions: "No material yet. Paste text or attach files above.",
     cleanStatement: "Clean statement",
     systemQuestions: "System questions",
+    noOpenQuestions: "No open questions. Continue to the next step.",
     nextStep: "Next step",
     storedAt: "Stored",
+    intakeReady: "Intake result ready",
     executionTitle: "Execution",
     executionDesc: "Run allowlisted project maintenance commands.",
     waitingExecution: "Waiting for execution...",
@@ -749,6 +753,8 @@ async function createIntake(event) {
   selectedDetail = null;
   await load();
   renderIntakeResult(result.intake, result.queue_path);
+  setStatus(t("intakeReady"), "ok");
+  $("#intakeResult").scrollIntoView({ behavior: "smooth", block: "center" });
 }
 
 function renderIntakeResult(intake, queuePath) {
@@ -777,7 +783,7 @@ function renderIntakeResult(intake, queuePath) {
       <span>${t("systemQuestions")}</span>
       ${(result.questions || []).length
         ? `<ul>${result.questions.map((question) => `<li>${escapeHtml(question)}</li>`).join("")}</ul>`
-        : `<p>-</p>`}
+        : `<p>${t("noOpenQuestions")}</p>`}
       <code>${escapeHtml(queuePath || "")}</code>
     </div>
   `;
