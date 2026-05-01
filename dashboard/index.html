@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Mercury Method Lab</title>
-    <link rel="stylesheet" href="/styles.css?v=20260501a">
+    <link rel="stylesheet" href="/styles.css?v=20260501b">
   </head>
   <body>
     <main class="shell">
@@ -14,6 +14,13 @@
           <div>
             <strong>Method Lab</strong>
             <span data-i18n="brandSubtitle">Agent-first intake</span>
+          </div>
+        </div>
+        <div class="rail-language">
+          <span class="language-label" data-i18n="languageLabel">Language</span>
+          <div class="language-mode" aria-label="Language mode">
+            <button type="button" data-locale="zh">&#20013;&#25991;</button>
+            <button type="button" data-locale="en">EN</button>
           </div>
         </div>
         <div class="rail-section">
@@ -36,11 +43,6 @@
             <p class="build-badge">GUI build: 2026.05.01-a</p>
           </div>
           <div class="toolbar">
-            <span class="language-label" data-i18n="languageLabel">Language</span>
-            <div id="languageMode" class="language-mode" aria-label="Language mode">
-              <button type="button" data-locale="zh">&#20013;&#25991;</button>
-              <button type="button" data-locale="en">EN</button>
-            </div>
             <select id="providerSelect" aria-label="Provider"></select>
             <button id="refreshButton" type="button" data-i18n="refresh">Refresh</button>
           </div>
@@ -59,7 +61,7 @@
             <form id="intakeForm" class="viewpoint-form">
               <label class="span-2">
                 <span data-i18n="materialLabel">Material text</span>
-                <textarea name="text" rows="8" placeholder="直接粘贴整段观点、问题、会议记录、草稿、网页摘录。可以不写标题。"></textarea>
+                <textarea name="text" rows="8" data-i18n-placeholder="materialPlaceholder" placeholder="直接粘贴整段观点、问题、会议记录、草稿、网页摘录。可以不写标题。"></textarea>
               </label>
               <label class="span-2 file-drop">
                 <span data-i18n="fileLabel">Attach files</span>
@@ -209,6 +211,6 @@
         </section>
       </section>
     </main>
-    <script src="/app.js?v=20260501a" type="module"></script>
+    <script src="/app.js?v=20260501b" type="module"></script>
   </body>
 </html>

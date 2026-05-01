@@ -95,6 +95,16 @@ textarea {
   font-weight: 800;
 }
 
+.rail-language {
+  display: grid;
+  gap: 8px;
+  margin: 0 0 14px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.78);
+}
+
 .rail-section {
   display: grid;
   gap: 8px;
@@ -501,6 +511,7 @@ h3 {
 }
 
 .language-mode button {
+  flex: 1;
   min-width: 58px;
   padding: 7px 10px;
   border: 0;

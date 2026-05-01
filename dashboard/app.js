@@ -61,6 +61,7 @@ const translations = {
     routeLabel: "\u5efa\u8bae\u8def\u7531",
     sourceKindLabel: "\u6765\u6e90\u7c7b\u578b",
     materialLabel: "\u6750\u6599\u6587\u672c",
+    materialPlaceholder: "\u76f4\u63a5\u7c98\u8d34\u6574\u6bb5\u89c2\u70b9\u3001\u95ee\u9898\u3001\u4f1a\u8bae\u8bb0\u5f55\u3001\u8349\u7a3f\u3001\u7f51\u9875\u6458\u5f55\u3002\u53ef\u4ee5\u4e0d\u5199\u6807\u9898\u3002",
     fileLabel: "\u9644\u52a0\u6587\u4ef6",
     fileHint: "\u56fe\u7247\u3001Markdown\u3001txt\u3001pdf\u3001docx \u6216\u5176\u4ed6\u6587\u6863\u5148\u5b58\u50a8\uff0c\u540e\u7eed\u518d\u89e3\u6790\u3002",
     submitButton: "\u5b58\u50a8\u5e76\u8fd0\u884c\u5165\u53e3\u5224\u65ad",
@@ -159,6 +160,7 @@ const translations = {
     routeLabel: "Routing hint",
     sourceKindLabel: "Source kind",
     materialLabel: "Material text",
+    materialPlaceholder: "Paste a full viewpoint, question, meeting note, draft, or web excerpt. No title required.",
     fileLabel: "Attach files",
     fileHint: "Images, markdown, txt, pdf, docx, or other documents are stored first. Parsing can happen later.",
     submitButton: "Store and run intake",
@@ -415,6 +417,9 @@ function render() {
 function renderStaticText() {
   document.querySelectorAll("[data-i18n]").forEach((node) => {
     node.textContent = t(node.dataset.i18n);
+  });
+  document.querySelectorAll("[data-i18n-placeholder]").forEach((node) => {
+    node.placeholder = t(node.dataset.i18nPlaceholder);
   });
   $("#artifactSearch").placeholder = t("artifactSearch");
 }
