@@ -24,6 +24,7 @@ const translations = {
     railSubmit: "\u63d0\u4ea4\u89c2\u70b9",
     railIntake: "\u5165\u53e3\u961f\u5217",
     railArtifacts: "\u5185\u90e8 artifact",
+    systemSurfaces: "\u7cfb\u7edf\u80fd\u529b\uff08\u6298\u53e0\uff09",
     eyebrow: "\u667a\u80fd\u4f53\u4f18\u5148\u63d0\u4ea4\u5c42",
     pageTitle: "\u5148\u63d0\u4ea4\u89c2\u70b9\uff0c\u518d\u8ba9\u6d41\u6c34\u7ebf\u627f\u63a5\u3002",
     refresh: "\u5237\u65b0",
@@ -54,28 +55,35 @@ const translations = {
     fieldType: "\u7c7b\u578b",
     fieldSourceRef: "\u6765\u6e90\u5f15\u7528",
     createButton: "\u521b\u5efa\u53ef\u8ffd\u8e2a artifact",
-    submitTitle: "\u63d0\u4ea4\u4e00\u4e2a\u89c2\u70b9",
-    submitDesc: "\u5199\u4e00\u6b21\u3002Mercury \u4f1a\u4fdd\u5b58\u4e3a\u516c\u5f00\u5165\u53e3\u6587\u4ef6\uff0c\u5e76\u751f\u6210\u667a\u80fd\u4f53\u53ef\u8bfb\u7684\u961f\u5217 envelope\u3002",
+    submitTitle: "\u628a\u6750\u6599\u4e22\u8fdb\u5b58\u50a8",
+    submitDesc: "\u7c98\u8d34\u6587\u672c\u6216\u4e0a\u4f20\u6587\u4ef6\u3002\u7cfb\u7edf\u8d1f\u8d23\u547d\u540d\u3001\u5b58\u50a8\u3001\u8def\u7531\u548c\u8fd4\u56de\u5e72\u51c0\u7684\u5165\u53e3\u5224\u65ad\u3002",
     submitterLabel: "\u63d0\u4ea4\u8005",
     routeLabel: "\u5efa\u8bae\u8def\u7531",
     sourceKindLabel: "\u6765\u6e90\u7c7b\u578b",
-    viewpointLabel: "\u89c2\u70b9 markdown",
-    submitButton: "\u63d0\u4ea4\u5230\u5165\u53e3\u5c42",
-    submitNote: "\u8fd9\u91cc\u4e0d\u6279\u51c6\u4e3a\u771f\uff0c\u53ea\u662f\u8fdb\u5165 intake queue\u3002",
+    materialLabel: "\u6750\u6599\u6587\u672c",
+    fileLabel: "\u9644\u52a0\u6587\u4ef6",
+    fileHint: "\u56fe\u7247\u3001Markdown\u3001txt\u3001pdf\u3001docx \u6216\u5176\u4ed6\u6587\u6863\u5148\u5b58\u50a8\uff0c\u540e\u7eed\u518d\u89e3\u6790\u3002",
+    submitButton: "\u5b58\u50a8\u5e76\u8fd0\u884c\u5165\u53e3\u5224\u65ad",
+    submitNote: "\u4f60\u53ea\u63d0\u4f9b\u6750\u6599\uff0c\u7cfb\u7edf\u8d1f\u8d23\u547d\u540d\u3001\u5b58\u50a8\u3001\u8def\u7531\u548c\u9996\u6b21\u56de\u5e94\u3002",
+    intakeResultEmpty: "\u63d0\u4ea4\u6750\u6599\u540e\uff0c\u8fd9\u91cc\u4f1a\u51fa\u73b0\u7cfb\u7edf\u7684\u5e72\u51c0\u5165\u53e3\u9648\u8ff0\u3002",
     flowTitle: "\u4e0b\u4e00\u6b65\u53d1\u751f\u4ec0\u4e48",
-    flowStep1Title: "\u5165\u53e3",
-    flowStep1Desc: "\u4fdd\u5b58\u5230 submissions/viewpoints\u3002",
-    flowStep2Title: "\u667a\u80fd\u4f53\u961f\u5217",
-    flowStep2Desc: "\u4e3a OpenClaw \u6216\u7231\u9a6c\u4ed5\u7c7b\u667a\u80fd\u4f53\u751f\u6210 JSON envelope\u3002",
-    flowStep3Title: "\u63d0\u5347",
-    flowStep3Desc: "\u9009\u4e2d\u540e\u8fdb\u5165 00_raw\uff0c\u4f46\u4e0d\u6279\u51c6\u4e3a\u771f\u3002",
-    flowStep4Title: "\u8def\u7531",
-    flowStep4Desc: "\u518d\u8fdb\u884c\u6e05\u6d17\u3001\u5224\u65ad\u3001\u5ba1\u8ba1\u6216\u884c\u52a8\u8f6c\u8bd1\u3002",
+    flowStep1Title: "\u5b58\u50a8",
+    flowStep1Desc: "\u628a\u7528\u6237\u539f\u59cb\u6750\u6599\u4fdd\u7559\u5230 submissions/inbox\u3002",
+    flowStep2Title: "\u56de\u5e94",
+    flowStep2Desc: "\u7acb\u5373\u8fd4\u56de\u5e72\u51c0\u9648\u8ff0\u3001\u8def\u7531\u548c\u95ee\u9898\u3002",
+    flowStep3Title: "\u961f\u5217",
+    flowStep3Desc: "\u4e3a OpenClaw \u6216\u7231\u9a6c\u4ed5\u7c7b\u667a\u80fd\u4f53\u751f\u6210 envelope\u3002",
+    flowStep4Title: "\u5904\u7406",
+    flowStep4Desc: "\u539f\u59cb artifact \u8fdb\u5165\u6e05\u6d17\u3001\u5224\u65ad\u3001\u5ba1\u8ba1\u6216\u884c\u52a8\u8f6c\u8bd1\u3002",
     intakeTitle: "\u5165\u53e3\u961f\u5217",
     intakeDesc: "\u6700\u8fd1\u63d0\u4ea4\uff0c\u7b49\u5f85\u63d0\u5347\u4e3a\u539f\u59cb\u8bc1\u636e\u3002",
     promoteButton: "\u63d0\u5347\u5230 00_raw",
     promotedLabel: "\u5df2\u63d0\u5347",
-    noSubmissions: "\u8fd8\u6ca1\u6709\u63d0\u4ea4\u3002\u5148\u5728\u4e0a\u65b9\u5199\u4e00\u6761\u89c2\u70b9\u3002",
+    noSubmissions: "\u8fd8\u6ca1\u6709\u6750\u6599\u3002\u5148\u5728\u4e0a\u65b9\u7c98\u8d34\u6587\u672c\u6216\u4e0a\u4f20\u6587\u4ef6\u3002",
+    cleanStatement: "\u5e72\u51c0\u9648\u8ff0",
+    systemQuestions: "\u7cfb\u7edf\u95ee\u9898",
+    nextStep: "\u4e0b\u4e00\u6b65",
+    storedAt: "\u5df2\u5b58\u50a8",
     executionTitle: "\u6267\u884c",
     executionDesc: "\u8fd0\u884c\u9879\u76ee\u767d\u540d\u5355\u5185\u7684\u7ef4\u62a4\u547d\u4ee4\u3002",
     waitingExecution: "\u7b49\u5f85\u6267\u884c...",
@@ -114,6 +122,7 @@ const translations = {
     railSubmit: "Submit viewpoint",
     railIntake: "Intake queue",
     railArtifacts: "Internal artifacts",
+    systemSurfaces: "System surfaces",
     eyebrow: "Agent-first submission layer",
     pageTitle: "Submit a viewpoint, then let the pipeline carry it.",
     refresh: "Refresh",
@@ -144,28 +153,35 @@ const translations = {
     fieldType: "Type",
     fieldSourceRef: "Source ref",
     createButton: "Create tracked artifact",
-    submitTitle: "Submit a viewpoint",
-    submitDesc: "Write once. Mercury stores it as a public intake file and creates an agent-readable queue envelope.",
+    submitTitle: "Drop material into storage",
+    submitDesc: "Paste text or attach files. The system names, stores, routes, and returns a clean intake statement.",
     submitterLabel: "Submitter",
     routeLabel: "Routing hint",
     sourceKindLabel: "Source kind",
-    viewpointLabel: "Viewpoint markdown",
-    submitButton: "Submit to intake",
-    submitNote: "No truth approval happens here. It only enters the intake queue.",
+    materialLabel: "Material text",
+    fileLabel: "Attach files",
+    fileHint: "Images, markdown, txt, pdf, docx, or other documents are stored first. Parsing can happen later.",
+    submitButton: "Store and run intake",
+    submitNote: "You provide material. The system handles naming, storage, routing, and first response.",
+    intakeResultEmpty: "Submit material to see the system's clean intake statement here.",
     flowTitle: "What happens next",
-    flowStep1Title: "Intake",
-    flowStep1Desc: "Save markdown under submissions/viewpoints.",
-    flowStep2Title: "Agent queue",
-    flowStep2Desc: "Create a JSON envelope for OpenClaw or Hermes-like agents.",
-    flowStep3Title: "Promote",
-    flowStep3Desc: "Move selected intake into 00_raw without approving it as truth.",
-    flowStep4Title: "Route",
-    flowStep4Desc: "Then clean, judge, audit, or translate into action.",
+    flowStep1Title: "Store",
+    flowStep1Desc: "Keep the user's raw material under submissions/inbox.",
+    flowStep2Title: "Respond",
+    flowStep2Desc: "Return a clean statement, route, and questions immediately.",
+    flowStep3Title: "Queue",
+    flowStep3Desc: "Create an envelope for OpenClaw or Hermes-like agents.",
+    flowStep4Title: "Process",
+    flowStep4Desc: "Raw artifact enters cleaning, judgment, audit, or action translation.",
     intakeTitle: "Intake queue",
     intakeDesc: "Recent submissions waiting for promotion into raw evidence.",
     promoteButton: "Promote to 00_raw",
     promotedLabel: "Promoted",
-    noSubmissions: "No submissions yet. Write the first viewpoint above.",
+    noSubmissions: "No material yet. Paste text or attach files above.",
+    cleanStatement: "Clean statement",
+    systemQuestions: "System questions",
+    nextStep: "Next step",
+    storedAt: "Stored",
     executionTitle: "Execution",
     executionDesc: "Run allowlisted project maintenance commands.",
     waitingExecution: "Waiting for execution...",
@@ -253,7 +269,7 @@ function init() {
 
 function bindEvents() {
   $("#refreshButton").addEventListener("click", load);
-  $("#viewpointForm").addEventListener("submit", createViewpointSubmission);
+  $("#intakeForm").addEventListener("submit", createIntake);
   $("#artifactSearch").addEventListener("input", (event) => {
     artifactSearch = event.target.value.trim().toLowerCase();
     if (data) {
@@ -476,7 +492,19 @@ function renderMetrics() {
 }
 
 function renderSubmissions() {
-  const submissions = data.submissions?.viewpoints || [];
+  const intakeItems = data.submissions?.intake_items || [];
+  const legacyViewpoints = data.submissions?.viewpoints || [];
+  const submissions = [
+    ...intakeItems.map((item) => ({
+      path: item.raw_artifact || item.path,
+      title: item.title,
+      routing_hint: item.route,
+      promoted: true,
+      updated_at: item.updated_at,
+      kind: "intake"
+    })),
+    ...legacyViewpoints.map((item) => ({ ...item, kind: "viewpoint" }))
+  ].sort((a, b) => (b.updated_at || "").localeCompare(a.updated_at || ""));
   const queueCount = data.submissions?.queue_count || 0;
   $("#queueCount").textContent = `${queueCount} agent task${queueCount === 1 ? "" : "s"}`;
   if (!submissions.length) {
@@ -490,7 +518,9 @@ function renderSubmissions() {
         <strong>${escapeHtml(submission.title)}</strong>
         <span>${escapeHtml(submission.path)} | ${escapeHtml(submission.routing_hint)}</span>
       </div>
-      ${submission.promoted
+      ${submission.kind === "intake"
+        ? `<button type="button" data-artifact-path="${escapeAttr(submission.path)}">${t("storedAt")}</button>`
+        : submission.promoted
         ? `<span class="status approved">${t("promotedLabel")}</span>`
         : `<button type="button" data-promote-submission="${escapeAttr(submission.path)}">${t("promoteButton")}</button>`}
     </article>
@@ -668,6 +698,85 @@ async function createViewpointSubmission(event) {
   form.elements.submitter.value = "local-gui";
   await load();
   showOutput(`${t("created")}: ${result.submission.path}\nagent queue: ${result.submission.queue_path}`);
+}
+
+async function createIntake(event) {
+  event.preventDefault();
+  const form = event.currentTarget;
+  const text = form.elements.text.value.trim();
+  const files = await readFilesAsDataUrls([...$("#intakeFiles").files]);
+
+  if (!text && files.length === 0) {
+    $("#intakeResult").className = "intake-result empty";
+    $("#intakeResult").textContent = t("noSubmissions");
+    return;
+  }
+
+  $("#intakeResult").className = "intake-result";
+  $("#intakeResult").textContent = t("loading");
+
+  const response = await fetch("/api/intake", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ text, files })
+  });
+  const result = await response.json();
+  if (!result.ok) {
+    $("#intakeResult").className = "intake-result error";
+    $("#intakeResult").textContent = `${t("failed")}: ${result.error || "unknown error"}`;
+    return;
+  }
+
+  form.reset();
+  selectedPath = result.intake.raw_artifact;
+  selectedDetail = null;
+  renderIntakeResult(result.intake, result.queue_path);
+  await load();
+}
+
+function renderIntakeResult(intake, queuePath) {
+  const result = intake.result || {};
+  $("#intakeResult").className = "intake-result";
+  $("#intakeResult").innerHTML = `
+    <div class="result-grid">
+      <div>
+        <span>${t("cleanStatement")}</span>
+        <strong>${escapeHtml(result.clean_statement || "")}</strong>
+      </div>
+      <div>
+        <span>Route</span>
+        <strong>${escapeHtml(result.route || intake.route || "")}</strong>
+      </div>
+      <div>
+        <span>${t("nextStep")}</span>
+        <strong>${escapeHtml(result.next_step || "")}</strong>
+      </div>
+      <div>
+        <span>Raw artifact</span>
+        <strong>${escapeHtml(intake.raw_artifact || "")}</strong>
+      </div>
+    </div>
+    <div class="result-questions">
+      <span>${t("systemQuestions")}</span>
+      ${(result.questions || []).length
+        ? `<ul>${result.questions.map((question) => `<li>${escapeHtml(question)}</li>`).join("")}</ul>`
+        : `<p>-</p>`}
+      <code>${escapeHtml(queuePath || "")}</code>
+    </div>
+  `;
+}
+
+async function readFilesAsDataUrls(files) {
+  return Promise.all(files.map((file) => new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve({
+      name: file.name,
+      type: file.type,
+      dataUrl: reader.result
+    });
+    reader.onerror = () => reject(reader.error);
+    reader.readAsDataURL(file);
+  })));
 }
 
 async function promoteSubmission(path) {

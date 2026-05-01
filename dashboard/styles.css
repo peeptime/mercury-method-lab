@@ -135,6 +135,25 @@ textarea {
   gap: 8px;
 }
 
+.system-capabilities {
+  margin-top: 14px;
+}
+
+.system-capabilities summary {
+  cursor: pointer;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 850;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.system-capabilities .capabilities {
+  margin-top: 10px;
+  max-height: 320px;
+  overflow: auto;
+}
+
 .capability {
   width: 100%;
   text-align: left;
@@ -303,6 +322,20 @@ h3 {
   line-height: 1.6;
 }
 
+.file-drop {
+  display: grid;
+  gap: 6px;
+  padding: 14px;
+  border: 1px dashed rgba(36, 91, 69, 0.34);
+  border-radius: 18px;
+  background: #fbfcf7;
+}
+
+.file-drop small {
+  color: var(--muted);
+  font-size: 12px;
+}
+
 .submit-actions {
   display: flex;
   align-items: center;
@@ -325,6 +358,65 @@ h3 {
 .intake-panel {
   padding: 18px;
   margin-bottom: 14px;
+}
+
+.intake-result {
+  margin-top: 16px;
+  padding: 16px;
+  border: 1px solid rgba(36, 91, 69, 0.18);
+  border-radius: 20px;
+  background: #f8fbf5;
+}
+
+.intake-result.error {
+  border-color: #efc9c4;
+  background: #fff1ef;
+  color: var(--danger);
+}
+
+.result-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.result-grid div,
+.result-questions {
+  display: grid;
+  gap: 5px;
+  padding: 12px;
+  border-radius: 14px;
+  background: #fff;
+}
+
+.result-grid span,
+.result-questions span {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 850;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.result-grid strong {
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.result-questions {
+  margin-top: 10px;
+}
+
+.result-questions ul {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.result-questions li,
+.result-questions p,
+.result-questions code {
+  color: var(--muted);
+  font-size: 13px;
 }
 
 .queue-count {

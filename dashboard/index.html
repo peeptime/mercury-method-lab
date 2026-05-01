@@ -22,7 +22,10 @@
           <a href="#intake" data-i18n="railIntake">Intake queue</a>
           <a href="#artifacts" data-i18n="railArtifacts">Internal artifacts</a>
         </div>
-        <nav id="capabilities" class="capabilities"></nav>
+        <details class="system-capabilities">
+          <summary data-i18n="systemSurfaces">System surfaces</summary>
+          <nav id="capabilities" class="capabilities"></nav>
+        </details>
       </aside>
 
       <section class="workspace">
@@ -49,55 +52,35 @@
           <article class="submit-card">
             <div class="panel-head">
               <div>
-                <h2 data-i18n="submitTitle">Submit a viewpoint</h2>
-                <p data-i18n="submitDesc">Write once. Mercury stores it as a public intake file and creates an agent-readable queue envelope.</p>
+                <h2 data-i18n="submitTitle">Drop material into storage</h2>
+                <p data-i18n="submitDesc">Paste text or attach files. The system names, stores, routes, and returns a clean intake statement.</p>
               </div>
             </div>
-            <form id="viewpointForm" class="viewpoint-form">
-              <label>
-                <span data-i18n="fieldTitle">Title</span>
-                <input name="title" type="text" required placeholder="例如：AI 热度不等于预算迁移">
-              </label>
-              <label>
-                <span data-i18n="submitterLabel">Submitter</span>
-                <input name="submitter" type="text" value="local-gui">
-              </label>
-              <label>
-                <span data-i18n="routeLabel">Routing hint</span>
-                <select name="routing_hint">
-                  <option value="factual-cleaning">factual-cleaning</option>
-                  <option value="structural-judgment">structural-judgment</option>
-                  <option value="content-commercial-diagnosis">content-commercial-diagnosis</option>
-                  <option value="action-translation">action-translation</option>
-                </select>
-              </label>
-              <label>
-                <span data-i18n="sourceKindLabel">Source kind</span>
-                <select name="source_kind">
-                  <option value="original">original</option>
-                  <option value="cited-public-source">cited-public-source</option>
-                  <option value="private-note">private-note</option>
-                  <option value="unknown">unknown</option>
-                </select>
-              </label>
+            <form id="intakeForm" class="viewpoint-form">
               <label class="span-2">
-                <span data-i18n="viewpointLabel">Viewpoint markdown</span>
-                <textarea name="content" rows="7" required placeholder="写观点、证据、疑问。这里不是最终结论，只是入口材料。"></textarea>
+                <span data-i18n="materialLabel">Material text</span>
+                <textarea name="text" rows="8" placeholder="直接粘贴整段观点、问题、会议记录、草稿、网页摘录。可以不写标题。"></textarea>
+              </label>
+              <label class="span-2 file-drop">
+                <span data-i18n="fileLabel">Attach files</span>
+                <input id="intakeFiles" name="files" type="file" multiple>
+                <small data-i18n="fileHint">Images, markdown, txt, pdf, docx, or other documents are stored first. Parsing can happen later.</small>
               </label>
               <div class="submit-actions span-2">
-                <button class="primary-action" type="submit" data-i18n="submitButton">Submit to intake</button>
-                <span data-i18n="submitNote">No truth approval happens here. It only enters the intake queue.</span>
+                <button class="primary-action" type="submit" data-i18n="submitButton">Store and run intake</button>
+                <span data-i18n="submitNote">You provide material. The system handles naming, storage, routing, and first response.</span>
               </div>
             </form>
+            <div id="intakeResult" class="intake-result empty" data-i18n="intakeResultEmpty">Submit material to see the system's clean intake statement here.</div>
           </article>
 
           <aside class="flow-card">
             <h2 data-i18n="flowTitle">What happens next</h2>
             <ol>
-              <li><strong data-i18n="flowStep1Title">Intake</strong><span data-i18n="flowStep1Desc">Save markdown under submissions/viewpoints.</span></li>
-              <li><strong data-i18n="flowStep2Title">Agent queue</strong><span data-i18n="flowStep2Desc">Create a JSON envelope for OpenClaw or Hermes-like agents.</span></li>
-              <li><strong data-i18n="flowStep3Title">Promote</strong><span data-i18n="flowStep3Desc">Move selected intake into 00_raw without approving it as truth.</span></li>
-              <li><strong data-i18n="flowStep4Title">Route</strong><span data-i18n="flowStep4Desc">Then clean, judge, audit, or translate into action.</span></li>
+              <li><strong data-i18n="flowStep1Title">Store</strong><span data-i18n="flowStep1Desc">Keep the user's raw material under submissions/inbox.</span></li>
+              <li><strong data-i18n="flowStep2Title">Respond</strong><span data-i18n="flowStep2Desc">Return a clean statement, route, and questions immediately.</span></li>
+              <li><strong data-i18n="flowStep3Title">Queue</strong><span data-i18n="flowStep3Desc">Create an envelope for OpenClaw or Hermes-like agents.</span></li>
+              <li><strong data-i18n="flowStep4Title">Process</strong><span data-i18n="flowStep4Desc">Raw artifact enters cleaning, judgment, audit, or action translation.</span></li>
             </ol>
           </aside>
         </section>

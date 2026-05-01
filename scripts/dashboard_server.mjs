@@ -82,6 +82,11 @@ const server = createServer(async (req, res) => {
       return sendJson(res, await createViewpointSubmission(body));
     }
 
+    if (url.pathname === "/api/intake" && req.method === "POST") {
+      const body = await readJson(req);
+      return sendJson(res, await createIntake(body));
+    }
+
     if (url.pathname === "/api/submission/promote" && req.method === "POST") {
       const body = await readJson(req);
       return sendJson(res, await promoteViewpointSubmission(body.path));
@@ -216,9 +221,11 @@ async function collectArtifacts() {
 
 async function collectSubmissions() {
   const submissionsRoot = join(root, "submissions", "viewpoints");
+  const intakeRoot = join(root, "submissions", "inbox");
   const queueRoot = join(root, "submissions", "agent-queue");
-  const [viewpointFiles, queueFiles] = await Promise.all([
+  const [viewpointFiles, intakeFiles, queueFiles] = await Promise.all([
     safeListFiles(submissionsRoot),
+    safeListFiles(intakeRoot),
     safeListFiles(queueRoot)
   ]);
 
@@ -247,9 +254,25 @@ async function collectSubmissions() {
   }
 
   return {
+    intake_items: await summarizeIntakeItems(intakeFiles),
     viewpoints: viewpoints.sort((a, b) => b.updated_at.localeCompare(a.updated_at)),
     queue_count: queueFiles.filter((item) => item.endsWith(".json")).length
   };
+}
+
+async function summarizeIntakeItems(files) {
+  const manifests = files.filter((item) => item.endsWith("manifest.json"));
+  const items = [];
+  for (const file of manifests) {
+    const manifest = JSON.parse(await readFile(file, "utf8"));
+    const fileStat = await stat(file);
+    items.push({
+      ...manifest,
+      path: relative(root, file).replaceAll("\\", "/"),
+      updated_at: fileStat.mtime.toISOString()
+    });
+  }
+  return items.sort((a, b) => b.updated_at.localeCompare(a.updated_at));
 }
 
 async function safeListFiles(dir) {
@@ -520,6 +543,88 @@ async function createViewpointSubmission(body) {
   };
 }
 
+async function createIntake(body) {
+  const text = String(body.text || "").trim();
+  const files = Array.isArray(body.files) ? body.files : [];
+  if (!text && files.length === 0) {
+    throw new Error("text or files are required");
+  }
+
+  const now = new Date();
+  const date = now.toISOString().slice(0, 10);
+  const stamp = now.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}Z$/, "Z");
+  const title = inferIntakeTitle(text, files);
+  const id = `${date}-${stamp.toLowerCase()}-${slugify(title) || "intake"}`;
+  const intakeRel = `submissions/inbox/${id}`;
+  const intakeDir = join(root, intakeRel);
+  const filesRel = `${intakeRel}/files`;
+  const rawRel = `00_raw/${id}.md`;
+  const rawPath = join(root, rawRel);
+  const savedFiles = [];
+
+  await mkdir(intakeDir, { recursive: true });
+  await mkdir(join(root, filesRel), { recursive: true });
+
+  if (text) {
+    await writeFile(join(intakeDir, "input.md"), `# User input\n\n${text}\n`, "utf8");
+  }
+
+  for (const [index, file] of files.entries()) {
+    const safeName = sanitizeFilename(file.name || `upload-${index + 1}`);
+    const targetRel = `${filesRel}/${safeName}`;
+    const targetPath = join(root, targetRel);
+    const bytes = decodeDataUrl(file.dataUrl || "");
+    await writeFile(targetPath, bytes);
+    savedFiles.push({
+      name: safeName,
+      path: targetRel,
+      type: file.type || "application/octet-stream",
+      size_bytes: bytes.length
+    });
+  }
+
+  const route = inferRoute(text, savedFiles);
+  const result = buildIntakeResult({ text, files: savedFiles, route, title });
+  const manifest = {
+    schema_version: "0.1",
+    id,
+    title,
+    kind: "raw-user-material",
+    created_at: now.toISOString(),
+    text_path: text ? `${intakeRel}/input.md` : "",
+    files: savedFiles,
+    route,
+    raw_artifact: rawRel,
+    result
+  };
+
+  const queueRel = `submissions/agent-queue/${id}.json`;
+  const envelope = {
+    schema_version: "0.1",
+    task_type: "process-intake",
+    source_path: `${intakeRel}/manifest.json`,
+    preferred_route: route,
+    requested_outputs: ["clean_statement", "questions", "raw_artifact", "routing_recommendation"],
+    human_review_required: true
+  };
+
+  await writeFile(join(intakeDir, "manifest.json"), `${JSON.stringify(manifest, null, 2)}\n`, "utf8");
+  await writeFile(join(root, queueRel), `${JSON.stringify(envelope, null, 2)}\n`, "utf8");
+  await writeFile(rawPath, renderRawIntakeArtifact({ id, title, date, intakeRel, text, savedFiles, route, result }), "utf8");
+
+  await appendLifecycleEvent({
+    action: "intake.create",
+    path: rawRel,
+    note: `route=${route}; files=${savedFiles.length}`
+  });
+
+  return {
+    ok: true,
+    intake: manifest,
+    queue_path: queueRel
+  };
+}
+
 async function promoteViewpointSubmission(path) {
   const sourcePath = assertSubmissionPath(path);
   const text = await readFile(sourcePath, "utf8");
@@ -741,6 +846,134 @@ function normalizeDate(value) {
 
 function escapeYaml(value) {
   return String(value ?? "").replaceAll("\\", "\\\\").replaceAll('"', '\\"');
+}
+
+function inferIntakeTitle(text, files) {
+  const firstLine = text
+    .split(/\r?\n/)
+    .map((line) => line.trim().replace(/^#+\s*/, ""))
+    .find(Boolean);
+  if (firstLine) {
+    return firstLine.slice(0, 48);
+  }
+  if (files.length === 1) {
+    return files[0].name || "uploaded-material";
+  }
+  return files.length > 1 ? `${files.length}-uploaded-files` : "untitled-intake";
+}
+
+function inferRoute(text, files) {
+  const normalized = text.toLowerCase();
+  if (files.length > 0 && !text) {
+    return "factual-cleaning";
+  }
+  if (/自媒体|内容|标题|流量|粉丝|变现|选题|publish|content|audience|creator/.test(normalized)) {
+    return "content-commercial-diagnosis";
+  }
+  if (/行动|计划|下一步|执行|落地|action|todo|plan/.test(normalized)) {
+    return "action-translation";
+  }
+  if (/结构|权力|规则|路径|系统|市场|竞争|structure|power|market|system/.test(normalized)) {
+    return "structural-judgment";
+  }
+  return "factual-cleaning";
+}
+
+function buildIntakeResult({ text, files, route, title }) {
+  const hasText = Boolean(text.trim());
+  const hasFiles = files.length > 0;
+  const statement = hasText
+    ? summarizeText(text)
+    : `已接收 ${files.length} 个文件，当前尚未解析文件正文。`;
+  const questions = [];
+
+  if (hasFiles) {
+    questions.push("这些文件是否可以被转换、OCR 或摘要？如果包含隐私内容，应先标记为 private-note。");
+  }
+  if (text.length < 80 && !hasFiles) {
+    questions.push("这条材料较短：你希望系统把它当作观点、问题、行动请求，还是待归档素材？");
+  }
+  if (route === "structural-judgment") {
+    questions.push("这个判断是否会影响项目方向、公开表达或资源投入？若会，后续需要审计。");
+  }
+
+  return {
+    title,
+    clean_statement: statement,
+    route,
+    questions,
+    next_step: route === "factual-cleaning"
+      ? "先做事实/推测/缺口分离。"
+      : `建议进入 ${route} 路由，但仍需保留原始材料。`
+  };
+}
+
+function summarizeText(text) {
+  const compact = text.replace(/\s+/g, " ").trim();
+  if (compact.length <= 180) {
+    return compact;
+  }
+  return `${compact.slice(0, 180)}...`;
+}
+
+function renderRawIntakeArtifact({ id, title, date, intakeRel, text, savedFiles, route, result }) {
+  const fileRefs = savedFiles.map((file) => `- ${file.path} (${file.type}, ${file.size_bytes} bytes)`).join("\n") || "- none";
+  return `# ${title}
+
+## Artifact Metadata
+
+- schema_version: 0.1
+- id: ${id}
+- type: raw
+- status: draft
+- owner_role: collector
+- source_refs: ${intakeRel}/manifest.json
+- created_at: ${date}
+- review_at: ${date}
+- submission_type: raw_user_material
+- routing_hint: ${route}
+
+## Clean Intake Statement
+
+${result.clean_statement}
+
+## System Questions
+
+${result.questions.length ? result.questions.map((question) => `- ${question}`).join("\n") : "- 暂无，材料可进入下一步处理。"}
+
+## Next Step
+
+${result.next_step}
+
+## Stored Inputs
+
+- text: ${text ? `${intakeRel}/input.md` : "none"}
+
+## Stored Files
+
+${fileRefs}
+
+## Original Text Snapshot
+
+${text || "_No text submitted._"}
+`;
+}
+
+function sanitizeFilename(value) {
+  const cleaned = String(value)
+    .replace(/[<>:"/\\|?*\x00-\x1F]/g, "-")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-+|-+$/g, "");
+  return cleaned || `upload-${Date.now()}`;
+}
+
+function decodeDataUrl(dataUrl) {
+  const match = String(dataUrl).match(/^data:.*?;base64,(.*)$/);
+  if (!match) {
+    throw new Error("Uploaded file must be base64 data URL");
+  }
+  return Buffer.from(match[1], "base64");
 }
 
 async function pathExists(path) {
