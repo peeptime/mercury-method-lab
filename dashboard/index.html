@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Mercury Control v2026.04.26-f</title>
-    <link rel="stylesheet" href="/styles.css?v=20260426f">
+    <title>Mercury Method Lab</title>
+    <link rel="stylesheet" href="/styles.css?v=20260501a">
   </head>
   <body>
     <main class="shell">
@@ -12,9 +12,15 @@
         <div class="brand">
           <span class="brand-mark">M</span>
           <div>
-            <strong>Mercury</strong>
-            <span data-i18n="brandSubtitle">Local lifecycle console</span>
+            <strong>Method Lab</strong>
+            <span data-i18n="brandSubtitle">Agent-first intake</span>
           </div>
+        </div>
+        <div class="rail-section">
+          <p data-i18n="railPrimary">Primary path</p>
+          <a href="#submit" data-i18n="railSubmit">Submit viewpoint</a>
+          <a href="#intake" data-i18n="railIntake">Intake queue</a>
+          <a href="#artifacts" data-i18n="railArtifacts">Internal artifacts</a>
         </div>
         <nav id="capabilities" class="capabilities"></nav>
       </aside>
@@ -22,9 +28,9 @@
       <section class="workspace">
         <header class="topbar">
           <div>
-            <p class="eyebrow" data-i18n="eyebrow">Lifecycle workbench</p>
-            <h1 data-i18n="pageTitle">Artifacts, review, audit, and execution</h1>
-            <p class="build-badge">GUI build: 2026.04.26-f</p>
+            <p class="eyebrow" data-i18n="eyebrow">Agent-first submission layer</p>
+            <h1 data-i18n="pageTitle">Submit a viewpoint, then let the pipeline carry it.</h1>
+            <p class="build-badge">GUI build: 2026.05.01-a</p>
           </div>
           <div class="toolbar">
             <span class="language-label" data-i18n="languageLabel">Language</span>
@@ -39,9 +45,77 @@
 
         <div id="appStatus" class="app-status warning" role="status">JavaScript is not started yet.</div>
 
+        <section id="submit" class="hero-flow">
+          <article class="submit-card">
+            <div class="panel-head">
+              <div>
+                <h2 data-i18n="submitTitle">Submit a viewpoint</h2>
+                <p data-i18n="submitDesc">Write once. Mercury stores it as a public intake file and creates an agent-readable queue envelope.</p>
+              </div>
+            </div>
+            <form id="viewpointForm" class="viewpoint-form">
+              <label>
+                <span data-i18n="fieldTitle">Title</span>
+                <input name="title" type="text" required placeholder="例如：AI 热度不等于预算迁移">
+              </label>
+              <label>
+                <span data-i18n="submitterLabel">Submitter</span>
+                <input name="submitter" type="text" value="local-gui">
+              </label>
+              <label>
+                <span data-i18n="routeLabel">Routing hint</span>
+                <select name="routing_hint">
+                  <option value="factual-cleaning">factual-cleaning</option>
+                  <option value="structural-judgment">structural-judgment</option>
+                  <option value="content-commercial-diagnosis">content-commercial-diagnosis</option>
+                  <option value="action-translation">action-translation</option>
+                </select>
+              </label>
+              <label>
+                <span data-i18n="sourceKindLabel">Source kind</span>
+                <select name="source_kind">
+                  <option value="original">original</option>
+                  <option value="cited-public-source">cited-public-source</option>
+                  <option value="private-note">private-note</option>
+                  <option value="unknown">unknown</option>
+                </select>
+              </label>
+              <label class="span-2">
+                <span data-i18n="viewpointLabel">Viewpoint markdown</span>
+                <textarea name="content" rows="7" required placeholder="写观点、证据、疑问。这里不是最终结论，只是入口材料。"></textarea>
+              </label>
+              <div class="submit-actions span-2">
+                <button class="primary-action" type="submit" data-i18n="submitButton">Submit to intake</button>
+                <span data-i18n="submitNote">No truth approval happens here. It only enters the intake queue.</span>
+              </div>
+            </form>
+          </article>
+
+          <aside class="flow-card">
+            <h2 data-i18n="flowTitle">What happens next</h2>
+            <ol>
+              <li><strong data-i18n="flowStep1Title">Intake</strong><span data-i18n="flowStep1Desc">Save markdown under submissions/viewpoints.</span></li>
+              <li><strong data-i18n="flowStep2Title">Agent queue</strong><span data-i18n="flowStep2Desc">Create a JSON envelope for OpenClaw or Hermes-like agents.</span></li>
+              <li><strong data-i18n="flowStep3Title">Promote</strong><span data-i18n="flowStep3Desc">Move selected intake into 00_raw without approving it as truth.</span></li>
+              <li><strong data-i18n="flowStep4Title">Route</strong><span data-i18n="flowStep4Desc">Then clean, judge, audit, or translate into action.</span></li>
+            </ol>
+          </aside>
+        </section>
+
+        <section id="intake" class="intake-panel">
+          <div class="panel-head">
+            <div>
+              <h2 data-i18n="intakeTitle">Intake queue</h2>
+              <p data-i18n="intakeDesc">Recent submissions waiting for promotion into raw evidence.</p>
+            </div>
+            <span id="queueCount" class="queue-count">0 agent tasks</span>
+          </div>
+          <div id="submissionRows" class="submission-list"></div>
+        </section>
+
         <section class="metrics" id="metrics"></section>
 
-        <section class="workbench">
+        <section id="artifacts" class="workbench">
           <article class="panel artifact-panel">
             <div class="panel-head">
               <div>
@@ -152,6 +226,6 @@
         </section>
       </section>
     </main>
-    <script src="/app.js?v=20260426f" type="module"></script>
+    <script src="/app.js?v=20260501a" type="module"></script>
   </body>
 </html>

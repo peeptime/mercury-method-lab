@@ -2,14 +2,14 @@ import { createServer } from "node:http";
 import { execFile } from "node:child_process";
 import { appendFile, mkdir, readdir, readFile, stat, writeFile } from "node:fs/promises";
 import { createReadStream } from "node:fs";
-import { dirname, extname, join, normalize, relative } from "node:path";
+import { basename, dirname, extname, join, normalize, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
 const dashboardRoot = join(root, "dashboard");
 const port = Number(process.env.MERCURY_DASHBOARD_PORT || 4788);
 const lifecycleLogPath = join(root, "data", "lifecycle-log.jsonl");
-const appVersion = "2026.04.26-f";
+const appVersion = "2026.05.01-a";
 
 const artifactDirs = [
   "00_inbox",
@@ -77,6 +77,16 @@ const server = createServer(async (req, res) => {
       return sendJson(res, await buildOverview());
     }
 
+    if (url.pathname === "/api/submission/viewpoint" && req.method === "POST") {
+      const body = await readJson(req);
+      return sendJson(res, await createViewpointSubmission(body));
+    }
+
+    if (url.pathname === "/api/submission/promote" && req.method === "POST") {
+      const body = await readJson(req);
+      return sendJson(res, await promoteViewpointSubmission(body.path));
+    }
+
     if (url.pathname === "/api/artifact" && req.method === "GET") {
       return sendJson(res, await getArtifactDetail(url.searchParams.get("path")));
     }
@@ -142,6 +152,7 @@ async function buildOverview() {
   const artifacts = await collectArtifacts();
   const statusCounts = buildStatusCounts(artifacts, stateMachine.states);
   const lifecycleLog = await readLifecycleLog();
+  const submissions = await collectSubmissions();
   const reviewQueue = artifacts
     .filter((artifact) => artifact.review_at && !["approved", "superseded", "rejected"].includes(artifact.status))
     .sort((a, b) => a.review_at.localeCompare(b.review_at));
@@ -158,6 +169,7 @@ async function buildOverview() {
     methods,
     entrypoints,
     integrations,
+    submissions,
     artifacts,
     statusCounts,
     lifecycleLog,
@@ -200,6 +212,52 @@ async function collectArtifacts() {
   }
 
   return artifacts.sort((a, b) => a.path.localeCompare(b.path));
+}
+
+async function collectSubmissions() {
+  const submissionsRoot = join(root, "submissions", "viewpoints");
+  const queueRoot = join(root, "submissions", "agent-queue");
+  const [viewpointFiles, queueFiles] = await Promise.all([
+    safeListFiles(submissionsRoot),
+    safeListFiles(queueRoot)
+  ]);
+
+  const viewpoints = [];
+  for (const file of viewpointFiles.filter((item) => item.endsWith(".md"))) {
+    const text = await readFile(file, "utf8");
+    const fileStat = await stat(file);
+    const metadata = parseSubmissionFrontmatter(text);
+    const relPath = relative(root, file).replaceAll("\\", "/");
+    const date = normalizeDate(metadata.created_at);
+    const title = metadata.title || relPath.split("/").pop().replace(/\.md$/i, "");
+    const rawPath = date ? join(root, "00_raw", `${date}-${slugify(title)}.md`) : "";
+
+    viewpoints.push({
+      path: relPath,
+      name: relPath.split("/").pop(),
+      title,
+      submitter: metadata.submitter || "unknown",
+      routing_hint: metadata.routing_hint || "factual-cleaning",
+      source_kind: metadata.source_kind || "unknown",
+      visibility: metadata.visibility || "public",
+      created_at: metadata.created_at || "",
+      updated_at: fileStat.mtime.toISOString(),
+      promoted: rawPath ? await pathExists(rawPath) : false
+    });
+  }
+
+  return {
+    viewpoints: viewpoints.sort((a, b) => b.updated_at.localeCompare(a.updated_at)),
+    queue_count: queueFiles.filter((item) => item.endsWith(".json")).length
+  };
+}
+
+async function safeListFiles(dir) {
+  try {
+    return await listFiles(dir);
+  } catch {
+    return [];
+  }
 }
 
 async function listFiles(dir) {
@@ -415,6 +473,87 @@ async function createArtifact(body) {
   return await getArtifactDetail(relPath);
 }
 
+async function createViewpointSubmission(body) {
+  const title = String(body.title || "").trim();
+  const content = String(body.content || "").trim();
+  if (!title || !content) {
+    throw new Error("title and content are required");
+  }
+
+  const today = new Date().toISOString().slice(0, 10);
+  const createdAt = normalizeDate(body.created_at) || today;
+  const routingHint = String(body.routing_hint || "factual-cleaning").trim();
+  const slug = slugify(title) || `viewpoint-${Date.now()}`;
+  const submissionRel = `submissions/viewpoints/${createdAt}-${slug}.md`;
+  const submissionPath = join(root, submissionRel);
+  const queueRel = `submissions/agent-queue/${createdAt}-${slug}.json`;
+  const queuePath = join(root, queueRel);
+
+  const markdown = `---\nschema_version: "0.1"\nsubmission_type: viewpoint\ntitle: "${escapeYaml(title)}"\nsubmitter: "${escapeYaml(body.submitter || "local-gui")}"\nlicense_intent: "${escapeYaml(body.license_intent || "review-only")}"\nvisibility: "${escapeYaml(body.visibility || "public")}"\nsource_kind: "${escapeYaml(body.source_kind || "original")}"\nrouting_hint: "${escapeYaml(routingHint)}"\ncreated_at: "${createdAt}"\n---\n\n# ${title}\n\n${content}\n`;
+  const envelope = {
+    schema_version: "0.1",
+    task_type: "promote-submission",
+    source_path: submissionRel,
+    preferred_route: routingHint,
+    requested_outputs: ["raw_artifact", "routing_recommendation"],
+    human_review_required: true
+  };
+
+  await mkdir(dirname(submissionPath), { recursive: true });
+  await mkdir(dirname(queuePath), { recursive: true });
+  await writeFile(submissionPath, markdown, "utf8");
+  await writeFile(queuePath, `${JSON.stringify(envelope, null, 2)}\n`, "utf8");
+  await appendLifecycleEvent({
+    action: "submission.create",
+    path: submissionRel,
+    note: `routing_hint=${routingHint}`
+  });
+
+  return {
+    ok: true,
+    submission: {
+      path: submissionRel,
+      queue_path: queueRel,
+      title,
+      routing_hint: routingHint
+    }
+  };
+}
+
+async function promoteViewpointSubmission(path) {
+  const sourcePath = assertSubmissionPath(path);
+  const text = await readFile(sourcePath, "utf8");
+  const frontmatter = parseSubmissionFrontmatter(text);
+  const slug = slugify(frontmatter.title || basename(sourcePath, ".md")) || `viewpoint-${Date.now()}`;
+  const date = normalizeDate(frontmatter.created_at) || new Date().toISOString().slice(0, 10);
+  const id = `${date}-${slug}`;
+  const targetRel = `00_raw/${id}.md`;
+  const targetPath = join(root, targetRel);
+
+  if (await pathExists(targetPath)) {
+    return {
+      ok: true,
+      artifact: await getArtifactDetail(targetRel),
+      already_exists: true
+    };
+  }
+
+  const output = `# ${frontmatter.title || slug}\n\n## Artifact Metadata\n\n- schema_version: 0.1\n- id: ${id}\n- type: raw\n- status: draft\n- owner_role: collector\n- source_refs: ${relative(root, sourcePath).replaceAll("\\", "/")}\n- created_at: ${date}\n- review_at: ${date}\n- submission_type: viewpoint\n- submitter: ${frontmatter.submitter || "unknown"}\n- license_intent: ${frontmatter.license_intent || "review-only"}\n- visibility: ${frontmatter.visibility || "public"}\n- source_kind: ${frontmatter.source_kind || "unknown"}\n- routing_hint: ${frontmatter.routing_hint || "factual-cleaning"}\n\n## Original Submission\n\n${stripFrontmatter(text).trim()}\n\n## Promotion Notes\n\n- Promoted from user submission.\n- This artifact is raw intake, not an approved fact or memory.\n- Next recommended route: ${frontmatter.routing_hint || "factual-cleaning"}\n`;
+
+  await writeFile(targetPath, output, "utf8");
+  await appendLifecycleEvent({
+    action: "submission.promote",
+    path: targetRel,
+    note: `source=${relative(root, sourcePath).replaceAll("\\", "/")}`
+  });
+
+  return {
+    ok: true,
+    artifact: await getArtifactDetail(targetRel),
+    already_exists: false
+  };
+}
+
 function pickMetadataUpdates(body) {
   const allowed = new Set(["status", "owner_role", "review_at", "source_refs", "decision_refs"]);
   const updates = {};
@@ -529,6 +668,20 @@ function assertArtifactPath(path) {
   return normalized;
 }
 
+function assertSubmissionPath(path) {
+  if (!path || typeof path !== "string") {
+    throw new Error("Submission path is required");
+  }
+  const normalized = normalize(path).replaceAll("\\", "/");
+  if (normalized.startsWith("../") || normalized.startsWith("/") || normalized.includes(":/")) {
+    throw new Error(`Invalid submission path: ${path}`);
+  }
+  if (!normalized.startsWith("submissions/viewpoints/") || !normalized.endsWith(".md")) {
+    throw new Error(`Path is outside viewpoint submissions: ${path}`);
+  }
+  return join(root, normalized);
+}
+
 async function readLifecycleLog(limit = 120) {
   try {
     const text = await readFile(lifecycleLogPath, "utf8");
@@ -558,9 +711,45 @@ function slugify(value) {
   return value
     .toLowerCase()
     .normalize("NFKD")
-    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/[^a-z0-9\u4e00-\u9fa5]+/g, "-")
     .replace(/^-+|-+$/g, "")
     .slice(0, 64);
+}
+
+function parseSubmissionFrontmatter(markdown) {
+  const match = markdown.match(/^---\r?\n([\s\S]*?)\r?\n---/);
+  if (!match) return {};
+
+  const data = {};
+  for (const line of match[1].split(/\r?\n/)) {
+    const pair = line.match(/^([A-Za-z0-9_-]+):\s*(.*)$/);
+    if (!pair) continue;
+    data[pair[1]] = unquote(pair[2].trim());
+  }
+  return data;
+}
+
+function stripFrontmatter(markdown) {
+  return markdown.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n?/, "");
+}
+
+function normalizeDate(value) {
+  if (!value) return "";
+  const match = String(value).match(/^\d{4}-\d{2}-\d{2}/);
+  return match ? match[0] : "";
+}
+
+function escapeYaml(value) {
+  return String(value ?? "").replaceAll("\\", "\\\\").replaceAll('"', '\\"');
+}
+
+async function pathExists(path) {
+  try {
+    await stat(path);
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 async function runAllowedCommand(script) {

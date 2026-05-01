@@ -19,9 +19,13 @@ const ownerRoles = [
 
 const translations = {
   zh: {
-    brandSubtitle: "\u672c\u5730\u751f\u547d\u5468\u671f\u63a7\u5236\u53f0",
-    eyebrow: "\u751f\u547d\u5468\u671f\u5de5\u4f5c\u53f0",
-    pageTitle: "Artifact\u3001\u590d\u67e5\u3001\u5ba1\u8ba1\u4e0e\u6267\u884c",
+    brandSubtitle: "\u667a\u80fd\u4f53\u4f18\u5148\u5165\u53e3",
+    railPrimary: "\u4e3b\u8def\u5f84",
+    railSubmit: "\u63d0\u4ea4\u89c2\u70b9",
+    railIntake: "\u5165\u53e3\u961f\u5217",
+    railArtifacts: "\u5185\u90e8 artifact",
+    eyebrow: "\u667a\u80fd\u4f53\u4f18\u5148\u63d0\u4ea4\u5c42",
+    pageTitle: "\u5148\u63d0\u4ea4\u89c2\u70b9\uff0c\u518d\u8ba9\u6d41\u6c34\u7ebf\u627f\u63a5\u3002",
     refresh: "\u5237\u65b0",
     languageLabel: "\u8bed\u8a00",
     artifactTableTitle: "Artifact \u5de5\u4f5c\u53f0",
@@ -50,6 +54,28 @@ const translations = {
     fieldType: "\u7c7b\u578b",
     fieldSourceRef: "\u6765\u6e90\u5f15\u7528",
     createButton: "\u521b\u5efa\u53ef\u8ffd\u8e2a artifact",
+    submitTitle: "\u63d0\u4ea4\u4e00\u4e2a\u89c2\u70b9",
+    submitDesc: "\u5199\u4e00\u6b21\u3002Mercury \u4f1a\u4fdd\u5b58\u4e3a\u516c\u5f00\u5165\u53e3\u6587\u4ef6\uff0c\u5e76\u751f\u6210\u667a\u80fd\u4f53\u53ef\u8bfb\u7684\u961f\u5217 envelope\u3002",
+    submitterLabel: "\u63d0\u4ea4\u8005",
+    routeLabel: "\u5efa\u8bae\u8def\u7531",
+    sourceKindLabel: "\u6765\u6e90\u7c7b\u578b",
+    viewpointLabel: "\u89c2\u70b9 markdown",
+    submitButton: "\u63d0\u4ea4\u5230\u5165\u53e3\u5c42",
+    submitNote: "\u8fd9\u91cc\u4e0d\u6279\u51c6\u4e3a\u771f\uff0c\u53ea\u662f\u8fdb\u5165 intake queue\u3002",
+    flowTitle: "\u4e0b\u4e00\u6b65\u53d1\u751f\u4ec0\u4e48",
+    flowStep1Title: "\u5165\u53e3",
+    flowStep1Desc: "\u4fdd\u5b58\u5230 submissions/viewpoints\u3002",
+    flowStep2Title: "\u667a\u80fd\u4f53\u961f\u5217",
+    flowStep2Desc: "\u4e3a OpenClaw \u6216\u7231\u9a6c\u4ed5\u7c7b\u667a\u80fd\u4f53\u751f\u6210 JSON envelope\u3002",
+    flowStep3Title: "\u63d0\u5347",
+    flowStep3Desc: "\u9009\u4e2d\u540e\u8fdb\u5165 00_raw\uff0c\u4f46\u4e0d\u6279\u51c6\u4e3a\u771f\u3002",
+    flowStep4Title: "\u8def\u7531",
+    flowStep4Desc: "\u518d\u8fdb\u884c\u6e05\u6d17\u3001\u5224\u65ad\u3001\u5ba1\u8ba1\u6216\u884c\u52a8\u8f6c\u8bd1\u3002",
+    intakeTitle: "\u5165\u53e3\u961f\u5217",
+    intakeDesc: "\u6700\u8fd1\u63d0\u4ea4\uff0c\u7b49\u5f85\u63d0\u5347\u4e3a\u539f\u59cb\u8bc1\u636e\u3002",
+    promoteButton: "\u63d0\u5347\u5230 00_raw",
+    promotedLabel: "\u5df2\u63d0\u5347",
+    noSubmissions: "\u8fd8\u6ca1\u6709\u63d0\u4ea4\u3002\u5148\u5728\u4e0a\u65b9\u5199\u4e00\u6761\u89c2\u70b9\u3002",
     executionTitle: "\u6267\u884c",
     executionDesc: "\u8fd0\u884c\u9879\u76ee\u767d\u540d\u5355\u5185\u7684\u7ef4\u62a4\u547d\u4ee4\u3002",
     waitingExecution: "\u7b49\u5f85\u6267\u884c...",
@@ -83,9 +109,13 @@ const translations = {
     capabilityCurrentUse: "\u5f53\u524d\u7528\u9014"
   },
   en: {
-    brandSubtitle: "Local lifecycle console",
-    eyebrow: "Lifecycle workbench",
-    pageTitle: "Artifacts, review, audit, and execution",
+    brandSubtitle: "Agent-first intake",
+    railPrimary: "Primary path",
+    railSubmit: "Submit viewpoint",
+    railIntake: "Intake queue",
+    railArtifacts: "Internal artifacts",
+    eyebrow: "Agent-first submission layer",
+    pageTitle: "Submit a viewpoint, then let the pipeline carry it.",
     refresh: "Refresh",
     languageLabel: "Language",
     artifactTableTitle: "Artifact workbench",
@@ -114,6 +144,28 @@ const translations = {
     fieldType: "Type",
     fieldSourceRef: "Source ref",
     createButton: "Create tracked artifact",
+    submitTitle: "Submit a viewpoint",
+    submitDesc: "Write once. Mercury stores it as a public intake file and creates an agent-readable queue envelope.",
+    submitterLabel: "Submitter",
+    routeLabel: "Routing hint",
+    sourceKindLabel: "Source kind",
+    viewpointLabel: "Viewpoint markdown",
+    submitButton: "Submit to intake",
+    submitNote: "No truth approval happens here. It only enters the intake queue.",
+    flowTitle: "What happens next",
+    flowStep1Title: "Intake",
+    flowStep1Desc: "Save markdown under submissions/viewpoints.",
+    flowStep2Title: "Agent queue",
+    flowStep2Desc: "Create a JSON envelope for OpenClaw or Hermes-like agents.",
+    flowStep3Title: "Promote",
+    flowStep3Desc: "Move selected intake into 00_raw without approving it as truth.",
+    flowStep4Title: "Route",
+    flowStep4Desc: "Then clean, judge, audit, or translate into action.",
+    intakeTitle: "Intake queue",
+    intakeDesc: "Recent submissions waiting for promotion into raw evidence.",
+    promoteButton: "Promote to 00_raw",
+    promotedLabel: "Promoted",
+    noSubmissions: "No submissions yet. Write the first viewpoint above.",
     executionTitle: "Execution",
     executionDesc: "Run allowlisted project maintenance commands.",
     waitingExecution: "Waiting for execution...",
@@ -201,6 +253,7 @@ function init() {
 
 function bindEvents() {
   $("#refreshButton").addEventListener("click", load);
+  $("#viewpointForm").addEventListener("submit", createViewpointSubmission);
   $("#artifactSearch").addEventListener("input", (event) => {
     artifactSearch = event.target.value.trim().toLowerCase();
     if (data) {
@@ -235,6 +288,12 @@ function bindEvents() {
     const transitionButton = event.target.closest("[data-transition-status]");
     if (transitionButton) {
       await saveArtifact({ status: transitionButton.dataset.transitionStatus });
+      return;
+    }
+
+    const promoteButton = event.target.closest("[data-promote-submission]");
+    if (promoteButton) {
+      await promoteSubmission(promoteButton.dataset.promoteSubmission);
       return;
     }
 
@@ -329,6 +388,7 @@ function render() {
   }
   renderCapabilities();
   renderProviderSelect();
+  renderSubmissions();
   renderMetrics();
   renderFilters();
   renderArtifacts();
@@ -354,6 +414,8 @@ function renderEmptyState(message) {
   $("#detailPath").textContent = "-";
   $("#artifactDetail").innerHTML = `<div class="empty">${escapeHtml(message)}</div>`;
   $("#lifecycleLog").innerHTML = `<div class="empty">${escapeHtml(message)}</div>`;
+  $("#submissionRows").innerHTML = `<div class="empty">${escapeHtml(message)}</div>`;
+  $("#queueCount").textContent = "0 agent tasks";
 }
 
 function setStatus(message, type = "info") {
@@ -410,6 +472,28 @@ function renderMetrics() {
   ];
   $(".metrics").innerHTML = metrics.map(([label, value]) => `
     <div class="metric"><span>${label}</span><strong>${value}</strong></div>
+  `).join("");
+}
+
+function renderSubmissions() {
+  const submissions = data.submissions?.viewpoints || [];
+  const queueCount = data.submissions?.queue_count || 0;
+  $("#queueCount").textContent = `${queueCount} agent task${queueCount === 1 ? "" : "s"}`;
+  if (!submissions.length) {
+    $("#submissionRows").innerHTML = `<div class="empty">${t("noSubmissions")}</div>`;
+    return;
+  }
+
+  $("#submissionRows").innerHTML = submissions.slice(0, 8).map((submission) => `
+    <article class="submission-item">
+      <div>
+        <strong>${escapeHtml(submission.title)}</strong>
+        <span>${escapeHtml(submission.path)} | ${escapeHtml(submission.routing_hint)}</span>
+      </div>
+      ${submission.promoted
+        ? `<span class="status approved">${t("promotedLabel")}</span>`
+        : `<button type="button" data-promote-submission="${escapeAttr(submission.path)}">${t("promoteButton")}</button>`}
+    </article>
   `).join("");
 }
 
@@ -563,6 +647,44 @@ async function createArtifact(event) {
   selectedDetail = result;
   await load();
   showOutput(`${t("created")}: ${selectedPath}`);
+}
+
+async function createViewpointSubmission(event) {
+  event.preventDefault();
+  const form = event.currentTarget;
+  const formData = new FormData(form);
+  const payload = Object.fromEntries(formData.entries());
+  const response = await fetch("/api/submission/viewpoint", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+  });
+  const result = await response.json();
+  if (!result.ok) {
+    showOutput(`${t("failed")}: ${result.error || "unknown error"}`);
+    return;
+  }
+  form.reset();
+  form.elements.submitter.value = "local-gui";
+  await load();
+  showOutput(`${t("created")}: ${result.submission.path}\nagent queue: ${result.submission.queue_path}`);
+}
+
+async function promoteSubmission(path) {
+  const response = await fetch("/api/submission/promote", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ path })
+  });
+  const result = await response.json();
+  if (!result.ok) {
+    showOutput(`${t("failed")}: ${result.error || "unknown error"}`);
+    return;
+  }
+  selectedPath = result.artifact.artifact.path;
+  selectedDetail = result.artifact;
+  await load();
+  showOutput(`${t("promotedLabel")}: ${selectedPath}`);
 }
 
 async function runCommand(script) {
