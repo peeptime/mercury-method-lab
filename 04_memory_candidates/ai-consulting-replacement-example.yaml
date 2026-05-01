@@ -1,0 +1,19 @@
+schema_version: "0.1"
+id: ai-consulting-replacement-example
+type: memory_candidate
+status: review_ready
+content: "AI 工具爆火不等于立即替代传统咨询；必须先区分舆论热度、企业采购和实际预算迁移。"
+source_refs:
+  - "00_raw/ai-consulting-replacement-example.md"
+decision_refs:
+  - "05_decision_logs/ai-consulting-replacement-example.md"
+confidence: medium
+time_scope: short-to-mid
+use_case: "评估 AI 对咨询行业的结构冲击时，防止把热度误判成替代。"
+risk: medium
+risk_note: "若过早固化为长期记忆，可能放大一次性舆论事件。"
+discarded: false
+discarded_note: "全面替代、立刻替代、咨询将消失等未证实强结论未进入长期记忆。"
+owner_role: memory-curator
+created_at: "2026-04-25"
+review_at: "2026-05-02"

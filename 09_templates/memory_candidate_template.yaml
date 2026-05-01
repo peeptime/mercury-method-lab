@@ -1,0 +1,17 @@
+schema_version: "0.1"
+id:
+type: memory_candidate
+status: draft
+content:
+source_refs:
+  -
+decision_refs:
+  -
+confidence: medium
+time_scope:
+use_case:
+risk: medium
+discarded: false
+owner_role: memory-curator
+created_at:
+review_at:

@@ -1,0 +1,22 @@
+{
+  "version": "0.1",
+  "active_method": "v8",
+  "methods": {
+    "v8": {
+      "status": "active",
+      "purpose": "Structural judgment and event analysis.",
+      "primary_docs": [
+        "../PSP-V8.0-突围者事件研判执行提示词.md",
+        "../PSP-V8.1-与市场同频的真实理解事件研判执行提示词.md",
+        "../纠偏压缩PSP-聪明人装聪明验证-v8.5.md"
+      ],
+      "artifact_flow": "default"
+    },
+    "future-method": {
+      "status": "reserved",
+      "purpose": "Reserved slot for future reasoning methods that need the same evidence, memory, decision, action, and audit loop.",
+      "primary_docs": [],
+      "artifact_flow": "default"
+    }
+  }
+}

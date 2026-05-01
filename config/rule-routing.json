@@ -1,0 +1,50 @@
+{
+  "version": "0.1",
+  "default_policy": "Route by task type, evidence state, and risk level. Do not activate all skills for every request.",
+  "routes": [
+    {
+      "id": "factual-cleaning",
+      "when": "Input contains raw material, claims, sources, or timeline uncertainty.",
+      "primary_skill": "fact-cleaner",
+      "required_outputs": ["facts", "speculation", "gaps", "source_quality"]
+    },
+    {
+      "id": "structural-judgment",
+      "when": "Input asks whether power, incentives, rules, paths, markets, or systems changed.",
+      "primary_method": "v8",
+      "pre_checks": ["fact-cleaner", "equilibrium-explainer"],
+      "post_checks": ["redteam-auditor"]
+    },
+    {
+      "id": "content-commercial-diagnosis",
+      "when": "Input concerns public writing, self-media, audience path, offer, trust, conversion, or monetization.",
+      "status": "planned",
+      "primary_skill": "content-diagnostics",
+      "policy": "Implement as original Mercury Method Lab skill. Do not import dbskill text, atoms, naming, or structure."
+    },
+    {
+      "id": "action-translation",
+      "when": "A judgment needs concrete next steps, stop conditions, or acceptance criteria.",
+      "primary_skill": "action-translator",
+      "required_outputs": ["immediate_action", "today", "three_days", "stop_condition", "acceptance_criteria"]
+    },
+    {
+      "id": "high-risk-audit",
+      "when": "A conclusion can affect money, legal exposure, public trust, irreversible work, or project direction.",
+      "primary_skill": "redteam-auditor",
+      "required_artifact": "07_audit_reports"
+    },
+    {
+      "id": "memory-migration",
+      "when": "Approved artifacts should move into another memory architecture or upstream Mercury Agent runtime recall.",
+      "primary_doc": "docs/memory-architecture-migration.md",
+      "required_artifacts": ["migration_bundle", "audit_report", "rollback_plan"]
+    },
+    {
+      "id": "publication",
+      "when": "Work is prepared for GitHub, bilingual readers, or public practice guidance.",
+      "primary_doc": "docs/publication-plan.md",
+      "required_checks": ["license_source_policy", "readme_bilingual", "quickstart_reproducible"]
+    }
+  ]
+}

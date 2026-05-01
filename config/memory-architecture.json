@@ -1,0 +1,48 @@
+{
+  "version": "0.1",
+  "current_architecture": "artifact-first-filesystem",
+  "source_of_truth": "markdown_yaml_artifacts",
+  "migration_allowed": true,
+  "migration_position": "Memory may move to a new runtime architecture, but evidence sovereignty and reversible migration must be preserved.",
+  "memory_layers": {
+    "evidence": {
+      "path": "00_raw/",
+      "role": "Original material. Never rewritten by migration."
+    },
+    "cleaned_facts": {
+      "path": "02_cleaned/",
+      "role": "Separated fact and inference."
+    },
+    "memory_candidates": {
+      "path": "04_memory_candidates/",
+      "role": "Reviewable candidates before durable reuse."
+    },
+    "decision_memory": {
+      "path": "05_decision_logs/",
+      "role": "Why a judgment was accepted, deferred, or rejected."
+    },
+    "audit_memory": {
+      "path": "07_audit_reports/",
+      "role": "Failure modes and counter-evidence."
+    },
+    "runtime_memory": {
+      "preferred_external_path": "~/.mercury/memory/",
+      "role": "Upstream Mercury Agent runtime recall, including Second Brain if enabled."
+    }
+  },
+  "migration_gates": [
+    "inventory existing artifacts",
+    "map each candidate to a memory type and source_refs",
+    "generate a reversible migration bundle",
+    "shadow-test recall without deleting artifact originals",
+    "write an audit report before cutover",
+    "keep rollback instructions with the migration bundle"
+  ],
+  "forbidden_migrations": [
+    "delete source artifacts after import",
+    "collapse uncertainty into durable memory",
+    "import unapproved candidates into runtime memory",
+    "write to upstream SQLite directly without a schema-aware adapter",
+    "mix third-party licensed text into public memory exports without source policy review"
+  ]
+}

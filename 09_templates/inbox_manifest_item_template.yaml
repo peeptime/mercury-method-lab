@@ -1,0 +1,12 @@
+id:
+title:
+path:
+source_type:
+status: staged
+ingestion_policy: defer_until_needed
+extract_when:
+tags:
+  -
+notes:
+created_at:
+review_at:

@@ -1,0 +1,40 @@
+{
+  "version": "0.1",
+  "observed_at": "2026-05-01",
+  "upstream": {
+    "repo": "https://github.com/cosmicstack-labs/mercury-agent",
+    "package": "@cosmicstack/mercury-agent",
+    "observed_package_version": "1.1.4",
+    "license": "MIT"
+  },
+  "compatibility_target": {
+    "mode": "rolling-compatible",
+    "preferred_range": ">=1.1.0 <2.0.0",
+    "minimum_reason": "1.0.0 introduced the stable ~/.mercury data architecture and Second Brain memory; 1.1.x keeps evolving provider support without changing the core memory boundary.",
+    "upgrade_policy": "Track upstream release notes before relying on changed memory, permissions, skills, provider, daemon, or scheduler behavior."
+  },
+  "integration_policy": {
+    "relationship": "companion-workspace",
+    "allowed": [
+      "sync local skills into ~/.mercury/skills",
+      "export approved artifacts into upstream-readable markdown/json bundles",
+      "read upstream version and runtime paths",
+      "map approved memory candidates into a migration envelope"
+    ],
+    "forbidden": [
+      "vendor upstream source code into this repository",
+      "assume a fixed upstream internal file layout beyond documented runtime paths",
+      "write directly into upstream Second Brain SQLite without a migration adapter",
+      "treat local Mercury Method Lab artifacts as upstream runtime state"
+    ]
+  },
+  "watch_points": [
+    "skills format",
+    "permissions.yaml schema",
+    "schedules.yaml schema",
+    "memory/second-brain database schema",
+    "provider configuration names",
+    "daemon/service behavior",
+    "CLI command names"
+  ]
+}

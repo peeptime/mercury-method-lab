@@ -1,0 +1,160 @@
+{
+  "version": "0.2",
+  "capabilities": {
+    "conversation": {
+      "label": {
+        "zh": "对话入口",
+        "en": "Conversation"
+      },
+      "status": "active",
+      "original_purpose": {
+        "zh": "通过 CLI 或 Telegram 发起对话。",
+        "en": "Start conversations through CLI or Telegram."
+      },
+      "current_use": {
+        "zh": "输入 V8.0 或其他方法的分析任务。",
+        "en": "Submit V8.0 and other method-analysis tasks."
+      },
+      "entrypoints": [
+        "npm run start:llm",
+        "npm run test:skill"
+      ]
+    },
+    "local-files": {
+      "label": {
+        "zh": "本地文件管理",
+        "en": "Local Files"
+      },
+      "status": "active",
+      "original_purpose": {
+        "zh": "读取、创建、编辑和删除文件。",
+        "en": "Read, create, edit, and delete files."
+      },
+      "current_use": {
+        "zh": "管理 raw、cleaned、audit 和 action 文档。",
+        "en": "Manage raw, cleaned, audit, and action artifacts."
+      },
+      "entrypoints": [
+        "00_raw",
+        "02_cleaned",
+        "07_audit_reports",
+        "06_action_plans"
+      ]
+    },
+    "commands": {
+      "label": {
+        "zh": "命令执行",
+        "en": "Commands"
+      },
+      "status": "active",
+      "original_purpose": {
+        "zh": "执行 shell、npm、git 等命令。",
+        "en": "Run shell, npm, git, and related commands."
+      },
+      "current_use": {
+        "zh": "更新看板、执行脚本并整理目录。",
+        "en": "Refresh the dashboard, run scripts, and maintain the workspace."
+      },
+      "entrypoints": [
+        "npm run doctor",
+        "npm run validate",
+        "npm run sync:skills"
+      ]
+    },
+    "git": {
+      "label": {
+        "zh": "Git 工具",
+        "en": "Git"
+      },
+      "status": "reserved",
+      "original_purpose": {
+        "zh": "查看 status、diff、commit 和 push。",
+        "en": "Inspect status, diff, commit, and push."
+      },
+      "current_use": {
+        "zh": "管理本地 V8 / Mercury 后台仓库。",
+        "en": "Manage the local V8 / Mercury backend repository."
+      },
+      "entrypoints": [
+        "git status",
+        "git diff"
+      ]
+    },
+    "skills": {
+      "label": {
+        "zh": "技能系统",
+        "en": "Skills"
+      },
+      "status": "reserved",
+      "original_purpose": {
+        "zh": "安装和调用专项技能。",
+        "en": "Install and invoke specialized skills."
+      },
+      "current_use": {
+        "zh": "运行 fact-cleaner、redteam-auditor 等能力。",
+        "en": "Run capabilities such as fact-cleaner and redteam-auditor."
+      },
+      "entrypoints": [
+        "08_skills",
+        "npm run sync:skills"
+      ]
+    },
+    "scheduler": {
+      "label": {
+        "zh": "调度器",
+        "en": "Scheduler"
+      },
+      "status": "reserved",
+      "original_purpose": {
+        "zh": "处理定时任务和周期提醒。",
+        "en": "Handle scheduled jobs and recurring reminders."
+      },
+      "current_use": {
+        "zh": "预留给每日复盘、每周审计和过期检查。",
+        "en": "Reserved for daily review, weekly audit, and expiry checks."
+      },
+      "entrypoints": [
+        "review queue",
+        "state-machine"
+      ]
+    },
+    "second-brain": {
+      "label": {
+        "zh": "第二大脑",
+        "en": "Second Brain"
+      },
+      "status": "reserved",
+      "original_purpose": {
+        "zh": "自动提取偏好、目标、项目、习惯和决策。",
+        "en": "Capture preferences, goals, projects, habits, and decisions."
+      },
+      "current_use": {
+        "zh": "记录长期判断和项目原则。",
+        "en": "Track long-term judgments and project principles."
+      },
+      "entrypoints": [
+        "04_memory_candidates",
+        "05_decision_logs"
+      ]
+    },
+    "permissions": {
+      "label": {
+        "zh": "权限系统",
+        "en": "Permissions"
+      },
+      "status": "reserved",
+      "original_purpose": {
+        "zh": "控制可读写范围与命令执行权限。",
+        "en": "Control read/write scope and command execution rights."
+      },
+      "current_use": {
+        "zh": "防止误改本地文件或越权执行。",
+        "en": "Prevent unsafe file edits or unauthorized execution."
+      },
+      "entrypoints": [
+        "config/permissions.json",
+        "config/architecture-entrypoints.json"
+      ]
+    }
+  }
+}

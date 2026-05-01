@@ -1,0 +1,51 @@
+{
+  "version": "0.1",
+  "entrypoints": {
+    "cli": {
+      "status": "active",
+      "purpose": "Local operation and automation.",
+      "references": ["package.json", "docs/execution-loop.md"]
+    },
+    "frontend": {
+      "status": "reserved",
+      "purpose": "Future local dashboard for artifact review, state movement, audits, and model switching.",
+      "suggested_modules": ["artifact-inbox", "decision-timeline", "audit-board", "memory-review", "provider-switcher", "skill-registry"],
+      "references": ["docs/architecture-entrypoints.md"]
+    },
+    "backend": {
+      "status": "reserved",
+      "purpose": "Future HTTP API around artifacts, states, skills, providers, audits, and exports.",
+      "suggested_modules": ["artifacts", "states", "skills", "providers", "audits", "exports"],
+      "references": ["docs/architecture-entrypoints.md"]
+    },
+    "database": {
+      "status": "active-index",
+      "purpose": "Generated index and dashboard acceleration layer. Markdown/YAML remains source of truth.",
+      "recommended_first_step": "SQLite plus portable JSON index",
+      "references": ["docs/architecture-entrypoints.md"]
+    },
+    "vector-index": {
+      "status": "reserved",
+      "purpose": "Future retrieval for approved memory candidates and raw evidence.",
+      "activation_condition": "Only after filesystem lookup becomes too slow or memory reuse becomes frequent.",
+      "references": ["docs/architecture-entrypoints.md"]
+    },
+    "local-agent": {
+      "status": "reserved",
+      "purpose": "Local agent bridge for OpenClaw or similar tools.",
+      "references": ["docs/openclaw-integration.md", "config/model-providers.json"]
+    },
+    "upstream-mercury-agent": {
+      "status": "reserved",
+      "purpose": "Compatibility adapter for cosmicstack-labs/mercury-agent runtime iteration without making this repository a fork.",
+      "suggested_modules": ["version-check", "skill-sync", "memory-export", "runtime-status"],
+      "references": ["docs/upstream-mercury-agent-compatibility.md", "config/upstream-mercury-agent.json"]
+    },
+    "memory-migration": {
+      "status": "reserved",
+      "purpose": "Reversible migration of approved artifact sediment into upstream or future memory architectures.",
+      "suggested_modules": ["inventory", "migration-envelope", "dry-run-recall", "rollback"],
+      "references": ["docs/memory-architecture-migration.md", "config/memory-architecture.json"]
+    }
+  }
+}

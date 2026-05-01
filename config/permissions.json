@@ -1,0 +1,39 @@
+{
+  "version": "0.1",
+  "roles": {
+    "collector": {
+      "read": ["00_raw"],
+      "write": ["00_raw", "01_segmented"],
+      "approve": []
+    },
+    "cleaner": {
+      "read": ["00_raw", "01_segmented"],
+      "write": ["02_cleaned", "03_uncertain"],
+      "approve": []
+    },
+    "memory-curator": {
+      "read": ["02_cleaned", "03_uncertain", "05_decision_logs"],
+      "write": ["04_memory_candidates"],
+      "approve": []
+    },
+    "decision-owner": {
+      "read": ["00_raw", "01_segmented", "02_cleaned", "03_uncertain", "04_memory_candidates", "07_audit_reports"],
+      "write": ["05_decision_logs", "06_action_plans"],
+      "approve": ["05_decision_logs"]
+    },
+    "auditor": {
+      "read": ["00_raw", "01_segmented", "02_cleaned", "03_uncertain", "04_memory_candidates", "05_decision_logs", "06_action_plans"],
+      "write": ["07_audit_reports"],
+      "approve": ["07_audit_reports"]
+    },
+    "operator": {
+      "read": ["10_exports", "scripts", "docs"],
+      "write": [],
+      "approve": []
+    }
+  },
+  "secret_policy": {
+    "allowed_locations": [".env", "runtime environment"],
+    "forbidden_patterns": ["ARK_API_KEY", "OPENAI_API_KEY", "Bearer "]
+  }
+}

@@ -1,0 +1,15 @@
+$ErrorActionPreference = "Stop"
+
+if (-not $env:ARK_API_KEY) {
+  Write-Error "Missing ARK_API_KEY"
+}
+
+$model = if ($env:ARK_MODEL) { $env:ARK_MODEL } else { "doubao-seed-2.0-code" }
+
+$env:DEFAULT_PROVIDER = "openai"
+$env:OPENAI_API_KEY = $env:ARK_API_KEY
+$env:OPENAI_BASE_URL = "https://ark.cn-beijing.volces.com/api/coding/v3"
+$env:OPENAI_MODEL = $model
+$env:OPENAI_ENABLED = "true"
+
+npx.cmd --cache "Z:\AI 202604\trae01\.npm-cache" @cosmicstack/mercury-agent start --foreground

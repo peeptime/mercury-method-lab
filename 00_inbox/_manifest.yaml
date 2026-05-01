@@ -1,0 +1,7 @@
+schema_version: "0.1"
+type: source_manifest
+status: staged
+owner_role: collector
+created_at: "2026-04-25"
+review_at: "2026-05-02"
+items: []

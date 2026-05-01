@@ -1,0 +1,12 @@
+{
+  "version": "0.1",
+  "integrations": {
+    "markitdown": {
+      "status": "disabled",
+      "purpose": "Optional converter for external PDF, Word, PowerPoint, Excel, HTML, image, audio, ZIP, and URL sources before they enter 00_raw.",
+      "enable_condition": "Set MERCURY_MARKITDOWN_ENABLED=true and make Python 3.10+ available.",
+      "entrypoint": "npm run ingest:doc -- <file-or-url> [output-name]",
+      "default_policy": "Do not use in the core V8-Mercury flow unless source material is not already markdown or plain text."
+    }
+  }
+}

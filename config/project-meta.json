@@ -1,0 +1,20 @@
+{
+  "project_name": "Mercury Method Lab",
+  "package_name": "mercury-method-lab",
+  "version": "0.2.0",
+  "codename": "Open Orbit",
+  "status": "architecture-hardening",
+  "position": "A companion method, evidence, audit, and migration lab for Mercury Agent-compatible workflows.",
+  "version_policy": {
+    "major": "Breaks artifact, memory, or upstream compatibility contracts.",
+    "minor": "Adds a new compatible architecture capability, adapter, migration path, or public workflow.",
+    "patch": "Fixes docs, validation, scripts, or non-breaking metadata."
+  },
+  "compatibility_posture": {
+    "upstream_project": "cosmicstack-labs/mercury-agent",
+    "relationship": "companion-workspace",
+    "not_a_fork": true,
+    "not_a_vendor_copy": true,
+    "do_not_lock_to_local_runtime": true
+  }
+}

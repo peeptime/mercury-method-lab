@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Mercury Control v2026.04.26-f</title>
+    <link rel="stylesheet" href="/styles.css?v=20260426f">
+  </head>
+  <body>
+    <main class="shell">
+      <aside class="rail">
+        <div class="brand">
+          <span class="brand-mark">M</span>
+          <div>
+            <strong>Mercury</strong>
+            <span data-i18n="brandSubtitle">Local lifecycle console</span>
+          </div>
+        </div>
+        <nav id="capabilities" class="capabilities"></nav>
+      </aside>
+
+      <section class="workspace">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow" data-i18n="eyebrow">Lifecycle workbench</p>
+            <h1 data-i18n="pageTitle">Artifacts, review, audit, and execution</h1>
+            <p class="build-badge">GUI build: 2026.04.26-f</p>
+          </div>
+          <div class="toolbar">
+            <span class="language-label" data-i18n="languageLabel">Language</span>
+            <div id="languageMode" class="language-mode" aria-label="Language mode">
+              <button type="button" data-locale="zh">&#20013;&#25991;</button>
+              <button type="button" data-locale="en">EN</button>
+            </div>
+            <select id="providerSelect" aria-label="Provider"></select>
+            <button id="refreshButton" type="button" data-i18n="refresh">Refresh</button>
+          </div>
+        </header>
+
+        <div id="appStatus" class="app-status warning" role="status">JavaScript is not started yet.</div>
+
+        <section class="metrics" id="metrics"></section>
+
+        <section class="workbench">
+          <article class="panel artifact-panel">
+            <div class="panel-head">
+              <div>
+                <h2 data-i18n="artifactTableTitle">Artifact workbench</h2>
+                <p data-i18n="artifactTableDesc">Select a file to inspect, edit, and move through lifecycle states.</p>
+              </div>
+            </div>
+            <div class="artifact-tools">
+              <input id="artifactSearch" type="search" placeholder="Search artifacts">
+              <div class="segmented" id="artifactFilters"></div>
+            </div>
+            <div class="table-wrap artifact-table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th data-i18n="artifactFile">File</th>
+                    <th data-i18n="artifactType">Type</th>
+                    <th data-i18n="artifactStatus">Status</th>
+                    <th data-i18n="artifactOwner">Owner</th>
+                    <th data-i18n="artifactReview">Review</th>
+                  </tr>
+                </thead>
+                <tbody id="artifactRows"></tbody>
+              </table>
+            </div>
+          </article>
+
+          <aside class="panel detail-panel">
+            <div class="panel-head">
+              <div>
+                <h2 data-i18n="detailTitle">Artifact detail</h2>
+                <p id="detailPath">-</p>
+              </div>
+            </div>
+            <div id="artifactDetail" class="detail-body"></div>
+          </aside>
+        </section>
+
+        <section class="lower-grid">
+          <article class="panel create-panel">
+            <div class="panel-head">
+              <div>
+                <h2 data-i18n="createTitle">Create artifact</h2>
+                <p data-i18n="createDesc">Start a tracked decision, action plan, audit report, memory candidate, or raw note.</p>
+              </div>
+            </div>
+            <form id="createForm" class="form-grid">
+              <label>
+                <span data-i18n="fieldTitle">Title</span>
+                <input name="title" type="text" required>
+              </label>
+              <label>
+                <span data-i18n="fieldType">Type</span>
+                <select name="type">
+                  <option value="decision_log">decision_log</option>
+                  <option value="action_plan">action_plan</option>
+                  <option value="audit_report">audit_report</option>
+                  <option value="memory_candidate">memory_candidate</option>
+                  <option value="raw">raw</option>
+                </select>
+              </label>
+              <label>
+                <span data-i18n="fieldOwner">Owner role</span>
+                <select name="owner_role" id="createOwner"></select>
+              </label>
+              <label>
+                <span data-i18n="fieldReviewAt">Review date</span>
+                <input name="review_at" type="date">
+              </label>
+              <label class="span-2">
+                <span data-i18n="fieldSourceRef">Source ref</span>
+                <input name="source_ref" type="text">
+              </label>
+              <label class="span-2">
+                <span data-i18n="fieldNote">Note</span>
+                <textarea name="note" rows="2"></textarea>
+              </label>
+              <button type="submit" data-i18n="createButton">Create tracked artifact</button>
+            </form>
+          </article>
+
+          <article class="panel">
+            <div class="panel-head">
+              <div>
+                <h2 data-i18n="executionTitle">Execution</h2>
+                <p data-i18n="executionDesc">Run allowlisted project maintenance commands.</p>
+              </div>
+            </div>
+            <div class="commands">
+              <button data-run="doctor" type="button">Doctor</button>
+              <button data-run="index" type="button">Index</button>
+              <button data-run="validate" type="button">Validate</button>
+              <button data-run="sync:skills" type="button">Sync Skills</button>
+              <button data-run="test:llm" type="button">Test LLM</button>
+            </div>
+            <pre id="commandOutput" class="output" data-i18n="waitingExecution">Waiting for execution...</pre>
+          </article>
+
+          <article class="panel lifecycle-panel">
+            <div class="panel-head">
+              <div>
+                <h2 data-i18n="logTitle">Lifecycle log</h2>
+                <p data-i18n="logDesc">Every GUI change is appended to data/lifecycle-log.jsonl.</p>
+              </div>
+            </div>
+            <div id="lifecycleLog" class="timeline"></div>
+          </article>
+        </section>
+      </section>
+    </main>
+    <script src="/app.js?v=20260426f" type="module"></script>
+  </body>
+</html>

@@ -1,0 +1,20 @@
+{
+  "version": "0.1",
+  "states": ["staged", "deferred", "indexed", "draft", "review_ready", "audited", "approved", "superseded", "rejected"],
+  "transitions": {
+    "staged": ["deferred", "indexed", "draft", "rejected"],
+    "deferred": ["indexed", "draft", "rejected"],
+    "indexed": ["draft", "superseded", "rejected"],
+    "draft": ["review_ready", "rejected"],
+    "review_ready": ["audited", "rejected"],
+    "audited": ["approved", "rejected"],
+    "approved": ["superseded"],
+    "superseded": [],
+    "rejected": []
+  },
+  "required_evidence": {
+    "review_ready": ["source_refs", "owner_role"],
+    "audited": ["audit_report"],
+    "approved": ["decision_log", "audit_report"]
+  }
+}
