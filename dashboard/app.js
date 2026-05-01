@@ -3,6 +3,7 @@ let selectedPath = "";
 let selectedDetail = null;
 let artifactFilter = "all";
 let artifactSearch = "";
+let lastIntakeResult = null;
 const localeStorageKey = "mercury-locale-v3";
 let locale = normalizeLocale(localStorage.getItem(localeStorageKey));
 
@@ -412,6 +413,9 @@ function render() {
   renderArtifacts();
   renderDetail();
   renderLifecycleLog();
+  if (lastIntakeResult) {
+    renderIntakeResult(lastIntakeResult.intake, lastIntakeResult.queuePath);
+  }
 }
 
 function renderStaticText() {
@@ -422,6 +426,10 @@ function renderStaticText() {
     node.placeholder = t(node.dataset.i18nPlaceholder);
   });
   $("#artifactSearch").placeholder = t("artifactSearch");
+  if (!lastIntakeResult) {
+    $("#intakeResult").className = "intake-result empty";
+    $("#intakeResult").textContent = t("intakeResultEmpty");
+  }
 }
 
 function renderEmptyState(message) {
@@ -732,11 +740,15 @@ async function createIntake(event) {
     return;
   }
 
+  lastIntakeResult = {
+    intake: result.intake,
+    queuePath: result.queue_path
+  };
   form.reset();
   selectedPath = result.intake.raw_artifact;
   selectedDetail = null;
-  renderIntakeResult(result.intake, result.queue_path);
   await load();
+  renderIntakeResult(result.intake, result.queue_path);
 }
 
 function renderIntakeResult(intake, queuePath) {
