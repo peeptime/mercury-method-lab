@@ -1,6 +1,6 @@
 {
   "name": "mercury-method-lab",
-  "version": "0.2.0",
+  "version": "0.3.3",
   "private": true,
   "type": "module",
   "description": "Companion method, evidence, audit, and migration lab for Mercury Agent-compatible workflows.",
@@ -11,6 +11,7 @@
     "index": "node scripts/rebuild_index.mjs",
     "import:viewpoint": "node scripts/import_viewpoint.mjs",
     "ingest:doc": "node scripts/ingest_document.mjs",
+    "v8:analyze": "node scripts/run_v8_analysis.mjs",
     "sync:skills": "node scripts/sync_skills.mjs",
     "validate": "node scripts/validate_artifacts.mjs",
     "test:llm": "node scripts/test_ark_coding_plan.mjs",

@@ -4,7 +4,25 @@
 
 ### Added
 
-- Recorded system wiki strategy as a next-version discussion topic instead of opening a separate GitHub Wiki immediately.
+- `execution_mode` 配置字段：支持 API 模式和 Agent 模式切换
+- `scripts/run_v8_analysis.mjs` V8.0 自动化执行脚本
+- AGENT_ENTRY.md AI 和人类的入口文档
+- UX 优化报告：8 项 UI 改进
+- 系统成熟度评估文档
+- 创新工程实践指导 V8 分析 artifact
+- EXECUTION-MODE-DESIGN.md 执行模式设计文档
+
+## 0.3.3 — Execution Mode
+
+Execution mode feature release.
+
+### Added
+
+- `execution_mode` 配置字段：支持 API 模式和 Agent 模式切换
+  - `api`：使用 V8 执行脚本 + API token（确定性高，成本高）
+  - `agent`：使用 AI Agent 智能做 V8 分析（成本低，质量依赖 Agent）
+- 存储始终激活约束：无论哪种模式，Mercury Lab 的存储管理必须始终激活
+- `docs/EXECUTION-MODE-DESIGN.md` 执行模式设计文档
 
 ## 0.2.0 — Open Orbit
 
@@ -23,6 +41,9 @@ Architecture hardening release.
 - Agent-first submission layer for markdown viewpoints and OpenClaw/Hermes-like agent queue envelopes.
 - GitHub Issue and PR templates for public intake.
 - `npm run import:viewpoint` to promote user viewpoint markdown into raw artifacts without approving it as truth.
+- V8.0 自动化执行脚本 `run_v8_analysis.mjs`
+- Dashboard UX 8 项优化
+- 系统成熟度评估（当前 70%，缺少 fact-cleaner 和 Dashboard 集成）
 
 ### Changed
 
