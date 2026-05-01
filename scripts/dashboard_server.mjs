@@ -553,7 +553,7 @@ async function createIntake(body) {
   const now = new Date();
   const date = now.toISOString().slice(0, 10);
   const stamp = now.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}Z$/, "Z");
-  const title = inferIntakeTitle(text, files);
+  let title = inferIntakeTitle(text, files);
   const id = `${date}-${stamp.toLowerCase()}-${slugify(title) || "intake"}`;
   const intakeRel = `submissions/inbox/${id}`;
   const intakeDir = join(root, intakeRel);
@@ -561,6 +561,7 @@ async function createIntake(body) {
   const rawRel = `00_raw/${id}.md`;
   const rawPath = join(root, rawRel);
   const savedFiles = [];
+  const extractedTexts = [];
 
   await mkdir(intakeDir, { recursive: true });
   await mkdir(join(root, filesRel), { recursive: true });
@@ -574,17 +575,29 @@ async function createIntake(body) {
     const targetRel = `${filesRel}/${safeName}`;
     const targetPath = join(root, targetRel);
     const bytes = decodeDataUrl(file.dataUrl || "");
+    const extractedText = extractTextFromUpload(safeName, file.type || "", bytes);
     await writeFile(targetPath, bytes);
     savedFiles.push({
       name: safeName,
       path: targetRel,
       type: file.type || "application/octet-stream",
-      size_bytes: bytes.length
+      size_bytes: bytes.length,
+      text_extracted: Boolean(extractedText)
     });
+    if (extractedText) {
+      extractedTexts.push({
+        name: safeName,
+        text: extractedText
+      });
+    }
   }
 
-  const route = inferRoute(text, savedFiles);
-  const result = buildIntakeResult({ text, files: savedFiles, route, title });
+  const analysisText = [text, ...extractedTexts.map((item) => item.text)].filter(Boolean).join("\n\n");
+  if (!text && analysisText) {
+    title = inferIntakeTitle(analysisText, savedFiles);
+  }
+  const route = inferRoute(analysisText, savedFiles);
+  const result = buildIntakeResult({ text: analysisText, files: savedFiles, route, title });
   const manifest = {
     schema_version: "0.1",
     id,
@@ -610,7 +623,7 @@ async function createIntake(body) {
 
   await writeFile(join(intakeDir, "manifest.json"), `${JSON.stringify(manifest, null, 2)}\n`, "utf8");
   await writeFile(join(root, queueRel), `${JSON.stringify(envelope, null, 2)}\n`, "utf8");
-  await writeFile(rawPath, renderRawIntakeArtifact({ id, title, date, intakeRel, text, savedFiles, route, result }), "utf8");
+  await writeFile(rawPath, renderRawIntakeArtifact({ id, title, date, intakeRel, text, savedFiles, extractedTexts, route, result }), "utf8");
 
   await appendLifecycleEvent({
     action: "intake.create",
@@ -867,13 +880,13 @@ function inferRoute(text, files) {
   if (files.length > 0 && !text) {
     return "factual-cleaning";
   }
-  if (/自媒体|内容|标题|流量|粉丝|变现|选题|publish|content|audience|creator/.test(normalized)) {
+  if (/自媒体|标题|流量|粉丝|变现|选题|公众号|小红书|短视频|发布策略|内容创作|publish|content strategy|audience|creator/.test(normalized)) {
     return "content-commercial-diagnosis";
   }
   if (/行动|计划|下一步|执行|落地|action|todo|plan/.test(normalized)) {
     return "action-translation";
   }
-  if (/结构|权力|规则|路径|系统|市场|竞争|structure|power|market|system/.test(normalized)) {
+  if (/结构|权力|规则|路径|系统|市场|竞争|维度|判别|模型|算力|验证|创新|解释|判断|structure|power|market|system|dimension|model|verification|judgment/.test(normalized)) {
     return "structural-judgment";
   }
   return "factual-cleaning";
@@ -887,8 +900,10 @@ function buildIntakeResult({ text, files, route, title }) {
     : `已接收 ${files.length} 个文件，当前尚未解析文件正文。`;
   const questions = [];
 
-  if (hasFiles) {
-    questions.push("这些文件是否可以被转换、OCR 或摘要？如果包含隐私内容，应先标记为 private-note。");
+  if (hasFiles && !files.some((file) => file.text_extracted)) {
+    questions.push("这些文件暂未解析正文：如果是图片、PDF 或 Word，后续需要 OCR/转换/摘要。");
+  } else if (hasFiles) {
+    questions.push("已从文本类文件中抽取正文；若还有图片、PDF 或 Word，后续仍需转换。");
   }
   if (text.length < 80 && !hasFiles) {
     questions.push("这条材料较短：你希望系统把它当作观点、问题、行动请求，还是待归档素材？");
@@ -916,8 +931,11 @@ function summarizeText(text) {
   return `${compact.slice(0, 180)}...`;
 }
 
-function renderRawIntakeArtifact({ id, title, date, intakeRel, text, savedFiles, route, result }) {
-  const fileRefs = savedFiles.map((file) => `- ${file.path} (${file.type}, ${file.size_bytes} bytes)`).join("\n") || "- none";
+function renderRawIntakeArtifact({ id, title, date, intakeRel, text, savedFiles, extractedTexts, route, result }) {
+  const fileRefs = savedFiles.map((file) => `- ${file.path} (${file.type}, ${file.size_bytes} bytes, text_extracted=${file.text_extracted})`).join("\n") || "- none";
+  const extractedTextBlock = extractedTexts.length
+    ? extractedTexts.map((file) => `### ${file.name}\n\n${file.text}`).join("\n\n")
+    : "_No file text extracted._";
   return `# ${title}
 
 ## Artifact Metadata
@@ -956,6 +974,10 @@ ${fileRefs}
 ## Original Text Snapshot
 
 ${text || "_No text submitted._"}
+
+## Extracted File Text
+
+${extractedTextBlock}
 `;
 }
 
@@ -974,6 +996,21 @@ function decodeDataUrl(dataUrl) {
     throw new Error("Uploaded file must be base64 data URL");
   }
   return Buffer.from(match[1], "base64");
+}
+
+function extractTextFromUpload(name, mimeType, bytes) {
+  const lower = name.toLowerCase();
+  const textLike = mimeType.startsWith("text/")
+    || /\.(md|markdown|txt|json|jsonl|csv|tsv|yaml|yml|xml|html|css|js|mjs|ts|tsx)$/i.test(lower);
+  if (!textLike) {
+    return "";
+  }
+
+  const text = bytes.toString("utf8").replace(/^\uFEFF/, "").trim();
+  if (!text || text.includes("\u0000")) {
+    return "";
+  }
+  return text.slice(0, 24000);
 }
 
 async function pathExists(path) {
