@@ -9,7 +9,8 @@ const root = dirname(dirname(fileURLToPath(import.meta.url)));
 const dashboardRoot = join(root, "dashboard");
 const port = Number(process.env.MERCURY_DASHBOARD_PORT || 4788);
 const lifecycleLogPath = join(root, "data", "lifecycle-log.jsonl");
-const appVersion = "2026.05.01-a";
+const appVersion = "2026.05.02-a";
+const expectedClientAssetVersion = "20260502a";
 
 const artifactDirs = [
   "00_inbox",
@@ -70,7 +71,15 @@ const server = createServer(async (req, res) => {
     const url = new URL(req.url, `http://${req.headers.host}`);
 
     if (url.pathname === "/api/health" && req.method === "GET") {
-      return sendJson(res, { ok: true, app: "mercury-dashboard", version: appVersion });
+      const packageJson = await readJsonFile("package.json");
+      return sendJson(res, {
+        ok: true,
+        app: "mercury-dashboard",
+        version: appVersion,
+        packageVersion: packageJson.version,
+        nodeVersion: process.version,
+        expectedClientAssetVersion
+      });
     }
 
     if (url.pathname === "/api/overview" && req.method === "GET") {
@@ -120,6 +129,11 @@ const server = createServer(async (req, res) => {
       return sendJson(res, await setActiveProvider(body.provider));
     }
 
+    if (url.pathname === "/api/execution-mode" && req.method === "PATCH") {
+      const body = await readJson(req);
+      return sendJson(res, await setExecutionMode(body.mode));
+    }
+
     if (url.pathname === "/api/capability" && req.method === "PATCH") {
       const body = await readJson(req);
       return sendJson(res, await setCapabilityStatus(body.key, body.status));
@@ -143,7 +157,8 @@ async function buildOverview() {
     capabilities,
     methods,
     entrypoints,
-    integrations
+    integrations,
+    packageJson
   ] = await Promise.all([
     readJsonFile("config/state-machine.json"),
     readJsonFile("config/permissions.json"),
@@ -151,7 +166,8 @@ async function buildOverview() {
     readJsonFile("config/mercury-capabilities.json"),
     readJsonFile("config/methods.json"),
     readJsonFile("config/architecture-entrypoints.json"),
-    readJsonFile("config/integrations.json")
+    readJsonFile("config/integrations.json"),
+    readJsonFile("package.json")
   ]);
 
   const artifacts = await collectArtifacts();
@@ -165,6 +181,9 @@ async function buildOverview() {
   return {
     ok: true,
     appVersion,
+    expectedClientAssetVersion,
+    packageVersion: packageJson.version,
+    nodeVersion: process.version,
     generated_at: new Date().toISOString(),
     root,
     stateMachine,
@@ -1052,6 +1071,18 @@ async function setActiveProvider(providerName) {
   config.active_provider = providerName;
   await writeJsonFile("config/model-providers.json", config);
   return { ok: true, active_provider: providerName };
+}
+
+async function setExecutionMode(mode) {
+  const allowed = new Set(["api", "agent"]);
+  if (!allowed.has(mode)) {
+    throw new Error(`Invalid execution mode: ${mode}`);
+  }
+
+  const config = await readJsonFile("config/methods.json");
+  config.execution_mode = mode;
+  await writeJsonFile("config/methods.json", config);
+  return { ok: true, execution_mode: mode };
 }
 
 async function setCapabilityStatus(key, status) {

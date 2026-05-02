@@ -1,0 +1,13 @@
+{
+  "schema_version": "0.1",
+  "task_type": "process-intake",
+  "source_path": "submissions/inbox/2026-05-01-20260501t082653z-维度识别局限的表达-md/manifest.json",
+  "preferred_route": "structural-judgment",
+  "requested_outputs": [
+    "clean_statement",
+    "questions",
+    "raw_artifact",
+    "routing_recommendation"
+  ],
+  "human_review_required": true
+}

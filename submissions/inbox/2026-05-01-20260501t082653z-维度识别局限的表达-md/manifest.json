@@ -1,0 +1,29 @@
+{
+  "schema_version": "0.1",
+  "id": "2026-05-01-20260501t082653z-维度识别局限的表达-md",
+  "title": "大模型维度突破与判别能力：长期储存版",
+  "kind": "raw-user-material",
+  "created_at": "2026-05-01T08:26:53.261Z",
+  "text_path": "",
+  "files": [
+    {
+      "name": "维度识别局限的表达.md",
+      "path": "submissions/inbox/2026-05-01-20260501t082653z-维度识别局限的表达-md/files/维度识别局限的表达.md",
+      "type": "application/octet-stream",
+      "size_bytes": 17205,
+      "text_extracted": true
+    }
+  ],
+  "route": "structural-judgment",
+  "raw_artifact": "00_raw/2026-05-01-20260501t082653z-维度识别局限的表达-md.md",
+  "result": {
+    "title": "大模型维度突破与判别能力：长期储存版",
+    "clean_statement": "# 大模型维度突破与判别能力：长期储存版 ## 0. 文档定位 本文用于长期储存本次讨论中形成的核心认知结构。 它不是对话记录，而是对一次认知碰撞的压缩：从“白酒/光模块隐喻判断”出发，延展到大模型的判别能力、维度突破、创新能力、算力价值、真实验证路径，以及当前大模型为什么仍然容易停留在“顺滑解释”而不是“有效判断”。 核心问题： > 当多个解释都能讲通时，...",
+    "route": "structural-judgment",
+    "questions": [
+      "已从文本类文件中抽取正文；若还有图片、PDF 或 Word，后续仍需转换。",
+      "这个判断是否会影响项目方向、公开表达或资源投入？若会，后续需要审计。"
+    ],
+    "next_step": "建议进入 structural-judgment 路由，但仍需保留原始材料。"
+  }
+}

@@ -2,7 +2,7 @@
 
 > 版本：0.3.0 → 0.3.3 迭代
 > 生成时间：2026-05-01 23:05 GMT+8
-> 状态：已记录，待实现
+> 状态：已实现（2026-05-02）
 
 ---
 
@@ -167,11 +167,24 @@ AI Agent 告知用户结果
 
 | 优先级 | 任务 | 状态 |
 |--------|------|------|
-| 🔴 P0 | 修改 `config/methods.json`，加 `execution_mode` 字段 | 待实现 |
-| 🔴 P0 | 更新 `AGENT_ENTRY.md`，说明两种模式 | 待实现 |
-| 🟡 P1 | 更新 `mercury-lab` skill，说明模式切换逻辑 | 待实现 |
-| 🟡 P1 | 更新 Dashboard UI，添加模式切换（可选） | 待实现 |
-| 🟢 P2 | 更新 CHANGELOG.md | 待实现 |
+| 🔴 P0 | 修改 `config/methods.json`，加 `execution_mode` 字段 | 已实现 |
+| 🔴 P0 | 更新 `AGENT_ENTRY.md`，说明两种模式 | 已实现 |
+| 🟡 P1 | 更新 `mercury-lab` skill，说明模式切换逻辑 | 已实现 |
+| 🟡 P1 | 更新 Dashboard UI，添加模式切换（可选） | 已实现 |
+| 🟢 P2 | 更新 CHANGELOG.md | 已实现 |
+
+---
+
+## 实现记录
+
+2026-05-02 已完成：
+
+- `config/methods.json` 增加 `execution_mode: "api"` 和 `execution_mode_description`。
+- Dashboard 后端增加 `PATCH /api/execution-mode`。
+- Dashboard 前端增加 Execution mode 切换控件，可在 `api` / `agent` 间切换并写回配置。
+- `docs/AGENT_ENTRY.md` 增加 API 模式和 Agent 模式说明。
+- `~/.qclaw-oversea/skills/mercury-lab/SKILL.md` 增加模式切换逻辑。
+- `CHANGELOG.md` 增加本次实现记录。
 
 ---
 

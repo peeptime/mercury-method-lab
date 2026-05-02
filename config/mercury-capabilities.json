@@ -46,7 +46,7 @@
         "zh": "命令执行",
         "en": "Commands"
       },
-      "status": "active",
+      "status": "reserved",
       "original_purpose": {
         "zh": "执行 shell、npm、git 等命令。",
         "en": "Run shell, npm, git, and related commands."

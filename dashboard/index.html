@@ -4,7 +4,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Mercury Method Lab</title>
-    <link rel="stylesheet" href="/styles.css?v=20260501b">
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="/styles.css?v=20260502a">
   </head>
   <body>
     <main class="shell">
@@ -16,20 +17,13 @@
             <span data-i18n="brandSubtitle">Agent-first intake</span>
           </div>
         </div>
-        <div class="rail-language">
-          <span class="language-label" data-i18n="languageLabel">Language</span>
-          <div class="language-mode" aria-label="Language mode">
-            <button type="button" data-locale="zh">&#20013;&#25991;</button>
-            <button type="button" data-locale="en">EN</button>
-          </div>
-        </div>
         <div class="rail-section">
           <p data-i18n="railPrimary">Primary path</p>
           <a href="#submit" data-i18n="railSubmit">Submit viewpoint</a>
           <a href="#intake" data-i18n="railIntake">Intake queue</a>
           <a href="#artifacts" data-i18n="railArtifacts">Internal artifacts</a>
         </div>
-        <details class="system-capabilities">
+        <details class="system-capabilities" open>
           <summary data-i18n="systemSurfaces">System surfaces</summary>
           <nav id="capabilities" class="capabilities"></nav>
         </details>
@@ -40,15 +34,31 @@
           <div>
             <p class="eyebrow" data-i18n="eyebrow">Agent-first submission layer</p>
             <h1 data-i18n="pageTitle">Submit a viewpoint, then let the pipeline carry it.</h1>
-            <p class="build-badge">GUI build: 2026.05.01-a</p>
           </div>
           <div class="toolbar">
+            <span id="buildBadge" class="build-badge" aria-label="GUI build">v2026.05.02-a</span>
+            <div class="topbar-language">
+              <span class="language-label" data-i18n="languageLabel">Language</span>
+              <div class="language-mode" aria-label="Language mode">
+                <button type="button" data-locale="zh">&#20013;&#25991;</button>
+                <button type="button" data-locale="en">EN</button>
+              </div>
+            </div>
             <select id="providerSelect" aria-label="Provider"></select>
             <button id="refreshButton" type="button" data-i18n="refresh">Refresh</button>
           </div>
         </header>
 
-        <div id="appStatus" class="app-status warning" role="status">JavaScript is not started yet.</div>
+        <div id="appStatus" class="app-status info" role="status">正在初始化...</div>
+        <div id="versionHint" class="version-hint" role="status">版本检查中...</div>
+
+        <section class="mode-card" aria-labelledby="executionModeTitle">
+          <div>
+            <h2 id="executionModeTitle" data-i18n="executionModeTitle">Execution mode</h2>
+            <p id="executionModeDesc">-</p>
+          </div>
+          <div class="segmented mode-toggle" id="executionModeButtons" aria-label="Execution mode"></div>
+        </section>
 
         <section id="submit" class="hero-flow">
           <article class="submit-card">
@@ -73,6 +83,7 @@
                 <span data-i18n="submitNote">You provide material. The system handles naming, storage, routing, and first response.</span>
               </div>
             </form>
+            <a href="#artifacts" class="quick-link" data-i18n="quickArtifacts">查看历史 artifacts &rarr;</a>
             <div id="intakeResult" class="intake-result empty">Submit material to see the system's clean intake statement here.</div>
           </article>
 
@@ -211,6 +222,6 @@
         </section>
       </section>
     </main>
-    <script src="/app.js?v=20260501d" type="module"></script>
+    <script src="/app.js?v=20260502a" type="module"></script>
   </body>
 </html>

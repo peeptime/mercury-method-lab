@@ -4,7 +4,9 @@ let selectedDetail = null;
 let artifactFilter = "all";
 let artifactSearch = "";
 let lastIntakeResult = null;
+let commandOutputTouched = false;
 const localeStorageKey = "mercury-locale-v3";
+const capabilitiesOpenStorageKey = "mercury-capabilities-open-v1";
 let locale = normalizeLocale(localStorage.getItem(localeStorageKey));
 
 const $ = (selector) => document.querySelector(selector);
@@ -25,11 +27,18 @@ const translations = {
     railSubmit: "\u63d0\u4ea4\u89c2\u70b9",
     railIntake: "\u5165\u53e3\u961f\u5217",
     railArtifacts: "\u5185\u90e8 artifact",
-    systemSurfaces: "\u7cfb\u7edf\u80fd\u529b\uff08\u6298\u53e0\uff09",
+    systemSurfaces: "\u7cfb\u7edf\u80fd\u529b",
     eyebrow: "\u667a\u80fd\u4f53\u4f18\u5148\u63d0\u4ea4\u5c42",
     pageTitle: "\u5148\u63d0\u4ea4\u89c2\u70b9\uff0c\u518d\u8ba9\u6d41\u6c34\u7ebf\u627f\u63a5\u3002",
     refresh: "\u5237\u65b0",
     languageLabel: "\u8bed\u8a00",
+    executionModeTitle: "\u6267\u884c\u6a21\u5f0f",
+    executionModeApi: "API \u6a21\u5f0f",
+    executionModeAgent: "Agent \u6a21\u5f0f",
+    executionModeFallback: "\u5f53\u524d\u6a21\u5f0f\uff1a{mode}",
+    executionModeSaved: "\u6267\u884c\u6a21\u5f0f\u5df2\u5207\u6362\u4e3a {mode}",
+    versionHintOk: "\u7248\u672c\uff1a\u540e\u7aef {app} \u00b7 \u524d\u7aef {asset} \u00b7 package {pkg} \u00b7 Node {node}",
+    versionHintMismatch: "\u7248\u672c\u63d0\u793a\uff1a\u540e\u7aef {app} \u9884\u671f\u524d\u7aef {expected}\uff0c\u5f53\u524d\u52a0\u8f7d {asset}\u3002\u8bf7\u5f3a\u5237\u65b0\u9875\u9762\uff1b\u5982\u679c\u4ecd\u7136\u4e0d\u4e00\u81f4\uff0c\u91cd\u542f dashboard\u3002",
     artifactTableTitle: "Artifact \u5de5\u4f5c\u53f0",
     artifactTableDesc: "\u9009\u4e2d\u6587\u4ef6\u540e\u53ef\u67e5\u770b\u8be6\u60c5\u3001\u4fee\u6539\u5143\u6570\u636e\u3001\u63a8\u8fdb\u72b6\u6001\u3002",
     artifactFile: "\u6587\u4ef6",
@@ -67,6 +76,7 @@ const translations = {
     fileHint: "\u56fe\u7247\u3001Markdown\u3001txt\u3001pdf\u3001docx \u6216\u5176\u4ed6\u6587\u6863\u5148\u5b58\u50a8\uff0c\u540e\u7eed\u518d\u89e3\u6790\u3002",
     submitButton: "\u5b58\u50a8\u5e76\u8fd0\u884c\u5165\u53e3\u5224\u65ad",
     submitNote: "\u4f60\u53ea\u63d0\u4f9b\u6750\u6599\uff0c\u7cfb\u7edf\u8d1f\u8d23\u547d\u540d\u3001\u5b58\u50a8\u3001\u8def\u7531\u548c\u9996\u6b21\u56de\u5e94\u3002",
+    quickArtifacts: "\u67e5\u770b\u5386\u53f2 artifacts \u2192",
     intakeResultEmpty: "\u63d0\u4ea4\u6750\u6599\u540e\uff0c\u8fd9\u91cc\u4f1a\u51fa\u73b0\u7cfb\u7edf\u7684\u5e72\u51c0\u5165\u53e3\u9648\u8ff0\u3002",
     flowTitle: "\u4e0b\u4e00\u6b65\u53d1\u751f\u4ec0\u4e48",
     flowStep1Title: "\u5b58\u50a8",
@@ -88,6 +98,9 @@ const translations = {
     nextStep: "\u4e0b\u4e00\u6b65",
     storedAt: "\u5df2\u5b58\u50a8",
     intakeReady: "\u5165\u53e3\u5224\u65ad\u5df2\u751f\u6210",
+    continueProcessing: "\u7ee7\u7eed\u5904\u7406",
+    submitAnother: "\u518d\u6b21\u63d0\u4ea4",
+    artifactsFocused: "\u5df2\u8df3\u5230 Artifact \u5de5\u4f5c\u53f0",
     executionTitle: "\u6267\u884c",
     executionDesc: "\u8fd0\u884c\u9879\u76ee\u767d\u540d\u5355\u5185\u7684\u7ef4\u62a4\u547d\u4ee4\u3002",
     waitingExecution: "\u7b49\u5f85\u6267\u884c...",
@@ -105,6 +118,8 @@ const translations = {
     commandSyncSkills: "\u540c\u6b65 Skills",
     commandTestLlm: "\u6d4b\u8bd5 LLM",
     runningScript: "\u6b63\u5728\u8fd0\u884c",
+    runningButton: "\u8fd0\u884c\u4e2d...",
+    commandFailed: "\u547d\u4ee4\u6267\u884c\u5931\u8d25",
     outputScript: "\u811a\u672c",
     outputOk: "\u6210\u529f",
     outputExitCode: "\u9000\u51fa\u7801",
@@ -131,6 +146,13 @@ const translations = {
     pageTitle: "Submit a viewpoint, then let the pipeline carry it.",
     refresh: "Refresh",
     languageLabel: "Language",
+    executionModeTitle: "Execution mode",
+    executionModeApi: "API mode",
+    executionModeAgent: "Agent mode",
+    executionModeFallback: "Current mode: {mode}",
+    executionModeSaved: "Execution mode switched to {mode}",
+    versionHintOk: "Version: server {app} · client {asset} · package {pkg} · Node {node}",
+    versionHintMismatch: "Version hint: server {app} expects client {expected}, but this page loaded {asset}. Hard refresh the page; if it still differs, restart dashboard.",
     artifactTableTitle: "Artifact workbench",
     artifactTableDesc: "Select a file to inspect, edit metadata, and move it through lifecycle states.",
     artifactFile: "File",
@@ -168,6 +190,7 @@ const translations = {
     fileHint: "Images, markdown, txt, pdf, docx, or other documents are stored first. Parsing can happen later.",
     submitButton: "Store and run intake",
     submitNote: "You provide material. The system handles naming, storage, routing, and first response.",
+    quickArtifacts: "View historical artifacts \u2192",
     intakeResultEmpty: "Submit material to see the system's clean intake statement here.",
     flowTitle: "What happens next",
     flowStep1Title: "Store",
@@ -189,6 +212,9 @@ const translations = {
     nextStep: "Next step",
     storedAt: "Stored",
     intakeReady: "Intake result ready",
+    continueProcessing: "Continue processing",
+    submitAnother: "Submit another",
+    artifactsFocused: "Artifact workbench in view",
     executionTitle: "Execution",
     executionDesc: "Run allowlisted project maintenance commands.",
     waitingExecution: "Waiting for execution...",
@@ -206,6 +232,8 @@ const translations = {
     commandSyncSkills: "Sync Skills",
     commandTestLlm: "Test LLM",
     runningScript: "Running",
+    runningButton: "Running...",
+    commandFailed: "Command failed",
     outputScript: "script",
     outputOk: "ok",
     outputExitCode: "exitCode",
@@ -266,17 +294,22 @@ init();
 
 function init() {
   bindEvents();
+  restoreCapabilitiesDisclosure();
   renderStaticText();
   renderLanguageMode();
   renderCommandLabels();
   renderOwnerOptions();
   renderEmptyState(t("loading"));
+  renderExecutionMode();
   load();
 }
 
 function bindEvents() {
   $("#refreshButton").addEventListener("click", load);
   $("#intakeForm").addEventListener("submit", createIntake);
+  $(".system-capabilities")?.addEventListener("toggle", (event) => {
+    localStorage.setItem(capabilitiesOpenStorageKey, event.currentTarget.open ? "1" : "0");
+  });
   $("#artifactSearch").addEventListener("input", (event) => {
     artifactSearch = event.target.value.trim().toLowerCase();
     if (data) {
@@ -308,6 +341,12 @@ function bindEvents() {
       return;
     }
 
+    const modeButton = event.target.closest("[data-execution-mode]");
+    if (modeButton) {
+      await setExecutionMode(modeButton.dataset.executionMode);
+      return;
+    }
+
     const transitionButton = event.target.closest("[data-transition-status]");
     if (transitionButton) {
       await saveArtifact({ status: transitionButton.dataset.transitionStatus });
@@ -328,7 +367,13 @@ function bindEvents() {
 
     const runButton = event.target.closest("[data-run]");
     if (runButton) {
-      await runCommand(runButton.dataset.run);
+      await runCommand(runButton.dataset.run, runButton);
+      return;
+    }
+
+    const intakeActionButton = event.target.closest("[data-intake-action]");
+    if (intakeActionButton) {
+      await handleIntakeAction(intakeActionButton.dataset.intakeAction);
       return;
     }
 
@@ -347,6 +392,13 @@ function bindEvents() {
     });
     await load();
   });
+}
+
+function restoreCapabilitiesDisclosure() {
+  const disclosure = $(".system-capabilities");
+  if (!disclosure) return;
+  const stored = localStorage.getItem(capabilitiesOpenStorageKey);
+  disclosure.open = stored === null ? true : stored === "1";
 }
 
 async function load() {
@@ -405,12 +457,16 @@ function render() {
   renderLanguageMode();
   renderCommandLabels();
   renderOwnerOptions();
+  renderExecutionMode();
+  renderVersionHint();
   if (!data) {
     renderEmptyState(t("loading"));
     return;
   }
   renderCapabilities();
   renderProviderSelect();
+  renderExecutionMode();
+  renderVersionHint();
   renderSubmissions();
   renderMetrics();
   renderFilters();
@@ -424,6 +480,7 @@ function render() {
 
 function renderStaticText() {
   document.querySelectorAll("[data-i18n]").forEach((node) => {
+    if (node.id === "commandOutput" && commandOutputTouched) return;
     node.textContent = t(node.dataset.i18n);
   });
   document.querySelectorAll("[data-i18n-placeholder]").forEach((node) => {
@@ -468,6 +525,7 @@ function renderLanguageMode() {
 
 function renderCommandLabels() {
   document.querySelectorAll("[data-run]").forEach((button) => {
+    if (button.classList.contains("is-running")) return;
     const key = commandLabels[button.dataset.run];
     if (key) {
       button.textContent = t(key);
@@ -488,6 +546,44 @@ function renderProviderSelect() {
   $("#providerSelect").innerHTML = Object.keys(data.modelProviders.providers).map((key) => `
     <option value="${key}" ${key === data.modelProviders.active_provider ? "selected" : ""}>${key}</option>
   `).join("");
+}
+
+function renderExecutionMode() {
+  const methods = data?.methods;
+  const current = normalizeExecutionMode(methods?.execution_mode);
+  const descriptions = methods?.execution_mode_description || {};
+  const labels = {
+    api: t("executionModeApi"),
+    agent: t("executionModeAgent")
+  };
+  const desc = translateField(descriptions[current], "") || t("executionModeFallback").replace("{mode}", labels[current] || current);
+
+  $("#executionModeDesc").textContent = desc;
+  $("#executionModeButtons").innerHTML = ["api", "agent"].map((mode) => `
+    <button class="${mode === current ? "active" : ""}" data-execution-mode="${mode}" type="button" aria-pressed="${mode === current ? "true" : "false"}">${labels[mode]}</button>
+  `).join("");
+}
+
+function renderVersionHint() {
+  const node = $("#versionHint");
+  const badge = $("#buildBadge");
+  if (!node || !badge) return;
+
+  const app = data?.appVersion || "unknown";
+  const expected = normalizeVersionToken(data?.expectedClientAssetVersion || "");
+  const asset = normalizeVersionToken(readLoadedAssetVersion());
+  const pkg = data?.packageVersion || "unknown";
+  const nodeVersion = data?.nodeVersion || "unknown";
+  const mismatch = Boolean(expected && asset && expected !== asset);
+
+  badge.textContent = `v${app}`;
+  node.className = mismatch ? "version-hint warning" : "version-hint";
+  node.textContent = (mismatch ? t("versionHintMismatch") : t("versionHintOk"))
+    .replace("{app}", app)
+    .replace("{expected}", expected || "unknown")
+    .replace("{asset}", asset || "unknown")
+    .replace("{pkg}", pkg)
+    .replace("{node}", nodeVersion);
 }
 
 function renderOwnerOptions() {
@@ -722,6 +818,7 @@ async function createIntake(event) {
   const form = event.currentTarget;
   const text = form.elements.text.value.trim();
   const files = await readFilesAsDataUrls([...$("#intakeFiles").files]);
+  const submitButton = form.querySelector('[type="submit"]');
 
   if (!text && files.length === 0) {
     $("#intakeResult").className = "intake-result empty";
@@ -731,30 +828,42 @@ async function createIntake(event) {
 
   $("#intakeResult").className = "intake-result";
   $("#intakeResult").textContent = t("loading");
+  setButtonBusy(submitButton, true);
 
-  const response = await fetch("/api/intake", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ text, files })
-  });
-  const result = await response.json();
-  if (!result.ok) {
+  try {
+    const response = await fetch("/api/intake", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text, files })
+    });
+    if (!response.ok) {
+      throw new Error(`POST /api/intake ${response.status}`);
+    }
+    const result = await response.json();
+    if (!result.ok) {
+      $("#intakeResult").className = "intake-result error";
+      $("#intakeResult").textContent = `${t("failed")}: ${result.error || "unknown error"}`;
+      return;
+    }
+
+    lastIntakeResult = {
+      intake: result.intake,
+      queuePath: result.queue_path
+    };
+    form.reset();
+    selectedPath = result.intake.raw_artifact;
+    selectedDetail = null;
+    await load();
+    renderIntakeResult(result.intake, result.queue_path);
+    setStatus(t("intakeReady"), "ok");
+    $("#intakeResult").scrollIntoView({ behavior: "smooth", block: "center" });
+  } catch (error) {
     $("#intakeResult").className = "intake-result error";
-    $("#intakeResult").textContent = `${t("failed")}: ${result.error || "unknown error"}`;
-    return;
+    $("#intakeResult").textContent = `${t("failed")}: ${error.message}`;
+    setStatus(`${t("failed")}: ${error.message}`, "error");
+  } finally {
+    setButtonBusy(submitButton, false);
   }
-
-  lastIntakeResult = {
-    intake: result.intake,
-    queuePath: result.queue_path
-  };
-  form.reset();
-  selectedPath = result.intake.raw_artifact;
-  selectedDetail = null;
-  await load();
-  renderIntakeResult(result.intake, result.queue_path);
-  setStatus(t("intakeReady"), "ok");
-  $("#intakeResult").scrollIntoView({ behavior: "smooth", block: "center" });
 }
 
 function renderIntakeResult(intake, queuePath) {
@@ -786,7 +895,38 @@ function renderIntakeResult(intake, queuePath) {
         : `<p>${t("noOpenQuestions")}</p>`}
       <code>${escapeHtml(queuePath || "")}</code>
     </div>
+    <div class="result-actions">
+      <button class="primary-action" type="button" data-intake-action="continue">${t("continueProcessing")}</button>
+      <button class="secondary-action" type="button" data-intake-action="reset">${t("submitAnother")}</button>
+    </div>
   `;
+}
+
+async function handleIntakeAction(action) {
+  if (action === "continue") {
+    const rawPath = lastIntakeResult?.intake?.raw_artifact;
+    let detailError = "";
+    if (rawPath && data?.artifacts?.some((artifact) => artifact.path === rawPath)) {
+      selectedPath = rawPath;
+      try {
+        await refreshSelectedDetail();
+        renderArtifacts();
+        renderDetail();
+      } catch (error) {
+        detailError = error.message;
+      }
+    }
+    $("#artifacts").scrollIntoView({ behavior: "smooth", block: "start" });
+    setStatus(detailError ? `${t("loadFailed")}: ${detailError}` : t("artifactsFocused"), detailError ? "error" : "ok");
+    return;
+  }
+
+  if (action === "reset") {
+    lastIntakeResult = null;
+    $("#intakeForm").reset();
+    renderStaticText();
+    $("#intakeForm").elements.text.focus();
+  }
 }
 
 async function readFilesAsDataUrls(files) {
@@ -819,23 +959,53 @@ async function promoteSubmission(path) {
   showOutput(`${t("promotedLabel")}: ${selectedPath}`);
 }
 
-async function runCommand(script) {
-  showOutput(`${t("runningScript")} ${script}...`);
-  const response = await fetch("/api/run", {
-    method: "POST",
+async function setExecutionMode(mode) {
+  const response = await fetch("/api/execution-mode", {
+    method: "PATCH",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ script })
+    body: JSON.stringify({ mode })
   });
   const result = await response.json();
-  showOutput([
-    `${t("outputScript")}: ${result.script}`,
-    `${t("outputOk")}: ${result.ok}`,
-    `${t("outputExitCode")}: ${result.exitCode}`,
-    "",
-    result.stdout || "",
-    result.stderr || ""
-  ].join("\n").trim());
+  if (!result.ok) {
+    setStatus(`${t("failed")}: ${result.error || "unknown error"}`, "error");
+    return;
+  }
+  if (data?.methods) {
+    data.methods.execution_mode = result.execution_mode;
+  }
+  renderExecutionMode();
+  setStatus(t("executionModeSaved").replace("{mode}", result.execution_mode), "ok");
   await load();
+}
+
+async function runCommand(script, button) {
+  setButtonBusy(button, true);
+  showOutput(`${t("runningScript")} ${script}...`);
+  try {
+    const response = await fetch("/api/run", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ script })
+    });
+    if (!response.ok) {
+      throw new Error(`POST /api/run ${response.status}`);
+    }
+    const result = await response.json();
+    showOutput([
+      `${t("outputScript")}: ${result.script}`,
+      `${t("outputOk")}: ${result.ok}`,
+      `${t("outputExitCode")}: ${result.exitCode}`,
+      "",
+      result.stdout || "",
+      result.stderr || ""
+    ].join("\n").trim());
+    await load();
+  } catch (error) {
+    showOutput(`${t("commandFailed")}: ${error.message}`);
+    setStatus(`${t("commandFailed")}: ${error.message}`, "error");
+  } finally {
+    setButtonBusy(button, false);
+  }
 }
 
 async function cycleCapability(key) {
@@ -867,8 +1037,33 @@ function ownerOptions(current) {
   return ownerRoles.map((role) => `<option value="${role}" ${role === current ? "selected" : ""}>${role}</option>`).join("");
 }
 
+function setButtonBusy(button, isBusy) {
+  if (!button) return;
+  if (isBusy) {
+    button.dataset.originalText = button.dataset.originalText || button.textContent;
+    button.disabled = true;
+    button.classList.add("is-running");
+    button.setAttribute("aria-busy", "true");
+    button.textContent = t("runningButton");
+    return;
+  }
+
+  button.disabled = false;
+  button.classList.remove("is-running");
+  button.removeAttribute("aria-busy");
+  if (button.dataset.i18n) {
+    button.textContent = t(button.dataset.i18n);
+  } else if (button.dataset.run && commandLabels[button.dataset.run]) {
+    button.textContent = t(commandLabels[button.dataset.run]);
+  } else if (button.dataset.originalText) {
+    button.textContent = button.dataset.originalText;
+  }
+  delete button.dataset.originalText;
+}
+
 function showOutput(text) {
-  $("#commandOutput").textContent = text || "";
+  commandOutputTouched = Boolean(text);
+  $("#commandOutput").textContent = text || t("waitingExecution");
 }
 
 function t(key) {
@@ -892,6 +1087,20 @@ function labelType(type) {
 
 function normalizeLocale(value) {
   return value === "en" ? "en" : "zh";
+}
+
+function normalizeExecutionMode(value) {
+  return value === "agent" ? "agent" : "api";
+}
+
+function readLoadedAssetVersion() {
+  const script = [...document.scripts].find((node) => node.src.includes("/app.js"));
+  if (!script) return "";
+  return new URL(script.src, window.location.href).searchParams.get("v") || "";
+}
+
+function normalizeVersionToken(value) {
+  return String(value || "").toLowerCase().replace(/[^a-z0-9]/g, "");
 }
 
 function escapeHtml(value) {

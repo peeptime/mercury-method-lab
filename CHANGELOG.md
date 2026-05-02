@@ -4,6 +4,10 @@
 
 ### Added
 
+- Dashboard Execution mode 切换控件，并写回 `config/methods.json`
+- `PATCH /api/execution-mode` Dashboard API
+- `AGENT_ENTRY.md` 和 `mercury-lab` skill 的 API / Agent 模式分流说明
+- Dashboard 版本嗅探提示：显示后端版本、前端资源版本、package 版本和 Node 版本，前后端错位时提示刷新或重启
 - `execution_mode` 配置字段：支持 API 模式和 Agent 模式切换
 - `scripts/run_v8_analysis.mjs` V8.0 自动化执行脚本
 - AGENT_ENTRY.md AI 和人类的入口文档

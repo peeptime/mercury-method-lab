@@ -31,6 +31,11 @@ Mercury Lab 支持多种分析方法，当前激活的是 **V8.0**。
 
 配置文件：`v8-mercury-backend/config/methods.json` → `active_method: v8`
 
+执行模式：`config/methods.json` → `execution_mode`
+
+- `api`：默认模式。Agent 不自己展开 V8.0 分析，直接调用 `npm run v8:analyze`，由 Mercury Lab 脚本消耗 API token、写入分析和审计 artifact。
+- `agent`：Agent 模式。Agent 使用自身上下文和 V8.0 框架完成分析，但仍必须写入 `00_raw/`、`01_segmented/`、`07_audit_reports/` 并更新索引。
+
 V8.0 提示词文件位置：
 ```
 Z:\AI 202604\trae01\PSP-V8.0-突围者事件研判执行提示词.md
@@ -130,11 +135,39 @@ Mercury Lab 不是独立运行的 runtime。它依赖 **Mercury Agent**（`cosmi
 
 ### 分析一段文本
 
-1. 将文本写入 `00_raw/YYYYMMDD-描述.md`
-2. 按 V8.0 框架分析
-3. 结果写入 `01_segmented/YYYYMMDD-描述-v8分析.md`
-4. 执行对抗性交叉验证（第七层）
-5. 审计报告写入 `07_audit_reports/`
+先读取 `config/methods.json.execution_mode`，再决定执行方式。
+
+#### API 模式（`execution_mode: "api"`）
+
+优先使用最小可执行脚本，不要让 agent 自己探索 V8.0 文件和输出路径，也不要重复消耗 Agent token 做同一轮 V8.0 主分析：
+
+```powershell
+npm run v8:analyze -- --text "要分析的原始材料" --title "材料标题"
+npm run v8:analyze -- --file .\path\to\input.md --title "材料标题"
+```
+
+脚本会自动完成：
+
+1. 写入 `00_raw/`，保留原始材料。
+2. 读取 `config/methods.json` 里的 active V8.0 提示词。
+3. 调用 `config/model-providers.json` 里的 active LLM provider。
+4. 写入 `01_segmented/` V8.0 结构化分析。
+5. 写入 `07_audit_reports/` red-team 审计报告。
+6. 默认重建 `11_indexes/source-index.json`。
+
+如果只想生成 artifact，不想重建索引，可加 `--no-index`。
+
+#### Agent 模式（`execution_mode: "agent"`）
+
+Agent 可以自己执行 V8.0 分析，但必须保持 Mercury Lab 的存储闭环：
+
+1. 写入 `00_raw/YYYY-MM-DD-描述.md`，保留原始材料。
+2. 按 V8.0 的 12 个核心模块生成 `01_segmented/YYYY-MM-DD-描述-v8-analysis.md`。
+3. 写入 `07_audit_reports/YYYY-MM-DD-描述-v8-audit.md`；如果不是独立 red-team adapter，审计中必须注明“此审计由 AI Agent 手工生成，未经过 V8-redteam adapter”。
+4. 运行 `npm run index` 更新索引。
+5. 运行 `npm run validate` 检查 artifact 契约。
+
+Agent 模式禁止只在对话里给结论而不落盘。跳过 `00_raw/` 或 `07_audit_reports/` 等于绕过 Mercury Lab。
 
 ### 提交一个问题/观点
 
@@ -171,4 +204,4 @@ Mercury Lab 目前主要服务于你自己的使用场景。有朝一日如果�
 
 ---
 
-*最后更新：2026-05-01 | 版本：0.2.0 | 位置：v8-mercury-backend/docs/AGENT_ENTRY.md*
+*最后更新：2026-05-02 | 版本：0.3.3 | 位置：v8-mercury-backend/docs/AGENT_ENTRY.md*
