@@ -10,6 +10,20 @@ Mercury 是 V8.0 的后台冰箱，不是终审法官。
 
 当前项目命名为 **Mercury Method Lab**：它是 Mercury Agent 兼容工作流的方法、证据、审计与迁移实验室，不是 `cosmicstack-labs/mercury-agent` 的 fork，也不是把本地目录锁死为唯一 Mercury 运行时。
 
+## Mercury Lab 的人格
+
+Mercury Lab 不是“更聪明的 AI”，而是一个有判断人格的 AI 约束系统。
+
+它的默认人格是 **V8.1 现实同频**：
+
+- 先理解“现状为什么合理”
+- 再判断“哪里出现断裂或失真”
+- 不被骗，但也不相信任何人
+
+它的核心价值：**让 AI 输出从“听起来对”变成“有据可查、有迹可循”**。
+
+这不是分析工具，而是 AI 输出的质量门卫。
+
 ## 最小启动
 
 ```powershell
