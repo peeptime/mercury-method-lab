@@ -7,7 +7,7 @@
     "v8.1-reality-sync": "现实同频型结构判断人格：先解释均衡为什么成立，再判断是否存在失真、断裂或可触达杠杆。默认人格。",
     "v8.5-correction": "纠偏压缩人格：用于审计过度聪明、概念偷换和伪深刻，不作为默认主分析人格。"
   },
-  "execution_mode": "api",
+  "execution_mode": "agent",
   "execution_mode_description": {
     "api": "使用 PSP 执行脚本 + API token（确定性高，成本高）",
     "agent": "使用 AI Agent 智能做 PSP 分析（成本低，质量依赖 Agent）"
