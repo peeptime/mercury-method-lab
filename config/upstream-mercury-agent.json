@@ -1,11 +1,18 @@
 {
   "version": "0.1",
-  "observed_at": "2026-05-01",
+  "observed_at": "2026-05-02",
   "upstream": {
     "repo": "https://github.com/cosmicstack-labs/mercury-agent",
     "package": "@cosmicstack/mercury-agent",
-    "observed_package_version": "1.1.4",
+    "observed_package_version": "1.1.5",
     "license": "MIT"
+  },
+  "runtime": {
+    "package": "@cosmicstack/mercury-agent",
+    "pinned_version": "1.1.5",
+    "npx_spec": "@cosmicstack/mercury-agent@1.1.5",
+    "cache_relative_to_workspace": ".npm-cache",
+    "pin_policy": "Launch scripts must use this exact version. Pre-commit sync keeps generated repository surfaces aligned with this source."
   },
   "compatibility_target": {
     "mode": "rolling-compatible",

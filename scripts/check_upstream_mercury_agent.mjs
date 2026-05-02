@@ -40,15 +40,19 @@ const githubMeta = await fetchJson("https://api.github.com/repos/cosmicstack-lab
 
 const latest = npmMeta.version;
 const observed = config.upstream.observed_package_version;
+const pinned = config.runtime?.pinned_version || "";
 const compatible = isLikelyCompatible(latest);
+const pinnedCompatible = pinned ? isLikelyCompatible(pinned) : false;
 
 console.log(`Upstream package: ${config.upstream.package}`);
 console.log(`Observed in config: ${observed}`);
+console.log(`Runtime pin: ${pinned || "missing"}`);
 console.log(`Latest on npm: ${latest}`);
 console.log(`GitHub pushed_at: ${githubMeta.pushed_at}`);
 console.log(`Compatibility target: ${config.compatibility_target.preferred_range}`);
 console.log(`Likely compatible: ${compatible ? "yes" : "review-required"}`);
+console.log(`Pinned compatible: ${pinnedCompatible ? "yes" : "review-required"}`);
 
-if (!compatible) {
+if (!compatible || !pinnedCompatible) {
   process.exitCode = 1;
 }

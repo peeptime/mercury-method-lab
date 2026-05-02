@@ -15,13 +15,14 @@ The local project should integrate by adapter and export, not by vendoring upstr
 
 ## Upstream Snapshot
 
-Observed on 2026-05-01:
+Observed on 2026-05-02:
 
 | Item | Value |
 | --- | --- |
 | Repository | `https://github.com/cosmicstack-labs/mercury-agent` |
 | Package | `@cosmicstack/mercury-agent` |
-| Observed version | `1.1.4` |
+| Observed version | `1.1.5` |
+| Runtime pin | `@cosmicstack/mercury-agent@1.1.5` |
 | License | MIT |
 | Runtime home | `~/.mercury/` |
 | Core memory | `~/.mercury/memory/` |

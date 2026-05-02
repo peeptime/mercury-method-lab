@@ -25,6 +25,9 @@ body:
         - structural-judgment
         - content-commercial-diagnosis
         - action-translation
+        - high-risk-audit
+        - memory-migration
+        - publication
     validations:
       required: true
   - type: dropdown

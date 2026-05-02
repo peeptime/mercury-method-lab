@@ -25,6 +25,8 @@ Suggested route:
 - [ ] content-commercial-diagnosis
 - [ ] action-translation
 - [ ] high-risk-audit
+- [ ] memory-migration
+- [ ] publication
 
 ## Notes
 
