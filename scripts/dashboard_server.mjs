@@ -1,5 +1,5 @@
 import { createServer } from "node:http";
-import { execFile } from "node:child_process";
+import { execFile, spawnSync } from "node:child_process";
 import { appendFile, mkdir, readdir, readFile, stat, writeFile } from "node:fs/promises";
 import { createReadStream } from "node:fs";
 import { basename, dirname, extname, join, normalize, relative } from "node:path";
@@ -9,8 +9,8 @@ const root = dirname(dirname(fileURLToPath(import.meta.url)));
 const dashboardRoot = join(root, "dashboard");
 const port = Number(process.env.MERCURY_DASHBOARD_PORT || 4788);
 const lifecycleLogPath = join(root, "data", "lifecycle-log.jsonl");
-const appVersion = "2026.05.02-b";
-const expectedClientAssetVersion = "20260502b";
+const appVersion = "2026.05.02-c";
+const expectedClientAssetVersion = "20260502c";
 
 const artifactDirs = [
   "00_inbox",
@@ -179,6 +179,7 @@ async function buildOverview() {
   const statusCounts = buildStatusCounts(artifacts, stateMachine.states);
   const lifecycleLog = await readLifecycleLog();
   const submissions = await collectSubmissions();
+  const deployment = buildDeploymentReadiness({ modelProviders, integrations, methods, packageJson, submissions });
   const reviewQueue = artifacts
     .filter((artifact) => artifact.review_at && !["approved", "superseded", "rejected"].includes(artifact.status))
     .sort((a, b) => a.review_at.localeCompare(b.review_at));
@@ -196,6 +197,7 @@ async function buildOverview() {
     modelProviders,
     capabilities,
     methods,
+    deployment,
     entrypoints,
     integrations,
     submissions,
@@ -205,6 +207,103 @@ async function buildOverview() {
     reviewQueue,
     auditSummary: buildAuditSummary(artifacts, statusCounts)
   };
+}
+
+function buildDeploymentReadiness({ modelProviders, integrations, methods, packageJson, submissions }) {
+  const providerName = modelProviders.active_provider;
+  const provider = modelProviders.providers?.[providerName] || {};
+  const apiKeyEnv = provider.api_key_env || "";
+  const baseUrlEnv = provider.base_url_env || "";
+  const modelEnv = provider.model_env || "";
+  const nodeMajor = Number(process.versions.node.split(".")[0]);
+  const platformLabels = {
+    win32: "Windows",
+    darwin: "macOS",
+    linux: "Linux"
+  };
+  const supportedPlatform = Boolean(platformLabels[process.platform]);
+  const apiKeyRequired = methods.execution_mode !== "agent" && provider.type !== "openai-compatible-local";
+  const apiKeySet = apiKeyEnv ? Boolean(readRuntimeEnv(apiKeyEnv)) : true;
+  const openclawConfigured = Boolean(readRuntimeEnv("OPENCLAW_BASE_URL") || providerName === "local-openclaw");
+  const markitdownEnabled = readRuntimeEnv("MERCURY_MARKITDOWN_ENABLED") === "true" || integrations.integrations?.markitdown?.status === "active";
+
+  const items = [
+    {
+      key: "node",
+      level: nodeMajor >= 20 ? "ok" : "required",
+      label: `Node ${process.version}`,
+      detail: "Requires Node 20+."
+    },
+    {
+      key: "os",
+      level: supportedPlatform ? "ok" : "warn",
+      label: platformLabels[process.platform] || process.platform,
+      detail: "Supported service targets: Windows Task Scheduler, macOS LaunchAgent, Linux systemd user unit."
+    },
+    {
+      key: "provider",
+      level: providerName ? "ok" : "required",
+      label: providerName || "No provider",
+      detail: providerName ? `Active model provider. Model override: ${modelEnv || "none"}.` : "Set config/model-providers.json active_provider."
+    },
+    {
+      key: "api-key",
+      level: apiKeyRequired && !apiKeySet ? "required" : "ok",
+      label: apiKeyEnv || "No API key env required",
+      detail: apiKeyRequired ? `Set ${apiKeyEnv} before API execution mode can run.` : "Agent mode or local provider can run without hosted API token."
+    },
+    {
+      key: "persona-mode",
+      level: methods.analysis_persona && methods.execution_mode ? "ok" : "required",
+      label: `${methods.analysis_persona || "missing"} / ${methods.execution_mode || "missing"}`,
+      detail: "analysis_persona chooses judgment posture; execution_mode chooses API or Agent channel."
+    },
+    {
+      key: "batch-submit",
+      level: "ok",
+      label: "submissions/viewpoints + submissions/agent-queue",
+      detail: `Silent batch path ready. Queue count: ${submissions.queue_count || 0}.`
+    },
+    {
+      key: "openclaw",
+      level: openclawConfigured ? "ok" : "optional",
+      label: openclawConfigured ? "OpenClaw-like endpoint configured" : "OpenClaw-like endpoint optional",
+      detail: openclawConfigured ? "OPENCLAW_BASE_URL or local-openclaw provider is present." : "Use OPENCLAW_BASE_URL and local-openclaw provider only when an agent endpoint exists."
+    },
+    {
+      key: "markitdown",
+      level: markitdownEnabled ? "ok" : "optional",
+      label: markitdownEnabled ? "Document conversion enabled" : "Document conversion disabled",
+      detail: "Markdown/plain text works without MarkItDown. Enable only for PDF/Office/URL conversion."
+    }
+  ];
+
+  return {
+    packageVersion: packageJson.version,
+    platform: process.platform,
+    providerName,
+    ready: items.every((item) => item.level !== "required"),
+    requiredCount: items.filter((item) => item.level === "required").length,
+    optionalCount: items.filter((item) => item.level === "optional").length,
+    items
+  };
+}
+
+function readRuntimeEnv(name) {
+  if (process.env[name]) {
+    return process.env[name];
+  }
+  if (process.platform !== "win32") {
+    return "";
+  }
+
+  const result = spawnSync(
+    "powershell",
+    ["-NoProfile", "-Command", `[Environment]::GetEnvironmentVariable('${name}','User')`],
+    { encoding: "utf8" }
+  );
+
+  return result.status === 0 ? result.stdout.trim() : "";
 }
 
 async function collectArtifacts() {

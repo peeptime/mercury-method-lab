@@ -1,6 +1,6 @@
 # Mercury Method Lab
 
-Version: `0.2.0` — Open Orbit
+Version: `0.3.5` — Deployment Gate
 
 Mercury Method Lab is a local-first method, evidence, audit, and migration workspace for Mercury Agent-compatible workflows.
 
@@ -28,11 +28,8 @@ npm run check:upstream
 ## Quick Start
 
 ```powershell
+npm install
 npm run doctor
-npm run check:upstream
-npm run validate
-npm run index
-npm run sync:skills
 npm run dashboard
 ```
 
@@ -41,6 +38,24 @@ Open the local dashboard at:
 ```text
 http://127.0.0.1:4788
 ```
+
+API execution mode needs an LLM token. The default provider is Ark Coding Plan:
+
+```powershell
+$env:ARK_API_KEY="..."
+npm run test:llm
+```
+
+See [docs/DEPLOYMENT-ONBOARDING.md](docs/DEPLOYMENT-ONBOARDING.md).
+
+## Architecture Boundary
+
+This release separates two axes:
+
+- `analysis_persona`: V8.1 / V8.0 / V8.5 judgment posture.
+- `execution_mode`: API / Agent execution channel.
+
+Adding a new skill or management Markdown file should not require architecture refactoring. See [docs/ARCHITECTURE-SHIFT-REPORT.md](docs/ARCHITECTURE-SHIFT-REPORT.md).
 
 ## Submission Layer
 
@@ -71,6 +86,8 @@ The project keeps Markdown/YAML artifacts as the source of truth. JSON and SQLit
 ## Key Docs
 
 - Project positioning: [docs/project-positioning.md](docs/project-positioning.md)
+- Architecture shift report: [docs/ARCHITECTURE-SHIFT-REPORT.md](docs/ARCHITECTURE-SHIFT-REPORT.md)
+- Deployment onboarding: [docs/DEPLOYMENT-ONBOARDING.md](docs/DEPLOYMENT-ONBOARDING.md)
 - Upstream compatibility: [docs/upstream-mercury-agent-compatibility.md](docs/upstream-mercury-agent-compatibility.md)
 - Memory migration: [docs/memory-architecture-migration.md](docs/memory-architecture-migration.md)
 - Rule routing: [docs/rule-routing.md](docs/rule-routing.md)

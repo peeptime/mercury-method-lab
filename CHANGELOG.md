@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+## 0.3.5 — Deployment Gate
+
+Release candidate cleanup: clarify upstream boundary, reduce onboarding friction, and make deployment readiness visible in Dashboard.
+
+### Added
+
+- `docs/ARCHITECTURE-SHIFT-REPORT.md` explaining what shifted from upstream Mercury Agent, what was added, what was intentionally not copied, and when future docs/skills require architecture review.
+- `docs/DEPLOYMENT-ONBOARDING.md` for token setup, OpenClaw-like endpoint, silent batch submission paths, OS support, and optional document conversion.
+- Dashboard deployment readiness card showing Node/OS/provider/API key/persona/execution mode/batch path/OpenClaw/MarkItDown status.
+
 ## 0.3.4 — Persona Axis
 
 Architecture pollution fix: split PSP analysis persona from execution mode.

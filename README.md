@@ -1,6 +1,6 @@
 # Mercury Method Lab
 
-Version: `0.2.0` — Open Orbit
+Version: `0.3.5` — Deployment Gate
 
 English entry: [README.en.md](README.en.md)
 
@@ -10,17 +10,24 @@ Mercury 是 V8.0 的后台冰箱，不是终审法官。
 
 当前项目命名为 **Mercury Method Lab**：它是 Mercury Agent 兼容工作流的方法、证据、审计与迁移实验室，不是 `cosmicstack-labs/mercury-agent` 的 fork，也不是把本地目录锁死为唯一 Mercury 运行时。
 
-## 快速开始
+## 最小启动
 
 ```powershell
+npm install
 npm run doctor
-npm run check:upstream
-npm run validate
-npm run index
-npm run sync:skills
-npm run test:llm
 npm run dashboard
 ```
+
+Dashboard 默认地址：`http://127.0.0.1:4788`
+
+API 模式需要一个 LLM token。默认火山方舟 Coding Plan：
+
+```powershell
+$env:ARK_API_KEY="..."
+npm run test:llm
+```
+
+部署门槛见 [docs/DEPLOYMENT-ONBOARDING.md](docs/DEPLOYMENT-ONBOARDING.md)。
 
 ## 用户提交层
 
@@ -47,6 +54,15 @@ npm run start:ark
 ```
 
 配置只从环境变量读取。不要把 `ARK_API_KEY` 写入项目文件。
+
+## 当前架构边界
+
+这一版已经把两个轴拆开：
+
+- `analysis_persona`：V8.1 / V8.0 / V8.5，决定判断人格。
+- `execution_mode`：API / Agent，决定执行通道。
+
+新增 skill 或管理框架 Markdown 不需要重构架构。规则见 [docs/ARCHITECTURE-SHIFT-REPORT.md](docs/ARCHITECTURE-SHIFT-REPORT.md)。
 
 ## 分工
 - Mercury Agent upstream：运行时、CLI/Telegram、权限工具、调度器、Second Brain、daemon
@@ -132,6 +148,8 @@ npm run start:ark
 - 权限与审计：[docs/permissions-and-audit.md](docs/permissions-and-audit.md)
 - 可选集成：[config/integrations.json](config/integrations.json)
 - 项目定位：[docs/project-positioning.md](docs/project-positioning.md)
+- 架构偏移报告：[docs/ARCHITECTURE-SHIFT-REPORT.md](docs/ARCHITECTURE-SHIFT-REPORT.md)
+- 部署上手：[docs/DEPLOYMENT-ONBOARDING.md](docs/DEPLOYMENT-ONBOARDING.md)
 - 上游兼容：[docs/upstream-mercury-agent-compatibility.md](docs/upstream-mercury-agent-compatibility.md)
 - 记忆迁移：[docs/memory-architecture-migration.md](docs/memory-architecture-migration.md)
 - 规则路由：[docs/rule-routing.md](docs/rule-routing.md)

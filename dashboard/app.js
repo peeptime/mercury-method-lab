@@ -43,6 +43,13 @@ const translations = {
     analysisPersonaV85: "V8.5 \u7ea0\u504f",
     analysisPersonaFallback: "\u5f53\u524d\u4eba\u683c\uff1a{persona}",
     analysisPersonaSaved: "\u5206\u6790\u4eba\u683c\u5df2\u5207\u6362\u4e3a {persona}",
+    deploymentTitle: "\u90e8\u7f72\u51c6\u5907\u5ea6",
+    deploymentDesc: "\u65b0\u7528\u6237\u8dd1\u5206\u6790\u524d\uff0c\u53ea\u9700\u786e\u8ba4\u8fd9\u51e0\u4e2a\u63a5\u7ebf\u70b9\u3002",
+    deploymentReady: "\u53ef\u8fd0\u884c",
+    deploymentNeedsSetup: "\u9700\u914d\u7f6e {count} \u9879",
+    deploymentOptional: "\u53ef\u9009",
+    deploymentRequired: "\u5fc5\u9700",
+    deploymentOk: "\u5df2\u5c31\u7eea",
     versionHintOk: "\u7248\u672c\uff1a\u540e\u7aef {app} \u00b7 \u524d\u7aef {asset} \u00b7 package {pkg} \u00b7 Node {node}",
     versionHintMismatch: "\u7248\u672c\u63d0\u793a\uff1a\u540e\u7aef {app} \u9884\u671f\u524d\u7aef {expected}\uff0c\u5f53\u524d\u52a0\u8f7d {asset}\u3002\u8bf7\u5f3a\u5237\u65b0\u9875\u9762\uff1b\u5982\u679c\u4ecd\u7136\u4e0d\u4e00\u81f4\uff0c\u91cd\u542f dashboard\u3002",
     artifactTableTitle: "Artifact \u5de5\u4f5c\u53f0",
@@ -163,6 +170,13 @@ const translations = {
     analysisPersonaV85: "V8.5 Correction",
     analysisPersonaFallback: "Current persona: {persona}",
     analysisPersonaSaved: "Analysis persona switched to {persona}",
+    deploymentTitle: "Deployment readiness",
+    deploymentDesc: "Check the few things a new user must wire before running analysis.",
+    deploymentReady: "Ready",
+    deploymentNeedsSetup: "{count} required",
+    deploymentOptional: "Optional",
+    deploymentRequired: "Required",
+    deploymentOk: "Ready",
     versionHintOk: "Version: server {app} · client {asset} · package {pkg} · Node {node}",
     versionHintMismatch: "Version hint: server {app} expects client {expected}, but this page loaded {asset}. Hard refresh the page; if it still differs, restart dashboard.",
     artifactTableTitle: "Artifact workbench",
@@ -314,6 +328,7 @@ function init() {
   renderEmptyState(t("loading"));
   renderExecutionMode();
   renderAnalysisPersona();
+  renderDeploymentReadiness();
   load();
 }
 
@@ -478,6 +493,7 @@ function render() {
   renderOwnerOptions();
   renderExecutionMode();
   renderAnalysisPersona();
+  renderDeploymentReadiness();
   renderVersionHint();
   if (!data) {
     renderEmptyState(t("loading"));
@@ -487,6 +503,7 @@ function render() {
   renderProviderSelect();
   renderExecutionMode();
   renderAnalysisPersona();
+  renderDeploymentReadiness();
   renderVersionHint();
   renderSubmissions();
   renderMetrics();
@@ -522,6 +539,8 @@ function renderEmptyState(message) {
   `).join("");
   $("#artifactFilters").innerHTML = "";
   $("#artifactRows").innerHTML = `<tr><td colspan="5"><div class="empty">${escapeHtml(message)}</div></td></tr>`;
+  $("#deploymentBadge").textContent = "-";
+  $("#deploymentReadiness").innerHTML = `<div class="empty">${escapeHtml(message)}</div>`;
   $("#detailPath").textContent = "-";
   $("#artifactDetail").innerHTML = `<div class="empty">${escapeHtml(message)}</div>`;
   $("#lifecycleLog").innerHTML = `<div class="empty">${escapeHtml(message)}</div>`;
@@ -600,6 +619,38 @@ function renderAnalysisPersona() {
   $("#analysisPersonaButtons").innerHTML = Object.keys(labels).map((persona) => `
     <button class="${persona === current ? "active" : ""}" data-analysis-persona="${persona}" type="button" aria-pressed="${persona === current ? "true" : "false"}">${labels[persona]}</button>
   `).join("");
+}
+
+function renderDeploymentReadiness() {
+  const deployment = data?.deployment;
+  const badge = $("#deploymentBadge");
+  const container = $("#deploymentReadiness");
+  if (!badge || !container) return;
+
+  if (!deployment) {
+    badge.textContent = "-";
+    container.innerHTML = `<div class="empty">${t("loading")}</div>`;
+    return;
+  }
+
+  badge.className = deployment.ready ? "readiness-badge ok" : "readiness-badge required";
+  badge.textContent = deployment.ready
+    ? t("deploymentReady")
+    : t("deploymentNeedsSetup").replace("{count}", deployment.requiredCount);
+
+  container.innerHTML = deployment.items.map((item) => {
+    const levelLabel = item.level === "required"
+      ? t("deploymentRequired")
+      : item.level === "optional"
+      ? t("deploymentOptional")
+      : t("deploymentOk");
+    return `
+      <article class="readiness-item ${item.level}">
+        <strong>${escapeHtml(item.label)}<span>${levelLabel}</span></strong>
+        <p>${escapeHtml(item.detail)}</p>
+      </article>
+    `;
+  }).join("");
 }
 
 function renderVersionHint() {

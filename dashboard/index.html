@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Mercury Method Lab</title>
     <link rel="icon" href="data:,">
-    <link rel="stylesheet" href="/styles.css?v=20260502b">
+    <link rel="stylesheet" href="/styles.css?v=20260502c">
   </head>
   <body>
     <main class="shell">
@@ -36,7 +36,7 @@
             <h1 data-i18n="pageTitle">Submit a viewpoint, then let the pipeline carry it.</h1>
           </div>
           <div class="toolbar">
-            <span id="buildBadge" class="build-badge" aria-label="GUI build">v2026.05.02-b</span>
+            <span id="buildBadge" class="build-badge" aria-label="GUI build">v2026.05.02-c</span>
             <div class="topbar-language">
               <span class="language-label" data-i18n="languageLabel">Language</span>
               <div class="language-mode" aria-label="Language mode">
@@ -63,6 +63,17 @@
             <p id="analysisPersonaDesc">-</p>
             <div class="segmented mode-toggle persona-toggle" id="analysisPersonaButtons" aria-label="Analysis persona"></div>
           </div>
+        </section>
+
+        <section class="readiness-panel" aria-labelledby="deploymentTitle">
+          <div class="panel-head">
+            <div>
+              <h2 id="deploymentTitle" data-i18n="deploymentTitle">Deployment readiness</h2>
+              <p data-i18n="deploymentDesc">Check the few things a new user must wire before running analysis.</p>
+            </div>
+            <span id="deploymentBadge" class="readiness-badge">-</span>
+          </div>
+          <div id="deploymentReadiness" class="readiness-grid"></div>
         </section>
 
         <section id="submit" class="hero-flow">
@@ -227,6 +238,6 @@
         </section>
       </section>
     </main>
-    <script src="/app.js?v=20260502b" type="module"></script>
+    <script src="/app.js?v=20260502c" type="module"></script>
   </body>
 </html>
