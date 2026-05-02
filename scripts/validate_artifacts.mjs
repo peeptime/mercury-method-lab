@@ -34,6 +34,7 @@ const requiredMarkdownHeadings = {
 const allowedStates = new Set(["draft", "review_ready", "audited", "approved", "superseded", "rejected"]);
 const allowedConfidence = new Set(["low", "medium", "high"]);
 const allowedRisk = new Set(["low", "medium", "high"]);
+const allowedMemoryLevels = new Set(["M0", "M1", "M2", "M3", "M4"]);
 
 const errors = [];
 const warnings = [];
@@ -180,6 +181,9 @@ for (const file of files) {
     }
     if (data.risk && !allowedRisk.has(data.risk)) {
       errors.push(`${fileRel}: invalid risk "${data.risk}"`);
+    }
+    if (data.memory_level && !allowedMemoryLevels.has(data.memory_level)) {
+      errors.push(`${fileRel}: invalid memory_level "${data.memory_level}"`);
     }
     if (data.owner_role && data.owner_role !== "memory-curator") {
       errors.push(`${fileRel}: owner_role must be memory-curator`);

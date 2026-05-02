@@ -132,6 +132,17 @@ npm run start:ark
 
 模型供应商统一配置在 [config/model-providers.json](config/model-providers.json)。默认 provider 是 `ark-coding-plan`，也可以用 `MERCURY_MODEL_PROVIDER` 临时切换。
 
+已预留通用 OpenAI-compatible 与本地开源 runtime：
+
+- `openai`
+- `openai-compatible-custom`
+- `local-openclaw`
+- `ollama-local`
+- `vllm-local`
+- `lm-studio-local`
+
+本地 provider 默认不要求 API key。托管 provider 支持 `MERCURY_API_KEY`、`OPENAI_API_KEY`、`MERCURY_OPENAI_API_KEY` 等 alias，详见 [docs/model-providers.md](docs/model-providers.md)。
+
 ## 工程入口
 
 - `npm run check:upstream`：检查 `@cosmicstack/mercury-agent` 最新版本是否落在当前兼容策略内。
@@ -155,6 +166,7 @@ npm run start:ark
 - 预入库规范：[docs/pre-ingestion-policy.md](docs/pre-ingestion-policy.md)
 - Markdown 标准：[docs/markdown-standard.md](docs/markdown-standard.md)
 - 模型供应商：[docs/model-providers.md](docs/model-providers.md)
+- 判断收口规则：[docs/JUDGMENT-CLOSURE-RULE.md](docs/JUDGMENT-CLOSURE-RULE.md)
 - 架构入口：[docs/architecture-entrypoints.md](docs/architecture-entrypoints.md)
 - OpenClaw 预留：[docs/openclaw-integration.md](docs/openclaw-integration.md)
 - 本地 GUI：[dashboard/index.html](dashboard/index.html)

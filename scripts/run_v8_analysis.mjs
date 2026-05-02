@@ -231,7 +231,8 @@ async function runV8Analysis({ title, source, methodProfile, modelConfig, rawPat
         "Do not ask follow-up questions. Do not mention that you are an AI model.",
         "Do not invent external facts. Mark assumptions, missing evidence, and verification gaps explicitly.",
         "Output Markdown only.",
-        "The output must include these sections exactly once: 第 0 层：语义嗅探与分流, 第一层：输入层, 第二层：结构定位, 第三层：权力分析, 第四层：杠杆点识别, 第五层：路径判断, 第六层：系统影响, 第七层：对抗性交叉验证, 评分, 审计, 最终结论, 后续建议."
+        "The output must include these sections exactly once: 第 0 层：语义嗅探与分流, 第一层：输入层, 第二层：结构定位, 第三层：权力分析, 第四层：杠杆点识别, 第五层：路径判断, 第六层：系统影响, 第七层：对抗性交叉验证, 评分, 审计, 最终结论, 后续建议, 停止条件, 推翻条件, 复盘时间, 记忆建议.",
+        "The closing sections must prevent endless analysis: name the next verification action, stop condition, falsifying signal, review date/window, and memory level M0-M4."
       ].join("\n")
     },
     {
@@ -248,6 +249,8 @@ async function runV8Analysis({ title, source, methodProfile, modelConfig, rawPat
         `- analysis_persona: ${methodProfile.personaName}`,
         "- write a structured PSP analysis suitable for 01_segmented/.",
         "- include explicit audit notes; do not leave the audit to the caller.",
+        "- close the judgment with 停止条件, 推翻条件, 复盘时间, and 记忆建议.",
+        "- memory level must be one of M0, M1, M2, M3, M4.",
         "",
         "## Input Material",
         source.text
@@ -265,9 +268,9 @@ async function runV8Audit({ title, source, analysis, completeness, methodProfile
       content: [
         "You are Mercury Lab's red-team audit adapter.",
         `Audit the PSP analysis against the original input, active persona ${methodProfile.personaName}, and the deterministic completeness check.`,
-        "Do not rewrite the analysis. Identify risk, missing assumptions, overclaims, and whether the result can proceed.",
+        "Do not rewrite the analysis. Identify risk, missing assumptions, overclaims, independent evidence gaps, stop-condition gaps, and memory-level risk.",
         "Output Markdown only.",
-        "You must include these headings exactly: ## 被审计结论, ## 关键假设, ## 最可能错误点, ## 对抗性交叉验证, ## 审计结论, ## 下一步."
+        "You must include these headings exactly: ## 被审计结论, ## 关键假设, ## 最可能错误点, ## 外部证据检查, ## 停止条件复核, ## 记忆建议复核, ## 对抗性交叉验证, ## 审计结论, ## 下一步."
       ].join("\n")
     },
     {
@@ -433,7 +436,11 @@ function assessV8Completeness(text) {
     "评分",
     "审计",
     "最终结论",
-    "后续建议"
+    "后续建议",
+    "停止条件",
+    "推翻条件",
+    "复盘时间",
+    "记忆建议"
   ];
   const present = required.filter((section) => text.includes(section));
   const missing = required.filter((section) => !text.includes(section));
@@ -464,6 +471,9 @@ function normalizeAuditMarkdown(text) {
     "## 被审计结论",
     "## 关键假设",
     "## 最可能错误点",
+    "## 外部证据检查",
+    "## 停止条件复核",
+    "## 记忆建议复核",
     "## 对抗性交叉验证",
     "## 审计结论",
     "## 下一步"

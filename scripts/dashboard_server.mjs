@@ -212,7 +212,8 @@ async function buildOverview() {
 function buildDeploymentReadiness({ modelProviders, integrations, methods, packageJson, submissions }) {
   const providerName = modelProviders.active_provider;
   const provider = modelProviders.providers?.[providerName] || {};
-  const apiKeyEnv = provider.api_key_env || "";
+  const apiKeyNames = [provider.api_key_env, ...(provider.api_key_env_aliases || [])].filter(Boolean);
+  const apiKeyEnv = apiKeyNames[0] || "";
   const baseUrlEnv = provider.base_url_env || "";
   const modelEnv = provider.model_env || "";
   const nodeMajor = Number(process.versions.node.split(".")[0]);
@@ -222,8 +223,8 @@ function buildDeploymentReadiness({ modelProviders, integrations, methods, packa
     linux: "Linux"
   };
   const supportedPlatform = Boolean(platformLabels[process.platform]);
-  const apiKeyRequired = methods.execution_mode !== "agent" && provider.type !== "openai-compatible-local";
-  const apiKeySet = apiKeyEnv ? Boolean(readRuntimeEnv(apiKeyEnv)) : true;
+  const apiKeyRequired = methods.execution_mode !== "agent" && provider.api_key_required !== false;
+  const apiKeySet = apiKeyNames.length ? apiKeyNames.some((name) => Boolean(readRuntimeEnv(name))) : true;
   const openclawConfigured = Boolean(readRuntimeEnv("OPENCLAW_BASE_URL") || providerName === "local-openclaw");
   const markitdownEnabled = readRuntimeEnv("MERCURY_MARKITDOWN_ENABLED") === "true" || integrations.integrations?.markitdown?.status === "active";
 
@@ -250,7 +251,7 @@ function buildDeploymentReadiness({ modelProviders, integrations, methods, packa
       key: "api-key",
       level: apiKeyRequired && !apiKeySet ? "required" : "ok",
       label: apiKeyEnv || "No API key env required",
-      detail: apiKeyRequired ? `Set ${apiKeyEnv} before API execution mode can run.` : "Agent mode or local provider can run without hosted API token."
+      detail: apiKeyRequired ? `Set one of: ${apiKeyNames.join(", ")}.` : "Agent mode or local provider can run without hosted API token."
     },
     {
       key: "persona-mode",

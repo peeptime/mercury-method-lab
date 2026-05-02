@@ -8,6 +8,7 @@ source_refs:
 decision_refs:
   -
 confidence: medium
+memory_level: M0
 time_scope:
 use_case:
 risk: medium

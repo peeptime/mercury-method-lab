@@ -59,6 +59,16 @@
         "high"
       ]
     },
+    "memory_level": {
+      "type": "string",
+      "enum": [
+        "M0",
+        "M1",
+        "M2",
+        "M3",
+        "M4"
+      ]
+    },
     "time_scope": {
       "type": "string"
     },

@@ -47,6 +47,24 @@ npm run test:llm
 
 长期使用可以把 `ARK_API_KEY` 设置为用户环境变量。不要把 token 写进仓库文件。
 
+也可以切换到通用 OpenAI-compatible provider：
+
+```powershell
+$env:MERCURY_MODEL_PROVIDER="openai-compatible-custom"
+$env:MERCURY_OPENAI_BASE_URL="https://example.com/v1"
+$env:MERCURY_OPENAI_API_KEY="..."
+$env:MERCURY_OPENAI_MODEL="model-name"
+npm run test:llm
+```
+
+兼容的 API key alias：
+
+| Provider | Env names |
+|------|------|
+| `ark-coding-plan` | `ARK_API_KEY`, `MERCURY_API_KEY` |
+| `openai` | `OPENAI_API_KEY`, `MERCURY_OPENAI_API_KEY`, `MERCURY_API_KEY` |
+| `openai-compatible-custom` | `MERCURY_OPENAI_API_KEY`, `OPENAI_API_KEY`, `MERCURY_API_KEY` |
+
 ## OpenClaw-like agent 关联
 
 OpenClaw-like agent 不是必需项。
@@ -65,6 +83,22 @@ OpenClaw-like agent 不是必需项。
   "api_key_env": "OPENCLAW_API_KEY",
   "model_env": "OPENCLAW_MODEL"
 }
+```
+
+本地开源 OpenAI-compatible runtime 也已预留：
+
+| Provider | 默认地址 | API key |
+|------|------|------|
+| `ollama-local` | `http://127.0.0.1:11434/v1` | 默认不需要 |
+| `vllm-local` | `http://127.0.0.1:8000/v1` | 默认不需要 |
+| `lm-studio-local` | `http://127.0.0.1:1234/v1` | 默认不需要 |
+
+示例：
+
+```powershell
+$env:MERCURY_MODEL_PROVIDER="ollama-local"
+$env:OLLAMA_MODEL="qwen2.5:7b"
+npm run test:llm
 ```
 
 ## 静默批量提交

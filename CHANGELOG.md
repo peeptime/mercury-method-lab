@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+## 0.3.6 — Judgment Closure
+
+Tighten PSP outputs so analysis closes with stop conditions, falsification signals, review timing, and memory-level advice. Expand model provider support for hosted OpenAI-compatible APIs and local open-source runtimes.
+
+### Added
+
+- Required PSP closing sections: `停止条件`, `推翻条件`, `复盘时间`, and `记忆建议`.
+- Red-team audit checks for external evidence, stop-condition quality, and memory-level risk.
+- Memory candidate `memory_level` support with `M0`-`M4` values.
+- `docs/JUDGMENT-CLOSURE-RULE.md` describing closure, external audit, and memory grading rules.
+- OpenAI-compatible provider expansion: `openai`, `ollama-local`, `vllm-local`, and `lm-studio-local`.
+- API key aliases for hosted providers, including `MERCURY_API_KEY`, `OPENAI_API_KEY`, and `MERCURY_OPENAI_API_KEY`.
+
 ## 0.3.5 — Deployment Gate
 
 Release candidate cleanup: clarify upstream boundary, reduce onboarding friction, and make deployment readiness visible in Dashboard.

@@ -1,5 +1,5 @@
 {
-  "version": "0.1",
+  "version": "0.2",
   "active_provider": "ark-coding-plan",
   "providers": {
     "ark-coding-plan": {
@@ -8,19 +8,52 @@
       "base_url": "https://ark.cn-beijing.volces.com/api/coding/v3",
       "chat_path": "/chat/completions",
       "api_key_env": "ARK_API_KEY",
+      "api_key_env_aliases": [
+        "MERCURY_API_KEY"
+      ],
       "model_env": "ARK_MODEL",
       "default_model": "doubao-seed-2.0-code",
       "low_cost_model": "doubao-seed-2.0-lite",
       "notes": "Coding Plan endpoint. Do not replace with /api/v3."
     },
+    "openai": {
+      "status": "reserved",
+      "type": "openai-compatible",
+      "base_url": "https://api.openai.com/v1",
+      "chat_path": "/chat/completions",
+      "api_key_env": "OPENAI_API_KEY",
+      "api_key_env_aliases": [
+        "MERCURY_OPENAI_API_KEY",
+        "MERCURY_API_KEY"
+      ],
+      "model_env": "OPENAI_MODEL",
+      "model_env_aliases": [
+        "MERCURY_OPENAI_MODEL",
+        "MERCURY_MODEL"
+      ],
+      "default_model": "gpt-4.1-mini",
+      "notes": "Hosted OpenAI API. Reserved; set MERCURY_MODEL_PROVIDER=openai to use."
+    },
     "openai-compatible-custom": {
       "status": "reserved",
       "type": "openai-compatible",
       "base_url_env": "MERCURY_OPENAI_BASE_URL",
+      "base_url_env_aliases": [
+        "OPENAI_BASE_URL",
+        "MERCURY_BASE_URL"
+      ],
       "chat_path": "/chat/completions",
       "api_key_env": "MERCURY_OPENAI_API_KEY",
+      "api_key_env_aliases": [
+        "OPENAI_API_KEY",
+        "MERCURY_API_KEY"
+      ],
       "model_env": "MERCURY_OPENAI_MODEL",
-      "default_model": "",
+      "model_env_aliases": [
+        "OPENAI_MODEL",
+        "MERCURY_MODEL"
+      ],
+      "default_model": "gpt-4.1-mini",
       "notes": "Reserved for any future hosted OpenAI-compatible model."
     },
     "local-openclaw": {
@@ -30,9 +63,55 @@
       "default_base_url": "http://127.0.0.1:11434/v1",
       "chat_path": "/chat/completions",
       "api_key_env": "OPENCLAW_API_KEY",
+      "api_key_required": false,
       "model_env": "OPENCLAW_MODEL",
       "default_model": "",
       "notes": "Reserved local endpoint. Confirm actual OpenClaw runtime URL and model name before activation."
+    },
+    "ollama-local": {
+      "status": "reserved",
+      "type": "openai-compatible-local",
+      "base_url_env": "OLLAMA_BASE_URL",
+      "default_base_url": "http://127.0.0.1:11434/v1",
+      "chat_path": "/chat/completions",
+      "api_key_env": "OLLAMA_API_KEY",
+      "api_key_required": false,
+      "model_env": "OLLAMA_MODEL",
+      "model_env_aliases": [
+        "MERCURY_LOCAL_MODEL"
+      ],
+      "default_model": "qwen2.5:7b",
+      "notes": "Local Ollama OpenAI-compatible endpoint. Uses no API key by default."
+    },
+    "vllm-local": {
+      "status": "reserved",
+      "type": "openai-compatible-local",
+      "base_url_env": "VLLM_BASE_URL",
+      "default_base_url": "http://127.0.0.1:8000/v1",
+      "chat_path": "/chat/completions",
+      "api_key_env": "VLLM_API_KEY",
+      "api_key_required": false,
+      "model_env": "VLLM_MODEL",
+      "model_env_aliases": [
+        "MERCURY_LOCAL_MODEL"
+      ],
+      "default_model": "local-model",
+      "notes": "Local vLLM OpenAI-compatible endpoint. Uses no API key by default unless the server requires one."
+    },
+    "lm-studio-local": {
+      "status": "reserved",
+      "type": "openai-compatible-local",
+      "base_url_env": "LM_STUDIO_BASE_URL",
+      "default_base_url": "http://127.0.0.1:1234/v1",
+      "chat_path": "/chat/completions",
+      "api_key_env": "LM_STUDIO_API_KEY",
+      "api_key_required": false,
+      "model_env": "LM_STUDIO_MODEL",
+      "model_env_aliases": [
+        "MERCURY_LOCAL_MODEL"
+      ],
+      "default_model": "local-model",
+      "notes": "Local LM Studio OpenAI-compatible endpoint. Uses no API key by default."
     }
   }
 }

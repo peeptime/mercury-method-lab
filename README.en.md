@@ -48,6 +48,17 @@ npm run test:llm
 
 See [docs/DEPLOYMENT-ONBOARDING.md](docs/DEPLOYMENT-ONBOARDING.md).
 
+Provider support now includes hosted OpenAI-compatible APIs and local runtimes:
+
+- `openai`
+- `openai-compatible-custom`
+- `local-openclaw`
+- `ollama-local`
+- `vllm-local`
+- `lm-studio-local`
+
+Local providers do not require API keys by default. Hosted providers accept aliases such as `MERCURY_API_KEY`, `OPENAI_API_KEY`, and `MERCURY_OPENAI_API_KEY`.
+
 ## Architecture Boundary
 
 This release separates two axes:
@@ -88,6 +99,7 @@ The project keeps Markdown/YAML artifacts as the source of truth. JSON and SQLit
 - Project positioning: [docs/project-positioning.md](docs/project-positioning.md)
 - Architecture shift report: [docs/ARCHITECTURE-SHIFT-REPORT.md](docs/ARCHITECTURE-SHIFT-REPORT.md)
 - Deployment onboarding: [docs/DEPLOYMENT-ONBOARDING.md](docs/DEPLOYMENT-ONBOARDING.md)
+- Judgment closure rule: [docs/JUDGMENT-CLOSURE-RULE.md](docs/JUDGMENT-CLOSURE-RULE.md)
 - Upstream compatibility: [docs/upstream-mercury-agent-compatibility.md](docs/upstream-mercury-agent-compatibility.md)
 - Memory migration: [docs/memory-architecture-migration.md](docs/memory-architecture-migration.md)
 - Rule routing: [docs/rule-routing.md](docs/rule-routing.md)

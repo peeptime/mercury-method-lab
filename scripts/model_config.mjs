@@ -16,9 +16,11 @@ export async function loadModelConfig() {
     throw new Error(`Unknown model provider: ${providerName}`);
   }
 
-  const baseUrl = readConfigValue(provider, "base_url", "base_url_env", "default_base_url");
-  const model = readEnv(provider.model_env) || provider.default_model;
-  const apiKey = provider.api_key_env ? readEnv(provider.api_key_env) : "";
+  const baseUrl = readConfigValue(provider, "base_url", "base_url_env", "base_url_env_aliases", "default_base_url");
+  const model = readFirstEnv([provider.model_env, ...(provider.model_env_aliases || [])]) || provider.default_model;
+  const apiKeyNames = [provider.api_key_env, ...(provider.api_key_env_aliases || [])].filter(Boolean);
+  const apiKey = readFirstEnv(apiKeyNames);
+  const apiKeyRequired = provider.api_key_required !== false;
 
   if (!baseUrl) {
     throw new Error(`Missing base URL for provider ${providerName}`);
@@ -28,8 +30,8 @@ export async function loadModelConfig() {
     throw new Error(`Missing model for provider ${providerName}. Set ${provider.model_env}.`);
   }
 
-  if (provider.api_key_env && !apiKey && providerName !== "local-openclaw") {
-    throw new Error(`Missing ${provider.api_key_env}`);
+  if (apiKeyNames.length && apiKeyRequired && !apiKey) {
+    throw new Error(`Missing API key. Set one of: ${apiKeyNames.join(", ")}`);
   }
 
   return {
@@ -39,18 +41,31 @@ export async function loadModelConfig() {
     chatUrl: `${baseUrl.replace(/\/+$/, "")}${provider.chat_path || "/chat/completions"}`,
     model,
     apiKey,
-    apiKeyEnv: provider.api_key_env
+    apiKeyEnv: provider.api_key_env,
+    apiKeyEnvAliases: provider.api_key_env_aliases || [],
+    apiKeyRequired
   };
 }
 
-function readConfigValue(provider, directKey, envKey, defaultKey) {
+function readConfigValue(provider, directKey, envKey, envAliasesKey, defaultKey) {
   if (provider[directKey]) {
     return provider[directKey];
   }
-  if (provider[envKey] && readEnv(provider[envKey])) {
-    return readEnv(provider[envKey]);
+  const envValue = readFirstEnv([provider[envKey], ...(provider[envAliasesKey] || [])]);
+  if (envValue) {
+    return envValue;
   }
   return provider[defaultKey] || "";
+}
+
+function readFirstEnv(names) {
+  for (const name of names.filter(Boolean)) {
+    const value = readEnv(name);
+    if (value) {
+      return value;
+    }
+  }
+  return "";
 }
 
 function readEnv(name) {
