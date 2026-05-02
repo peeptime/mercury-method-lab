@@ -37,6 +37,12 @@ const translations = {
     executionModeAgent: "Agent \u6a21\u5f0f",
     executionModeFallback: "\u5f53\u524d\u6a21\u5f0f\uff1a{mode}",
     executionModeSaved: "\u6267\u884c\u6a21\u5f0f\u5df2\u5207\u6362\u4e3a {mode}",
+    analysisPersonaTitle: "\u5206\u6790\u4eba\u683c",
+    analysisPersonaV80: "V8.0 \u7a81\u56f4",
+    analysisPersonaV81: "V8.1 \u540c\u9891",
+    analysisPersonaV85: "V8.5 \u7ea0\u504f",
+    analysisPersonaFallback: "\u5f53\u524d\u4eba\u683c\uff1a{persona}",
+    analysisPersonaSaved: "\u5206\u6790\u4eba\u683c\u5df2\u5207\u6362\u4e3a {persona}",
     versionHintOk: "\u7248\u672c\uff1a\u540e\u7aef {app} \u00b7 \u524d\u7aef {asset} \u00b7 package {pkg} \u00b7 Node {node}",
     versionHintMismatch: "\u7248\u672c\u63d0\u793a\uff1a\u540e\u7aef {app} \u9884\u671f\u524d\u7aef {expected}\uff0c\u5f53\u524d\u52a0\u8f7d {asset}\u3002\u8bf7\u5f3a\u5237\u65b0\u9875\u9762\uff1b\u5982\u679c\u4ecd\u7136\u4e0d\u4e00\u81f4\uff0c\u91cd\u542f dashboard\u3002",
     artifactTableTitle: "Artifact \u5de5\u4f5c\u53f0",
@@ -151,6 +157,12 @@ const translations = {
     executionModeAgent: "Agent mode",
     executionModeFallback: "Current mode: {mode}",
     executionModeSaved: "Execution mode switched to {mode}",
+    analysisPersonaTitle: "Analysis persona",
+    analysisPersonaV80: "V8.0 Breakthrough",
+    analysisPersonaV81: "V8.1 Reality sync",
+    analysisPersonaV85: "V8.5 Correction",
+    analysisPersonaFallback: "Current persona: {persona}",
+    analysisPersonaSaved: "Analysis persona switched to {persona}",
     versionHintOk: "Version: server {app} · client {asset} · package {pkg} · Node {node}",
     versionHintMismatch: "Version hint: server {app} expects client {expected}, but this page loaded {asset}. Hard refresh the page; if it still differs, restart dashboard.",
     artifactTableTitle: "Artifact workbench",
@@ -301,6 +313,7 @@ function init() {
   renderOwnerOptions();
   renderEmptyState(t("loading"));
   renderExecutionMode();
+  renderAnalysisPersona();
   load();
 }
 
@@ -344,6 +357,12 @@ function bindEvents() {
     const modeButton = event.target.closest("[data-execution-mode]");
     if (modeButton) {
       await setExecutionMode(modeButton.dataset.executionMode);
+      return;
+    }
+
+    const personaButton = event.target.closest("[data-analysis-persona]");
+    if (personaButton) {
+      await setAnalysisPersona(personaButton.dataset.analysisPersona);
       return;
     }
 
@@ -458,6 +477,7 @@ function render() {
   renderCommandLabels();
   renderOwnerOptions();
   renderExecutionMode();
+  renderAnalysisPersona();
   renderVersionHint();
   if (!data) {
     renderEmptyState(t("loading"));
@@ -466,6 +486,7 @@ function render() {
   renderCapabilities();
   renderProviderSelect();
   renderExecutionMode();
+  renderAnalysisPersona();
   renderVersionHint();
   renderSubmissions();
   renderMetrics();
@@ -561,6 +582,23 @@ function renderExecutionMode() {
   $("#executionModeDesc").textContent = desc;
   $("#executionModeButtons").innerHTML = ["api", "agent"].map((mode) => `
     <button class="${mode === current ? "active" : ""}" data-execution-mode="${mode}" type="button" aria-pressed="${mode === current ? "true" : "false"}">${labels[mode]}</button>
+  `).join("");
+}
+
+function renderAnalysisPersona() {
+  const methods = data?.methods;
+  const current = normalizeAnalysisPersona(methods?.analysis_persona);
+  const descriptions = methods?.analysis_persona_description || {};
+  const labels = {
+    "v8.0-breakthrough": t("analysisPersonaV80"),
+    "v8.1-reality-sync": t("analysisPersonaV81"),
+    "v8.5-correction": t("analysisPersonaV85")
+  };
+  const desc = translateField(descriptions[current], "") || t("analysisPersonaFallback").replace("{persona}", labels[current] || current);
+
+  $("#analysisPersonaDesc").textContent = desc;
+  $("#analysisPersonaButtons").innerHTML = Object.keys(labels).map((persona) => `
+    <button class="${persona === current ? "active" : ""}" data-analysis-persona="${persona}" type="button" aria-pressed="${persona === current ? "true" : "false"}">${labels[persona]}</button>
   `).join("");
 }
 
@@ -978,6 +1016,25 @@ async function setExecutionMode(mode) {
   await load();
 }
 
+async function setAnalysisPersona(persona) {
+  const response = await fetch("/api/analysis-persona", {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ persona })
+  });
+  const result = await response.json();
+  if (!result.ok) {
+    setStatus(`${t("failed")}: ${result.error || "unknown error"}`, "error");
+    return;
+  }
+  if (data?.methods) {
+    data.methods.analysis_persona = result.analysis_persona;
+  }
+  renderAnalysisPersona();
+  setStatus(t("analysisPersonaSaved").replace("{persona}", result.analysis_persona), "ok");
+  await load();
+}
+
 async function runCommand(script, button) {
   setButtonBusy(button, true);
   showOutput(`${t("runningScript")} ${script}...`);
@@ -1091,6 +1148,10 @@ function normalizeLocale(value) {
 
 function normalizeExecutionMode(value) {
   return value === "agent" ? "agent" : "api";
+}
+
+function normalizeAnalysisPersona(value) {
+  return ["v8.0-breakthrough", "v8.1-reality-sync", "v8.5-correction"].includes(value) ? value : "v8.1-reality-sync";
 }
 
 function readLoadedAssetVersion() {

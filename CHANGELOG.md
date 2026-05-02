@@ -2,8 +2,17 @@
 
 ## Unreleased
 
+## 0.3.4 — Persona Axis
+
+Architecture pollution fix: split PSP analysis persona from execution mode.
+
 ### Added
 
+- `analysis_persona` 配置字段：把 V8.0 / V8.1 / V8.5 从执行模式中拆出，默认 `v8.1-reality-sync`
+- `docs/methods/` 收纳 PSP-V8.0、PSP-V8.1、v8.5 纠偏提示词，减少工作区外依赖
+- `docs/ANALYSIS-PERSONA-DESIGN.md` 记录人格轴与执行通道轴的架构边界
+- Dashboard Analysis persona 预览与切换控件，并写回 `config/methods.json`
+- `PATCH /api/analysis-persona` Dashboard API
 - Dashboard Execution mode 切换控件，并写回 `config/methods.json`
 - `PATCH /api/execution-mode` Dashboard API
 - `AGENT_ENTRY.md` 和 `mercury-lab` skill 的 API / Agent 模式分流说明

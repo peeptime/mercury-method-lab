@@ -9,8 +9,8 @@ const root = dirname(dirname(fileURLToPath(import.meta.url)));
 const dashboardRoot = join(root, "dashboard");
 const port = Number(process.env.MERCURY_DASHBOARD_PORT || 4788);
 const lifecycleLogPath = join(root, "data", "lifecycle-log.jsonl");
-const appVersion = "2026.05.02-a";
-const expectedClientAssetVersion = "20260502a";
+const appVersion = "2026.05.02-b";
+const expectedClientAssetVersion = "20260502b";
 
 const artifactDirs = [
   "00_inbox",
@@ -132,6 +132,11 @@ const server = createServer(async (req, res) => {
     if (url.pathname === "/api/execution-mode" && req.method === "PATCH") {
       const body = await readJson(req);
       return sendJson(res, await setExecutionMode(body.mode));
+    }
+
+    if (url.pathname === "/api/analysis-persona" && req.method === "PATCH") {
+      const body = await readJson(req);
+      return sendJson(res, await setAnalysisPersona(body.persona));
     }
 
     if (url.pathname === "/api/capability" && req.method === "PATCH") {
@@ -1083,6 +1088,20 @@ async function setExecutionMode(mode) {
   config.execution_mode = mode;
   await writeJsonFile("config/methods.json", config);
   return { ok: true, execution_mode: mode };
+}
+
+async function setAnalysisPersona(personaName) {
+  const config = await readJsonFile("config/methods.json");
+  if (!config.personas?.[personaName]) {
+    throw new Error(`Invalid analysis persona: ${personaName}`);
+  }
+
+  config.analysis_persona = personaName;
+  for (const [key, persona] of Object.entries(config.personas)) {
+    persona.status = key === personaName ? "active" : "reserved";
+  }
+  await writeJsonFile("config/methods.json", config);
+  return { ok: true, analysis_persona: personaName };
 }
 
 async function setCapabilityStatus(key, status) {

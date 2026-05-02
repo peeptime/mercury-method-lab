@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Mercury Method Lab</title>
     <link rel="icon" href="data:,">
-    <link rel="stylesheet" href="/styles.css?v=20260502a">
+    <link rel="stylesheet" href="/styles.css?v=20260502b">
   </head>
   <body>
     <main class="shell">
@@ -36,7 +36,7 @@
             <h1 data-i18n="pageTitle">Submit a viewpoint, then let the pipeline carry it.</h1>
           </div>
           <div class="toolbar">
-            <span id="buildBadge" class="build-badge" aria-label="GUI build">v2026.05.02-a</span>
+            <span id="buildBadge" class="build-badge" aria-label="GUI build">v2026.05.02-b</span>
             <div class="topbar-language">
               <span class="language-label" data-i18n="languageLabel">Language</span>
               <div class="language-mode" aria-label="Language mode">
@@ -53,11 +53,16 @@
         <div id="versionHint" class="version-hint" role="status">版本检查中...</div>
 
         <section class="mode-card" aria-labelledby="executionModeTitle">
-          <div>
+          <div class="mode-block">
             <h2 id="executionModeTitle" data-i18n="executionModeTitle">Execution mode</h2>
             <p id="executionModeDesc">-</p>
+            <div class="segmented mode-toggle" id="executionModeButtons" aria-label="Execution mode"></div>
           </div>
-          <div class="segmented mode-toggle" id="executionModeButtons" aria-label="Execution mode"></div>
+          <div class="mode-block">
+            <h2 id="analysisPersonaTitle" data-i18n="analysisPersonaTitle">Analysis persona</h2>
+            <p id="analysisPersonaDesc">-</p>
+            <div class="segmented mode-toggle persona-toggle" id="analysisPersonaButtons" aria-label="Analysis persona"></div>
+          </div>
         </section>
 
         <section id="submit" class="hero-flow">
@@ -222,6 +227,6 @@
         </section>
       </section>
     </main>
-    <script src="/app.js?v=20260502a" type="module"></script>
+    <script src="/app.js?v=20260502b" type="module"></script>
   </body>
 </html>

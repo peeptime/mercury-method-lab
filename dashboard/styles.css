@@ -257,9 +257,9 @@ h3 {
 }
 
 .mode-card {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: stretch;
   gap: 14px;
   margin: 0 0 14px;
   padding: 13px 14px;
@@ -269,12 +269,21 @@ h3 {
   box-shadow: 0 10px 28px rgba(36, 60, 45, 0.08);
 }
 
+.mode-block {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 6px 12px;
+  align-items: center;
+  min-width: 0;
+}
+
 .mode-card h2 {
   margin-bottom: 4px;
   font-size: 14px;
 }
 
 .mode-card p {
+  grid-column: 1 / -1;
   color: var(--muted);
   font-size: 13px;
   line-height: 1.45;
@@ -289,10 +298,14 @@ h3 {
 }
 
 .mode-toggle button {
-  min-width: 82px;
+  min-width: 76px;
   border: 0;
   background: transparent;
   font-weight: 800;
+}
+
+.persona-toggle button {
+  min-width: 112px;
 }
 
 .hero-flow {
@@ -986,6 +999,7 @@ label span {
   .topbar,
   .toolbar,
   .mode-card,
+  .mode-block,
   .form-grid,
   .form-grid.compact,
   .viewpoint-form,

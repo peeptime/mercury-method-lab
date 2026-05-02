@@ -1,19 +1,23 @@
 {
-  "version": "0.3",
+  "version": "0.4",
   "active_method": "v8",
+  "analysis_persona": "v8.1-reality-sync",
+  "analysis_persona_description": {
+    "v8.0-breakthrough": "突围型结构穿透人格：先切开表面解释，再用审计刹车。适合强叙事污染、伪结构、伪杠杆识别。",
+    "v8.1-reality-sync": "现实同频型结构判断人格：先解释均衡为什么成立，再判断是否存在失真、断裂或可触达杠杆。默认人格。",
+    "v8.5-correction": "纠偏压缩人格：用于审计过度聪明、概念偷换和伪深刻，不作为默认主分析人格。"
+  },
   "execution_mode": "api",
   "execution_mode_description": {
-    "api": "使用 V8 执行脚本 + API token（确定性高，成本高）",
-    "agent": "使用 AI Agent 智能做 V8 分析（成本低，质量依赖 Agent）"
+    "api": "使用 PSP 执行脚本 + API token（确定性高，成本高）",
+    "agent": "使用 AI Agent 智能做 PSP 分析（成本低，质量依赖 Agent）"
   },
   "methods": {
     "v8": {
       "status": "active",
-      "purpose": "Structural judgment and event analysis.",
+      "purpose": "PSP structural judgment artifact flow. The active analysis persona is selected by analysis_persona.",
       "primary_docs": [
-        "../PSP-V8.0-突围者事件研判执行提示词.md",
-        "../PSP-V8.1-与市场同频的真实理解事件研判执行提示词.md",
-        "../纠偏压缩PSP-聪明人装聪明验证-v8.5.md"
+        "docs/methods/PSP-V8.1-与市场同频的真实理解事件研判执行提示词.md"
       ],
       "artifact_flow": "default"
     },
@@ -22,6 +26,32 @@
       "purpose": "Reserved slot for future reasoning methods that need the same evidence, memory, decision, action, and audit loop.",
       "primary_docs": [],
       "artifact_flow": "default"
+    }
+  },
+  "personas": {
+    "v8.0-breakthrough": {
+      "status": "reserved",
+      "label": "V8.0 突围者",
+      "stance": "不相信表面叙事，优先识别假结构、假权力、假杠杆。",
+      "primary_docs": [
+        "docs/methods/PSP-V8.0-突围者事件研判执行提示词.md"
+      ]
+    },
+    "v8.1-reality-sync": {
+      "status": "active",
+      "label": "V8.1 现实同频",
+      "stance": "先承认现实均衡为何成立，再寻找失真、断裂、错配和可触达杠杆。",
+      "primary_docs": [
+        "docs/methods/PSP-V8.1-与市场同频的真实理解事件研判执行提示词.md"
+      ]
+    },
+    "v8.5-correction": {
+      "status": "reserved",
+      "label": "V8.5 纠偏压缩",
+      "stance": "用于审计过度聪明、概念偷换、伪深刻和不可执行判断。",
+      "primary_docs": [
+        "docs/methods/纠偏压缩PSP-聪明人装聪明验证-v8.5.md"
+      ]
     }
   }
 }

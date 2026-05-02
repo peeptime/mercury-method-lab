@@ -1,6 +1,6 @@
 # Execution Mode 设计文档
 
-> 版本：0.3.0 → 0.3.3 迭代
+> 版本：0.3.0 → 0.3.4 迭代
 > 生成时间：2026-05-01 23:05 GMT+8
 > 状态：已实现（2026-05-02）
 
@@ -21,6 +21,8 @@ Mercury Lab 当前存在两种智能消耗方式：
 
 ## 解决方案：execution_mode 配置
 
+2026-05-02 补充：`execution_mode` 只解决“谁来执行”。V8.0 / V8.1 / V8.5 属于分析人格，不属于执行模式。人格轴已拆到 `analysis_persona`，默认 `v8.1-reality-sync`。
+
 ### 设计目标
 
 - **正确的东西做正确的事**：AI Agent 负责理解、决策、编排；Mercury Lab 负责执行、存储、审计
@@ -35,8 +37,9 @@ Mercury Lab 当前存在两种智能消耗方式：
 
 ```json
 {
-  "version": "0.3",
+  "version": "0.4",
   "active_method": "v8",
+  "analysis_persona": "v8.1-reality-sync",
   "execution_mode": "api",
   "execution_mode_description": {
     "api": "使用 V8 执行脚本 + API token（确定性高，成本高）",
@@ -47,8 +50,11 @@ Mercury Lab 当前存在两种智能消耗方式：
 
 | 字段 | 说明 |
 |------|------|
+| `analysis_persona` | 当前分析人格：默认 `v8.1-reality-sync` |
 | `execution_mode` | 当前模式：`api`（默认）或 `agent` |
 | `execution_mode_description` | 模式说明，供 UI 和文档使用 |
+
+边界纪律：`analysis_persona` 决定判断姿态，`execution_mode` 决定执行通道。不要在一次主分析中同时加载 V8.0、V8.1、V8.5 后让模型自行融合。
 
 ---
 

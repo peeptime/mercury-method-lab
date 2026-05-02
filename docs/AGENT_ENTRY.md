@@ -27,21 +27,29 @@ Artifact 分两种：
 
 ### 2. 方法路由
 
-Mercury Lab 支持多种分析方法，当前激活的是 **V8.0**。
+Mercury Lab 支持多种分析方法。当前激活方法是 **PSP/V8**，当前分析人格是 **V8.1 现实同频**。
 
 配置文件：`v8-mercury-backend/config/methods.json` → `active_method: v8`
 
+分析人格：`config/methods.json` → `analysis_persona`
+
+- `v8.1-reality-sync`：默认人格。先解释现实均衡为什么成立，再判断是否存在失真、断裂、错配或可触达杠杆。
+- `v8.0-breakthrough`：突围人格。适合强叙事污染、伪结构、伪权力、伪杠杆识别。
+- `v8.5-correction`：纠偏人格。用于审计过度聪明、概念偷换和伪深刻，不作为默认主分析人格。
+
 执行模式：`config/methods.json` → `execution_mode`
 
-- `api`：默认模式。Agent 不自己展开 V8.0 分析，直接调用 `npm run v8:analyze`，由 Mercury Lab 脚本消耗 API token、写入分析和审计 artifact。
-- `agent`：Agent 模式。Agent 使用自身上下文和 V8.0 框架完成分析，但仍必须写入 `00_raw/`、`01_segmented/`、`07_audit_reports/` 并更新索引。
+- `api`：默认模式。Agent 不自己展开主分析，直接调用 `npm run v8:analyze`，由 Mercury Lab 脚本消耗 API token、写入分析和审计 artifact。
+- `agent`：Agent 模式。Agent 使用自身上下文和当前分析人格完成分析，但仍必须写入 `00_raw/`、`01_segmented/`、`07_audit_reports/` 并更新索引。
 
-V8.0 提示词文件位置：
+PSP 人格提示词文件位置：
 ```
-Z:\AI 202604\trae01\PSP-V8.0-突围者事件研判执行提示词.md
-Z:\AI 202604\trae01\PSP-V8.1-与市场同频的真实理解事件研判执行提示词.md
-Z:\AI 202604\trae01\纠偏压缩PSP-聪明人装聪明验证-v8.5.md
+v8-mercury-backend/docs/methods/PSP-V8.0-突围者事件研判执行提示词.md
+v8-mercury-backend/docs/methods/PSP-V8.1-与市场同频的真实理解事件研判执行提示词.md
+v8-mercury-backend/docs/methods/纠偏压缩PSP-聪明人装聪明验证-v8.5.md
 ```
+
+架构边界：V8.0 / V8.1 / V8.5 是“分析人格”，API / Agent 是“执行通道”。不得把人格版本当成运行模式，也不得在一次主分析中混读多个 PSP 人格，除非当前人格文档显式要求对照审计。
 
 ---
 
@@ -52,7 +60,7 @@ Z:\AI 202604\trae01\纠偏压缩PSP-聪明人装聪明验证-v8.5.md
   ↓
 写入 00_raw/（文件名格式：YYYYMMDD-描述.md）
   ↓
-调用 V8.0 分析 → 写入 01_segmented/
+调用当前 PSP 分析人格 → 写入 01_segmented/
   ↓
 事实清洗 → 写入 02_cleaned/
   ↓
@@ -86,7 +94,7 @@ Z:\AI 202604\trae01\纠偏压缩PSP-聪明人装聪明验证-v8.5.md
 v8-mercury-backend/
 ├── 00_raw/          # 原始材料入口
 ├── 00_inbox/        # 预入库材料（有价值但暂不处理）
-├── 01_segmented/    # V8.0 结构化分析
+├── 01_segmented/    # PSP 结构化分析
 ├── 02_cleaned/     # 事实清洗
 ├── 03_uncertain/  # 异常信号、待追踪项
 ├── 04_memory_candidates/  # 值得长期积累的结论
@@ -149,9 +157,9 @@ npm run v8:analyze -- --file .\path\to\input.md --title "材料标题"
 脚本会自动完成：
 
 1. 写入 `00_raw/`，保留原始材料。
-2. 读取 `config/methods.json` 里的 active V8.0 提示词。
+2. 读取 `config/methods.json` 里的 `analysis_persona`，只加载当前人格的主提示词。
 3. 调用 `config/model-providers.json` 里的 active LLM provider。
-4. 写入 `01_segmented/` V8.0 结构化分析。
+4. 写入 `01_segmented/` PSP 结构化分析。
 5. 写入 `07_audit_reports/` red-team 审计报告。
 6. 默认重建 `11_indexes/source-index.json`。
 
@@ -159,10 +167,10 @@ npm run v8:analyze -- --file .\path\to\input.md --title "材料标题"
 
 #### Agent 模式（`execution_mode: "agent"`）
 
-Agent 可以自己执行 V8.0 分析，但必须保持 Mercury Lab 的存储闭环：
+Agent 可以自己执行 PSP 分析，但必须保持 Mercury Lab 的存储闭环：
 
 1. 写入 `00_raw/YYYY-MM-DD-描述.md`，保留原始材料。
-2. 按 V8.0 的 12 个核心模块生成 `01_segmented/YYYY-MM-DD-描述-v8-analysis.md`。
+2. 按当前 `analysis_persona` 的固定输出结构生成 `01_segmented/YYYY-MM-DD-描述-v8-analysis.md`。
 3. 写入 `07_audit_reports/YYYY-MM-DD-描述-v8-audit.md`；如果不是独立 red-team adapter，审计中必须注明“此审计由 AI Agent 手工生成，未经过 V8-redteam adapter”。
 4. 运行 `npm run index` 更新索引。
 5. 运行 `npm run validate` 检查 artifact 契约。
@@ -188,7 +196,7 @@ Get-Content config/methods.json
 
 | 需要什么 | 去哪 |
 |---------|------|
-| V8.0 框架细节 | `docs/v8-framework.md` 或 `references/v8-framework.md` |
+| PSP 人格细节 | `docs/methods/` |
 | Artifact 状态流转 | `docs/architecture.md` |
 | 禁止事项详解 | `references/forbidden-rules.md` |
 | 上游兼容策略 | `docs/upstream-mercury-agent-compatibility.md` |
@@ -204,4 +212,4 @@ Mercury Lab 目前主要服务于你自己的使用场景。有朝一日如果�
 
 ---
 
-*最后更新：2026-05-02 | 版本：0.3.3 | 位置：v8-mercury-backend/docs/AGENT_ENTRY.md*
+*最后更新：2026-05-02 | 版本：0.3.4 | 位置：v8-mercury-backend/docs/AGENT_ENTRY.md*

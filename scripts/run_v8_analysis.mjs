@@ -28,7 +28,7 @@ const slug = slugify(args.slug || title);
 const id = `${stamp}-${slug}`;
 const reviewAt = date;
 
-const methodDocs = await loadActiveMethodDocs();
+const methodProfile = await loadMethodProfile(args.persona);
 const modelConfig = await loadModelConfig();
 const rawPath = join(root, "00_raw", `${date}-${id}.md`);
 const segmentedPath = join(root, "01_segmented", `${date}-${id}-v8-analysis.md`);
@@ -38,9 +38,9 @@ await mkdir(dirname(rawPath), { recursive: true });
 await mkdir(dirname(segmentedPath), { recursive: true });
 await mkdir(dirname(auditPath), { recursive: true });
 
-await writeFile(rawPath, renderRawArtifact({ title, source, now, reviewAt, id }), "utf8");
+await writeFile(rawPath, renderRawArtifact({ title, source, methodProfile, now, reviewAt, id }), "utf8");
 
-const rawAnalysis = await runV8Analysis({ title, source, methodDocs, modelConfig, rawPath });
+const rawAnalysis = await runV8Analysis({ title, source, methodProfile, modelConfig, rawPath });
 const rawCompleteness = assessV8Completeness(rawAnalysis);
 const analysis = normalizeAnalysisMarkdown(rawAnalysis, rawCompleteness.missing);
 const completeness = {
@@ -50,14 +50,14 @@ const completeness = {
 
 await writeFile(
   segmentedPath,
-  renderSegmentedArtifact({ title, source, analysis, completeness, now, reviewAt, id, rawPath, modelConfig }),
+  renderSegmentedArtifact({ title, source, analysis, completeness, methodProfile, now, reviewAt, id, rawPath, modelConfig }),
   "utf8"
 );
 
-const audit = normalizeAuditMarkdown(await runV8Audit({ title, source, analysis, completeness, modelConfig, rawPath, segmentedPath }));
+const audit = normalizeAuditMarkdown(await runV8Audit({ title, source, analysis, completeness, methodProfile, modelConfig, rawPath, segmentedPath }));
 await writeFile(
   auditPath,
-  renderAuditArtifact({ title, source, audit, completeness, now, reviewAt, id, rawPath, segmentedPath, modelConfig }),
+  renderAuditArtifact({ title, source, audit, completeness, methodProfile, now, reviewAt, id, rawPath, segmentedPath, modelConfig }),
   "utf8"
 );
 
@@ -70,6 +70,8 @@ const output = {
   ok: true,
   provider: modelConfig.providerName,
   model: modelConfig.model,
+  method: methodProfile.methodName,
+  persona: methodProfile.personaName,
   raw: rel(rawPath),
   segmented: rel(segmentedPath),
   audit: rel(auditPath),
@@ -86,6 +88,7 @@ function parseArgs(argv) {
     title: "",
     slug: "",
     provider: "",
+    persona: "",
     noIndex: false,
     help: false
   };
@@ -104,6 +107,8 @@ function parseArgs(argv) {
       result.slug = argv[++i] || "";
     } else if (arg === "--provider") {
       result.provider = argv[++i] || "";
+    } else if (arg === "--persona") {
+      result.persona = argv[++i] || "";
     } else if (arg === "--no-index") {
       result.noIndex = true;
     } else if (!arg.startsWith("-") && !result.file && !result.text) {
@@ -124,6 +129,7 @@ function printUsage() {
     "",
     "Options:",
     "  --provider <name>  Override config/model-providers.json active provider.",
+    "  --persona <name>   Override config/methods.json analysis_persona for this run.",
     "  --slug <slug>      Override output filename slug.",
     "  --no-index         Skip rebuilding 11_indexes/source-index.json.",
     "",
@@ -166,15 +172,19 @@ function inferTitle(source) {
   return source.text.split(/\r?\n/).find((line) => line.trim())?.slice(0, 48).trim() || "v8-input";
 }
 
-async function loadActiveMethodDocs() {
+async function loadMethodProfile(personaOverride) {
   const config = JSON.parse(await readFile(methodsPath, "utf8"));
-  const active = config.methods?.[config.active_method];
+  const methodName = config.active_method || "v8";
+  const active = config.methods?.[methodName];
   if (!active) {
     throw new Error(`Unknown active method: ${config.active_method}`);
   }
 
+  const personaName = personaOverride || config.analysis_persona || "v8.1-reality-sync";
+  const persona = config.personas?.[personaName];
+  const docPaths = persona?.primary_docs?.length ? persona.primary_docs : active.primary_docs;
   const docs = [];
-  for (const docPath of active.primary_docs || []) {
+  for (const docPath of docPaths || []) {
     const absolutePath = resolve(root, docPath);
     try {
       docs.push({
@@ -187,14 +197,23 @@ async function loadActiveMethodDocs() {
   }
 
   if (!docs.length) {
-    throw new Error(`No readable method docs for active method ${config.active_method}`);
+    throw new Error(`No readable method docs for method ${methodName} persona ${personaName}`);
   }
 
-  return docs;
+  return {
+    methodName,
+    method: active,
+    personaName,
+    persona: persona || {
+      label: personaName,
+      stance: "Legacy method persona inferred from active method primary_docs."
+    },
+    docs
+  };
 }
 
-async function runV8Analysis({ title, source, methodDocs, modelConfig, rawPath }) {
-  const methodText = methodDocs.map((doc) => [
+async function runV8Analysis({ title, source, methodProfile, modelConfig, rawPath }) {
+  const methodText = methodProfile.docs.map((doc) => [
     `# Method doc: ${rel(doc.path)}`,
     doc.text.trim()
   ].join("\n\n")).join("\n\n---\n\n");
@@ -203,8 +222,12 @@ async function runV8Analysis({ title, source, methodDocs, modelConfig, rawPath }
     {
       role: "system",
       content: [
-        "You are Mercury Lab's deterministic V8.0 execution adapter.",
-        "Use the provided V8.0 method documents as the operating template.",
+        "You are Mercury Lab's deterministic PSP execution adapter.",
+        `Active method: ${methodProfile.methodName}.`,
+        `Active analysis persona: ${methodProfile.personaName} (${methodProfile.persona.label || methodProfile.personaName}).`,
+        `Persona stance: ${methodProfile.persona.stance || "Use the provided method document exactly."}`,
+        "Do not merge competing PSP personas unless the active persona document explicitly asks for it.",
+        "Use the provided active persona document as the operating template.",
         "Do not ask follow-up questions. Do not mention that you are an AI model.",
         "Do not invent external facts. Mark assumptions, missing evidence, and verification gaps explicitly.",
         "Output Markdown only.",
@@ -214,14 +237,16 @@ async function runV8Analysis({ title, source, methodDocs, modelConfig, rawPath }
     {
       role: "user",
       content: [
-        "## V8.0 Method Documents",
+        "## Active PSP Persona Documents",
         methodText,
         "",
         "## Mercury Lab Execution Contract",
         `- title: ${title}`,
         `- raw_artifact: ${rel(rawPath)}`,
         `- source_ref: ${source.ref}`,
-        "- write a structured V8.0 analysis suitable for 01_segmented/.",
+        `- method: ${methodProfile.methodName}`,
+        `- analysis_persona: ${methodProfile.personaName}`,
+        "- write a structured PSP analysis suitable for 01_segmented/.",
         "- include explicit audit notes; do not leave the audit to the caller.",
         "",
         "## Input Material",
@@ -233,13 +258,13 @@ async function runV8Analysis({ title, source, methodDocs, modelConfig, rawPath }
   return callChat(modelConfig, messages, 0.2);
 }
 
-async function runV8Audit({ title, source, analysis, completeness, modelConfig, rawPath, segmentedPath }) {
+async function runV8Audit({ title, source, analysis, completeness, methodProfile, modelConfig, rawPath, segmentedPath }) {
   const messages = [
     {
       role: "system",
       content: [
         "You are Mercury Lab's red-team audit adapter.",
-        "Audit the V8.0 analysis against the original input and the deterministic completeness check.",
+        `Audit the PSP analysis against the original input, active persona ${methodProfile.personaName}, and the deterministic completeness check.`,
         "Do not rewrite the analysis. Identify risk, missing assumptions, overclaims, and whether the result can proceed.",
         "Output Markdown only.",
         "You must include these headings exactly: ## 被审计结论, ## 关键假设, ## 最可能错误点, ## 对抗性交叉验证, ## 审计结论, ## 下一步."
@@ -254,6 +279,8 @@ async function runV8Audit({ title, source, analysis, completeness, modelConfig, 
         `- raw: ${rel(rawPath)}`,
         `- segmented: ${rel(segmentedPath)}`,
         `- source_ref: ${source.ref}`,
+        `- method: ${methodProfile.methodName}`,
+        `- analysis_persona: ${methodProfile.personaName}`,
         "",
         "## Deterministic completeness check",
         JSON.stringify(completeness, null, 2),
@@ -261,7 +288,7 @@ async function runV8Audit({ title, source, analysis, completeness, modelConfig, 
         "## Original input",
         source.text,
         "",
-        "## V8.0 analysis to audit",
+        "## PSP analysis to audit",
         analysis
       ].join("\n")
     }
@@ -303,7 +330,7 @@ async function callChat(modelConfig, messages, temperature) {
   return content;
 }
 
-function renderRawArtifact({ title, source, now, reviewAt, id }) {
+function renderRawArtifact({ title, source, methodProfile, now, reviewAt, id }) {
   return `# ${title}
 
 ## Artifact Metadata
@@ -316,7 +343,8 @@ function renderRawArtifact({ title, source, now, reviewAt, id }) {
 - source_refs: ${source.ref}
 - created_at: ${now.toISOString()}
 - review_at: ${reviewAt}
-- method: v8
+- method: ${methodProfile.methodName}
+- analysis_persona: ${methodProfile.personaName}
 - automation: scripts/run_v8_analysis.mjs
 
 ## Original Submission
@@ -325,8 +353,8 @@ ${source.text}
 `;
 }
 
-function renderSegmentedArtifact({ title, source, analysis, completeness, now, reviewAt, id, rawPath, modelConfig }) {
-  return `# Mercury Lab V8.0 分析：${title}
+function renderSegmentedArtifact({ title, source, analysis, completeness, methodProfile, now, reviewAt, id, rawPath, modelConfig }) {
+  return `# Mercury Lab PSP 分析：${title}
 
 ## Artifact Metadata
 
@@ -338,7 +366,8 @@ function renderSegmentedArtifact({ title, source, analysis, completeness, now, r
 - source_refs: ${rel(rawPath)}
 - created_at: ${now.toISOString()}
 - review_at: ${reviewAt}
-- method: v8
+- method: ${methodProfile.methodName}
+- analysis_persona: ${methodProfile.personaName}
 - automation: scripts/run_v8_analysis.mjs
 - model_provider: ${modelConfig.providerName}
 - model: ${modelConfig.model}
@@ -358,8 +387,8 @@ ${analysis}
 `;
 }
 
-function renderAuditArtifact({ title, source, audit, completeness, now, reviewAt, id, rawPath, segmentedPath, modelConfig }) {
-  return `# Mercury Lab V8.0 审计：${title}
+function renderAuditArtifact({ title, source, audit, completeness, methodProfile, now, reviewAt, id, rawPath, segmentedPath, modelConfig }) {
+  return `# Mercury Lab PSP 审计：${title}
 
 ## Artifact Metadata
 
@@ -371,7 +400,8 @@ function renderAuditArtifact({ title, source, audit, completeness, now, reviewAt
 - source_refs: ${rel(segmentedPath)}
 - created_at: ${now.toISOString()}
 - review_at: ${reviewAt}
-- method: v8-redteam
+- method: ${methodProfile.methodName}-redteam
+- analysis_persona: ${methodProfile.personaName}
 - automation: scripts/run_v8_analysis.mjs
 - model_provider: ${modelConfig.providerName}
 - model: ${modelConfig.model}
@@ -421,7 +451,7 @@ function normalizeAnalysisMarkdown(text, missing) {
 
   return `${text.trim()}
 
-## 自动补全的 V8.0 结构
+## 自动补全的 PSP 结构
 
 以下章节由脚本补齐，说明分析模型没有完整遵守输出契约，需在审计中复核。
 
