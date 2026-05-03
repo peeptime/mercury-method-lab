@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+## 0.5.1 — Execution Mode Guard
+
+Fix V8 analysis startup and mode switching so persona configuration remains parseable and agent mode does not spend API tokens.
+
+### Fixed
+
+- Restored `config/methods.json` to valid JSON with one stable persona schema and no duplicated top-level persona fields.
+- Escaped the V8.2.1 persona wording so JSON parsing no longer fails before analysis starts.
+- Made `scripts/run_v8_analysis.mjs` read `execution_mode` and skip API calls in `agent` mode.
+- Added `--mode` / `--execution-mode` overrides for one-off API or Agent runs.
+- Hardened CLI parsing for `--persona v8.2-dimension-radar`, `--persona=v8.2-dimension-radar`, and `-p v8.2-dimension-radar`.
+
 ## 0.3.6 — Judgment Closure
 
 Tighten PSP outputs so analysis closes with stop conditions, falsification signals, review timing, and memory-level advice. Expand model provider support for hosted OpenAI-compatible APIs and local open-source runtimes.

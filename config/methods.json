@@ -1,13 +1,14 @@
 {
-  "version": "0.4",
+  "version": "0.5.1",
   "active_method": "v8",
   "analysis_persona": "v8.1-reality-sync",
   "analysis_persona_description": {
     "v8.0-breakthrough": "突围型结构穿透人格：先切开表面解释，再用审计刹车。适合强叙事污染、伪结构、伪杠杆识别。",
     "v8.1-reality-sync": "现实同频型结构判断人格：先解释均衡为什么成立，再判断是否存在失真、断裂或可触达杠杆。默认人格。",
-    "v8.5-correction": "纠偏压缩人格：用于审计过度聪明、概念偷换和伪深刻，不作为默认主分析人格。",
     "v8.2-dimension-radar": "维度迁移雷达人格：不预测终局，先判断问题是否变了；不判断概念生死，先观察能力器官是否迁移；适合泡沫审计、技术叙事识别和新概念去伪存真。",
-    "v8.2.1-dimension-radar-production": "维度迁移雷达生产型增强版：基于V8.2的补丁，专用于已进入高频生产任务的概念（如AI Coding）；新增宿主寿命判断和反向吞并信号审计，适合"正在长成新身体"的概念。",
+    "v8.2.1-dimension-radar-production": "维度迁移雷达生产型增强版：基于 V8.2 的补丁，专用于已进入高频生产任务的概念；新增宿主寿命判断和反向吞并信号审计。",
+    "v8.5-correction": "纠偏压缩人格：用于审计过度聪明、概念偷换和伪深刻，不作为默认主分析人格。"
+  },
   "execution_mode": "agent",
   "execution_mode_description": {
     "api": "使用 PSP 执行脚本 + API token（确定性高，成本高）",
@@ -65,7 +66,7 @@
     "v8.2.1-dimension-radar-production": {
       "status": "active",
       "label": "V8.2.1 维度迁移雷达（生产型增强）",
-      "stance": "不分析尸体，而分析正在生长的身体。专用于已进入高频生产任务的概念，新增宿主寿命判断和反向吞并信号审计，适合判断"正在长成什么"而非"会不会死"。",
+      "stance": "不分析尸体，而分析正在生长的身体。专用于已进入高频生产任务的概念，新增宿主寿命判断和反向吞并信号审计，适合判断“正在长成什么”而非“会不会死”。",
       "primary_docs": [
         "docs/methods/PSP-V8.2.1-维度迁移雷达-生产型概念增强版.md"
       ]

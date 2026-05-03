@@ -19,6 +19,9 @@ if (args.help || (!args.text && !args.file)) {
   process.exit(args.help ? 0 : 1);
 }
 
+const methodsConfig = await loadMethodsConfig();
+const executionMode = normalizeExecutionMode(args.mode || methodsConfig.execution_mode || "api");
+
 const now = new Date();
 const date = now.toISOString().slice(0, 10);
 const stamp = now.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}Z$/, "z").toLowerCase();
@@ -28,17 +31,47 @@ const slug = slugify(args.slug || title);
 const id = `${stamp}-${slug}`;
 const reviewAt = date;
 
-const methodProfile = await loadMethodProfile(args.persona);
-const modelConfig = await loadModelConfig();
+const methodProfile = await loadMethodProfile(methodsConfig, args.persona);
 const rawPath = join(root, "00_raw", `${date}-${id}.md`);
 const segmentedPath = join(root, "01_segmented", `${date}-${id}-v8-analysis.md`);
 const auditPath = join(root, "07_audit_reports", `${date}-${id}-v8-audit.md`);
+const agentQueuePath = join(root, "submissions", "agent-queue", `${date}-${id}-v8-agent-task.json`);
 
 await mkdir(dirname(rawPath), { recursive: true });
 await mkdir(dirname(segmentedPath), { recursive: true });
 await mkdir(dirname(auditPath), { recursive: true });
+await mkdir(dirname(agentQueuePath), { recursive: true });
 
-await writeFile(rawPath, renderRawArtifact({ title, source, methodProfile, now, reviewAt, id }), "utf8");
+await writeFile(rawPath, renderRawArtifact({ title, source, methodProfile, executionMode, now, reviewAt, id }), "utf8");
+
+if (executionMode === "agent") {
+  await writeFile(
+    agentQueuePath,
+    `${JSON.stringify(renderAgentQueueEnvelope({ title, source, methodProfile, now, reviewAt, id, rawPath, segmentedPath, auditPath }), null, 2)}\n`,
+    "utf8"
+  );
+
+  let indexResult = { ok: false, skipped: true, message: "skipped by --no-index" };
+  if (!args.noIndex) {
+    indexResult = rebuildIndex();
+  }
+
+  console.log(JSON.stringify({
+    ok: true,
+    execution_mode: executionMode,
+    method: methodProfile.methodName,
+    persona: methodProfile.personaName,
+    raw: rel(rawPath),
+    agent_queue: rel(agentQueuePath),
+    segmented_target: rel(segmentedPath),
+    audit_target: rel(auditPath),
+    index: indexResult,
+    next_action: "Agent mode selected: API calls were skipped. An agent-readable task envelope was written for analysis/audit completion."
+  }, null, 2));
+  process.exit(0);
+}
+
+const modelConfig = await loadModelConfig();
 
 const rawAnalysis = await runV8Analysis({ title, source, methodProfile, modelConfig, rawPath });
 const rawCompleteness = assessV8Completeness(rawAnalysis);
@@ -68,6 +101,7 @@ if (!args.noIndex) {
 
 const output = {
   ok: true,
+  execution_mode: executionMode,
   provider: modelConfig.providerName,
   model: modelConfig.model,
   method: methodProfile.methodName,
@@ -89,27 +123,32 @@ function parseArgs(argv) {
     slug: "",
     provider: "",
     persona: "",
+    mode: "",
     noIndex: false,
     help: false
   };
 
   for (let i = 0; i < argv.length; i += 1) {
     const arg = argv[i];
-    if (arg === "--help" || arg === "-h") {
+    const [flag, inlineValue] = splitArg(arg);
+    const readValue = () => inlineValue ?? argv[++i] ?? "";
+    if (flag === "--help" || flag === "-h") {
       result.help = true;
-    } else if (arg === "--text") {
-      result.text = argv[++i] || "";
-    } else if (arg === "--file") {
-      result.file = argv[++i] || "";
-    } else if (arg === "--title") {
-      result.title = argv[++i] || "";
-    } else if (arg === "--slug") {
-      result.slug = argv[++i] || "";
-    } else if (arg === "--provider") {
-      result.provider = argv[++i] || "";
-    } else if (arg === "--persona") {
-      result.persona = argv[++i] || "";
-    } else if (arg === "--no-index") {
+    } else if (flag === "--text") {
+      result.text = readValue();
+    } else if (flag === "--file") {
+      result.file = readValue();
+    } else if (flag === "--title") {
+      result.title = readValue();
+    } else if (flag === "--slug") {
+      result.slug = readValue();
+    } else if (flag === "--provider") {
+      result.provider = readValue();
+    } else if (flag === "--persona" || flag === "-p") {
+      result.persona = readValue();
+    } else if (flag === "--mode" || flag === "--execution-mode") {
+      result.mode = readValue();
+    } else if (flag === "--no-index") {
       result.noIndex = true;
     } else if (!arg.startsWith("-") && !result.file && !result.text) {
       result.file = arg;
@@ -121,6 +160,14 @@ function parseArgs(argv) {
   return result;
 }
 
+function splitArg(arg) {
+  const index = arg.indexOf("=");
+  if (!arg.startsWith("--") || index === -1) {
+    return [arg, undefined];
+  }
+  return [arg.slice(0, index), arg.slice(index + 1)];
+}
+
 function printUsage() {
   console.log([
     "Usage:",
@@ -128,6 +175,7 @@ function printUsage() {
     "  npm run v8:analyze -- --file path/to/input.md --title \"标题\"",
     "",
     "Options:",
+    "  --mode <api|agent> Override config/methods.json execution_mode for this run.",
     "  --provider <name>  Override config/model-providers.json active provider.",
     "  --persona <name>   Override config/methods.json analysis_persona for this run.",
     "  --slug <slug>      Override output filename slug.",
@@ -172,8 +220,23 @@ function inferTitle(source) {
   return source.text.split(/\r?\n/).find((line) => line.trim())?.slice(0, 48).trim() || "v8-input";
 }
 
-async function loadMethodProfile(personaOverride) {
-  const config = JSON.parse(await readFile(methodsPath, "utf8"));
+async function loadMethodsConfig() {
+  try {
+    return JSON.parse(await readFile(methodsPath, "utf8"));
+  } catch (error) {
+    throw new Error(`Failed to parse config/methods.json: ${error.message}`);
+  }
+}
+
+function normalizeExecutionMode(value) {
+  const mode = String(value || "api").trim().toLowerCase();
+  if (mode === "api" || mode === "agent") {
+    return mode;
+  }
+  throw new Error(`Unknown execution_mode: ${value}. Expected "api" or "agent".`);
+}
+
+async function loadMethodProfile(config, personaOverride) {
   const methodName = config.active_method || "v8";
   const active = config.methods?.[methodName];
   if (!active) {
@@ -182,6 +245,10 @@ async function loadMethodProfile(personaOverride) {
 
   const personaName = personaOverride || config.analysis_persona || "v8.1-reality-sync";
   const persona = config.personas?.[personaName];
+  if (personaOverride && !persona) {
+    const available = Object.keys(config.personas || {}).sort().join(", ") || "none";
+    throw new Error(`Unknown persona: ${personaOverride}. Available personas: ${available}`);
+  }
   const docPaths = persona?.primary_docs?.length ? persona.primary_docs : active.primary_docs;
   const docs = [];
   for (const docPath of docPaths || []) {
@@ -333,7 +400,7 @@ async function callChat(modelConfig, messages, temperature) {
   return content;
 }
 
-function renderRawArtifact({ title, source, methodProfile, now, reviewAt, id }) {
+function renderRawArtifact({ title, source, methodProfile, executionMode, now, reviewAt, id }) {
   return `# ${title}
 
 ## Artifact Metadata
@@ -348,12 +415,60 @@ function renderRawArtifact({ title, source, methodProfile, now, reviewAt, id }) 
 - review_at: ${reviewAt}
 - method: ${methodProfile.methodName}
 - analysis_persona: ${methodProfile.personaName}
+- execution_mode: ${executionMode}
 - automation: scripts/run_v8_analysis.mjs
 
 ## Original Submission
 
 ${source.text}
 `;
+}
+
+function renderAgentQueueEnvelope({ title, source, methodProfile, now, reviewAt, id, rawPath, segmentedPath, auditPath }) {
+  return {
+    schema_version: "0.1",
+    task_type: "v8-agent-analysis",
+    id: `agent-task-${id}`,
+    status: "pending_agent_execution",
+    created_at: now.toISOString(),
+    review_at: reviewAt,
+    method: methodProfile.methodName,
+    analysis_persona: methodProfile.personaName,
+    persona_label: methodProfile.persona.label || methodProfile.personaName,
+    source_ref: source.ref,
+    raw_artifact: rel(rawPath),
+    requested_outputs: {
+      segmented: rel(segmentedPath),
+      audit: rel(auditPath),
+      index: "11_indexes/source-index.json"
+    },
+    instructions: [
+      "Use the active persona documents listed in method_docs.",
+      "Write the structured PSP analysis to requested_outputs.segmented.",
+      "Write an audit report to requested_outputs.audit and state that it was generated in agent mode.",
+      "Run npm run index after writing artifacts unless the caller passed --no-index.",
+      "Do not call the model provider API from scripts/run_v8_analysis.mjs in agent mode."
+    ],
+    required_analysis_sections: [
+      "第 0 层：语义嗅探与分流",
+      "第一层：输入层",
+      "第二层：结构定位",
+      "第三层：权力分析",
+      "第四层：杠杆点识别",
+      "第五层：路径判断",
+      "第六层：系统影响",
+      "第七层：对抗性交叉验证",
+      "评分",
+      "审计",
+      "最终结论",
+      "后续建议",
+      "停止条件",
+      "推翻条件",
+      "复盘时间",
+      "记忆建议"
+    ],
+    method_docs: methodProfile.docs.map((doc) => rel(doc.path))
+  };
 }
 
 function renderSegmentedArtifact({ title, source, analysis, completeness, methodProfile, now, reviewAt, id, rawPath, modelConfig }) {

@@ -1,6 +1,6 @@
 # Mercury Method Lab
 
-Version: `0.5`
+Version: `0.5.1`
 
 Mercury Method Lab is a local-first method, evidence, audit, and migration workspace for Mercury Agent-compatible workflows.
 
