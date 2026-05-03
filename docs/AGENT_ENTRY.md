@@ -36,6 +36,7 @@ Mercury Lab 支持多种分析方法。当前激活方法是 **PSP/V8**，当前
 - `v8.1-reality-sync`：默认人格。先解释现实均衡为什么成立，再判断是否存在失真、断裂、错配或可触达杠杆。
 - `v8.0-breakthrough`：突围人格。适合强叙事污染、伪结构、伪权力、伪杠杆识别。
 - `v8.5-correction`：纠偏人格。用于审计过度聪明、概念偷换和伪深刻，不作为默认主分析人格。
+- `v8.2-dimension-radar`：维度雷达人格。不预测终局，先判断问题是否变了；不判断概念生死，先观察能力器官是否迁移；适合泡沫审计、技术叙事识别和新概念去伪存真。
 
 执行模式：`config/methods.json` → `execution_mode`
 
@@ -46,6 +47,7 @@ PSP 人格提示词文件位置：
 ```
 v8-mercury-backend/docs/methods/PSP-V8.0-突围者事件研判执行提示词.md
 v8-mercury-backend/docs/methods/PSP-V8.1-与市场同频的真实理解事件研判执行提示词.md
+v8-mercury-backend/docs/methods/PSP-V8.2-维度迁移雷达-技术叙事审计人格.md
 v8-mercury-backend/docs/methods/纠偏压缩PSP-聪明人装聪明验证-v8.5.md
 ```
 
