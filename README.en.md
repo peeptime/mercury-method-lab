@@ -2,11 +2,15 @@
 
 **An insight-sample precipitation system for high-frequency AI conversationalists.**
 
-Version: `0.7.2`
+It keeps smart thoughts from becoming clean but useless waste.
+
+Version: `0.7.3`
 
 Mercury Method Lab is a local-first method, evidence, audit, and migration workspace for Mercury Agent-compatible workflows.
 
 It is **not** a fork of [`cosmicstack-labs/mercury-agent`](https://github.com/cosmicstack-labs/mercury-agent). It is a companion layer that keeps method reasoning, evidence chains, memory candidates, decision logs, action plans, and audit reports separate from the runtime.
+
+It is not a system that thinks for you. It helps decide which thoughts deserve to be kept, advanced, reused, or discarded. Think of it less as a second brain and more as a quality gate inside the judgment loop.
 
 ## Start Here
 

@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+## 0.7.3 — 定位语收紧
+
+### Changed
+
+- `README.md` 首屏增加主打语：「不让聪明变成垃圾」。
+- `README.md` 核心定位补充：Mercury Lab 不是帮你思考，而是判断哪些思考值得留下、推进、复用。
+- `README.md` 用「前额叶里的一个质检闸门」替代「第二前额叶」式表达。
+- `README.en.md` 和 `DEMO.md` 同步补充 quality gate 定位。
+
 ## 0.7.2 — 外部可见样本路径
 
 ### Added

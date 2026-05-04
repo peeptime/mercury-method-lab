@@ -4,6 +4,8 @@ This demo answers the first GitHub question: "What do I put in, and what comes o
 
 Mercury Method Lab is not trying to replace ChatGPT. It turns high-value AI conversation fragments into project materials that can be classified, audited, reused, and later challenged.
 
+Its job is simple: keep smart thoughts from becoming clean but useless waste. It does not think for you; it acts as a quality gate for which thoughts should be kept, advanced, reused, or discarded.
+
 ## Raw Input
 
 ```text
