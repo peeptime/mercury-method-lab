@@ -13,6 +13,7 @@ data/*.log
 data/*.jsonl
 11_indexes/*.sqlite
 11_indexes/source-index.json
+11_indexes/sample-index.json
 
 # Local caches
 .npm-cache/

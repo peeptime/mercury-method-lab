@@ -6,6 +6,8 @@ These files are not the source of truth. They are rebuilt from Markdown, YAML, m
 
 ## Outputs
 
-- `source-index.json`: portable JSON index.
+- `source-index.json`: portable JSON file-level artifact index.
+- `sample-index.json`: portable JSON sample-level index for grading, project binding, reuse, and feedback gaps.
 - `mercury-index.sqlite`: optional local SQLite index when Node's SQLite module is available.
 
+Run `npm run index` to rebuild generated views.

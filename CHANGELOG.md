@@ -2,6 +2,20 @@
 
 ## Unreleased
 
+## 0.7.1 — 样本索引初版
+
+### Added
+
+- `npm run index` 现在同时生成 `11_indexes/sample-index.json`，作为样本库的机器可读视图。
+- `sample-index.json` 暴露 `sample_type`、`project_id`、`reuse_count`、`reuse_refs`、`feedback_status`、`feedback_refs`、`memory_level`、`confidence` 和 `risk`。
+- 样本索引会汇总缺口：未判级、未绑定项目、无复用追踪、决策/行动无反馈。
+- SQLite artifact 表同步增加样本判级、项目、复用、反馈和风险字段。
+
+### Changed
+
+- `README.md` / `README.en.md` 增加 source index 与 sample index 的区别。
+- `docs/GOVERNANCE.md` 升级到 v0.2.1：样本库索引从“未做”调整为“初版已做”，后续重点转向检索、复用追踪和反馈回填。
+
 ## 0.7.0 — 核心定位声明 + 碎片循环问题确认
 
 ### Changed

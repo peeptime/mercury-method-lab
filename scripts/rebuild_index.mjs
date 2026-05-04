@@ -6,6 +6,7 @@ const root = dirname(dirname(fileURLToPath(import.meta.url)));
 const indexDir = join(root, "11_indexes");
 const sqlitePath = join(indexDir, "mercury-index.sqlite");
 const jsonPath = join(indexDir, "source-index.json");
+const sampleJsonPath = join(indexDir, "sample-index.json");
 
 const sourceDirs = [
   "00_inbox",
@@ -43,10 +44,25 @@ for (const file of files) {
     owner_role: metadata.owner_role || "",
     created_at: metadata.created_at || "",
     review_at: metadata.review_at || "",
+    sample_type: metadata.sample_type || inferSampleType(relPath, metadata),
+    project_id: metadata.project_id || "",
+    source_refs: parseRefs(metadata.source_refs),
+    decision_refs: parseRefs(metadata.decision_refs),
+    action_refs: parseRefs(metadata.action_refs),
+    audit_refs: parseRefs(metadata.audit_refs),
+    reuse_refs: parseRefs(metadata.reuse_refs),
+    reuse_count: parseInteger(metadata.reuse_count),
+    feedback_status: metadata.feedback_status || inferFeedbackStatus(relPath, metadata),
+    feedback_refs: parseRefs(metadata.feedback_refs),
+    memory_level: metadata.memory_level || "",
+    confidence: metadata.confidence || "",
+    risk: metadata.risk || "",
     size_bytes: fileStat.size,
     updated_at: fileStat.mtime.toISOString()
   });
 }
+
+const sampleIndex = buildSampleIndex(records);
 
 await mkdir(indexDir, { recursive: true });
 await writeFile(jsonPath, `${JSON.stringify({
@@ -55,11 +71,13 @@ await writeFile(jsonPath, `${JSON.stringify({
   source_of_truth: "filesystem_markdown_yaml",
   records
 }, null, 2)}\n`, "utf8");
+await writeFile(sampleJsonPath, `${JSON.stringify(sampleIndex, null, 2)}\n`, "utf8");
 
 const sqlite = await tryBuildSqlite(records);
 
 console.log(`Indexed ${records.length} records`);
 console.log(`Wrote ${relative(root, jsonPath).replaceAll("\\", "/")}`);
+console.log(`Wrote ${relative(root, sampleJsonPath).replaceAll("\\", "/")}`);
 if (sqlite.ok) {
   console.log(`Wrote ${relative(root, sqlitePath).replaceAll("\\", "/")}`);
 } else {
@@ -105,7 +123,7 @@ function parseMetadata(text, relPath) {
   for (const line of metadataMatch[1].split(/\r?\n/)) {
     const match = line.match(/^-\s*([A-Za-z0-9_-]+):\s*(.*)$/);
     if (match) {
-      metadata[match[1]] = match[2].trim();
+      metadata[match[1]] = parseMetadataValue(match[2].trim());
     }
   }
   return metadata;
@@ -113,14 +131,45 @@ function parseMetadata(text, relPath) {
 
 function parseFlatYaml(text) {
   const result = {};
+  let currentKey = null;
   for (const rawLine of text.split(/\r?\n/)) {
     const line = rawLine.trimEnd();
+    const listMatch = line.match(/^\s*-\s+(.+)$/);
+    if (listMatch && currentKey) {
+      result[currentKey] ??= [];
+      if (!Array.isArray(result[currentKey])) {
+        result[currentKey] = [result[currentKey]];
+      }
+      result[currentKey].push(unquote(listMatch[1].trim()));
+      continue;
+    }
+
     const pairMatch = line.match(/^([A-Za-z0-9_-]+):\s*(.*)$/);
     if (pairMatch) {
-      result[pairMatch[1]] = pairMatch[2].trim().replace(/^["']|["']$/g, "");
+      currentKey = pairMatch[1];
+      result[pairMatch[1]] = parseMetadataValue(pairMatch[2].trim());
     }
   }
   return result;
+}
+
+function parseMetadataValue(value) {
+  const trimmed = value.trim();
+  if (!trimmed) {
+    return "";
+  }
+  if (trimmed.startsWith("[") && trimmed.endsWith("]")) {
+    return trimmed
+      .slice(1, -1)
+      .split(",")
+      .map((item) => unquote(item.trim()))
+      .filter(Boolean);
+  }
+  return unquote(trimmed);
+}
+
+function unquote(value) {
+  return value.replace(/^["']|["']$/g, "");
 }
 
 function inferType(path) {
@@ -138,6 +187,103 @@ function inferType(path) {
     "10_exports": "export"
   };
   return map[dir] || "unknown";
+}
+
+function inferSampleType(path, metadata) {
+  if (metadata.sample_type) {
+    return metadata.sample_type;
+  }
+
+  const type = metadata.type || inferType(path);
+  const map = {
+    raw: "素材",
+    cleaned: "观察",
+    uncertain: "假设",
+    memory_candidate: "素材",
+    decision_log: "决策",
+    action_plan: "行动计划",
+    audit_report: "审计",
+    export: "模板"
+  };
+  return map[type] || "未判级";
+}
+
+function inferFeedbackStatus(path, metadata) {
+  if (metadata.feedback_status) {
+    return metadata.feedback_status;
+  }
+  const type = metadata.type || inferType(path);
+  if (type === "decision_log" || type === "action_plan") {
+    return "missing";
+  }
+  return "not_required";
+}
+
+function parseRefs(value) {
+  if (!value) {
+    return [];
+  }
+  if (Array.isArray(value)) {
+    return value.map(String).filter(Boolean);
+  }
+  return String(value)
+    .split(",")
+    .map((item) => item.trim())
+    .filter(Boolean);
+}
+
+function parseInteger(value) {
+  const parsed = Number.parseInt(value, 10);
+  return Number.isFinite(parsed) ? parsed : 0;
+}
+
+function buildSampleIndex(records) {
+  const sampleRecords = records
+    .filter((record) => !record.name?.toLowerCase().startsWith("readme"))
+    .map((record) => ({
+      path: record.path,
+      type: record.type,
+      status: record.status,
+      sample_type: record.sample_type,
+      sample_type_source: record.sample_type === "未判级" ? "missing" : "inferred_or_metadata",
+      project_id: record.project_id || "unassigned",
+      source_refs: record.source_refs,
+      decision_refs: record.decision_refs,
+      action_refs: record.action_refs,
+      audit_refs: record.audit_refs,
+      reuse_count: record.reuse_count,
+      reuse_refs: record.reuse_refs,
+      feedback_status: record.feedback_status,
+      feedback_refs: record.feedback_refs,
+      memory_level: record.memory_level,
+      confidence: record.confidence,
+      risk: record.risk,
+      review_at: record.review_at,
+      updated_at: record.updated_at
+    }));
+
+  return {
+    schema_version: "0.1",
+    generated_at: new Date().toISOString(),
+    purpose: "sample_library_index",
+    source_of_truth: "filesystem_markdown_yaml",
+    known_gaps: summarizeSampleGaps(sampleRecords),
+    records: sampleRecords
+  };
+}
+
+function summarizeSampleGaps(records) {
+  const count = (predicate) => records.filter(predicate).length;
+  return {
+    total_records: records.length,
+    missing_sample_type: count((record) => record.sample_type_source === "missing"),
+    missing_project_id: count((record) => record.project_id === "unassigned"),
+    missing_reuse_tracking: count((record) => record.reuse_count === 0 && record.reuse_refs.length === 0),
+    missing_feedback_for_decision_or_action: count((record) => (
+      (record.type === "decision_log" || record.type === "action_plan")
+      && record.feedback_status === "missing"
+    ))
+  };
 }
 
 async function tryBuildSqlite(records) {
@@ -161,6 +307,13 @@ async function tryBuildSqlite(records) {
       owner_role TEXT,
       created_at TEXT,
       review_at TEXT,
+      sample_type TEXT,
+      project_id TEXT,
+      reuse_count INTEGER,
+      feedback_status TEXT,
+      memory_level TEXT,
+      confidence TEXT,
+      risk TEXT,
       size_bytes INTEGER,
       updated_at TEXT
     );
@@ -168,8 +321,10 @@ async function tryBuildSqlite(records) {
 
   const insert = db.prepare(`
     INSERT INTO artifacts (
-      path, directory, name, extension, type, status, owner_role, created_at, review_at, size_bytes, updated_at
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      path, directory, name, extension, type, status, owner_role, created_at, review_at,
+      sample_type, project_id, reuse_count, feedback_status, memory_level, confidence, risk,
+      size_bytes, updated_at
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `);
 
   for (const record of records) {
@@ -183,6 +338,13 @@ async function tryBuildSqlite(records) {
       record.owner_role,
       record.created_at,
       record.review_at,
+      record.sample_type,
+      record.project_id,
+      record.reuse_count,
+      record.feedback_status,
+      record.memory_level,
+      record.confidence,
+      record.risk,
       record.size_bytes,
       record.updated_at
     );

@@ -2,7 +2,7 @@
 
 **An insight-sample precipitation system for high-frequency AI conversationalists.**
 
-Version: `0.7.0`
+Version: `0.7.1`
 
 Mercury Method Lab is a local-first method, evidence, audit, and migration workspace for Mercury Agent-compatible workflows.
 
@@ -95,6 +95,11 @@ capture -> normalize -> validate -> reason -> decide -> act -> audit -> export -
 ```
 
 The project keeps Markdown/YAML artifacts as the source of truth. JSON and SQLite indexes are generated views.
+
+`npm run index` now writes two generated views:
+
+- `11_indexes/source-index.json`: file-level artifact index
+- `11_indexes/sample-index.json`: sample-level index for grading, project binding, reuse, and feedback gaps
 
 ## Key Docs
 

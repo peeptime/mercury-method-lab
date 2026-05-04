@@ -2,7 +2,7 @@
 
 **面向高频 AI 对话者的"洞察样本沉淀系统"。**
 
-Version: `0.7.0`
+Version: `0.7.1`
 
 English entry: [README.en.md](README.en.md)
 
@@ -109,6 +109,11 @@ Dashboard 默认地址：`http://127.0.0.1:4788`
 - **红队审计**：07_audit_reports/
 - **索引更新**：11_indexes/
 
+`npm run index` 现在会生成两层索引：
+
+- `11_indexes/source-index.json`：文件级 artifact 索引
+- `11_indexes/sample-index.json`：样本级索引，暴露判级、项目绑定、复用和反馈缺口
+
 ---
 
 ## 分工
@@ -153,4 +158,4 @@ inbox → raw → segmented → cleaned → uncertain → memory_candidates → 
 - 架构边界：[docs/architecture.md](docs/architecture.md)
 - 判断收口规则：[docs/JUDGMENT-CLOSURE-RULE.md](docs/JUDGMENT-CLOSURE-RULE.md)
 - V8 方法文档：[docs/methods/](docs/methods/)
-- 迭代指引：[docs/ITERATION-GUIDE-0.7.0.md](docs/ITERATION-GUIDE-0.7.0.md)
+- 迭代指引：[docs/ITERATION-GUIDE-0.7.1.md](docs/ITERATION-GUIDE-0.7.1.md)
