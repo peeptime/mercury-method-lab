@@ -18,6 +18,7 @@ const sourceDirs = [
   "05_decision_logs",
   "06_action_plans",
   "07_audit_reports",
+  "examples",
   "10_exports"
 ];
 
@@ -184,6 +185,7 @@ function inferType(path) {
     "05_decision_logs": "decision_log",
     "06_action_plans": "action_plan",
     "07_audit_reports": "audit_report",
+    examples: "example",
     "10_exports": "export"
   };
   return map[dir] || "unknown";

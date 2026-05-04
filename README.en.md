@@ -2,11 +2,30 @@
 
 **An insight-sample precipitation system for high-frequency AI conversationalists.**
 
-Version: `0.7.1`
+Version: `0.7.2`
 
 Mercury Method Lab is a local-first method, evidence, audit, and migration workspace for Mercury Agent-compatible workflows.
 
 It is **not** a fork of [`cosmicstack-labs/mercury-agent`](https://github.com/cosmicstack-labs/mercury-agent). It is a companion layer that keeps method reasoning, evidence chains, memory candidates, decision logs, action plans, and audit reports separate from the runtime.
+
+## Start Here
+
+You do not need to understand the whole method first:
+
+- [DEMO.md](DEMO.md): how a messy idea becomes reviewable project material
+- [examples/](examples/): a complete sample chain from raw input to reuse decision
+- [sample_index.md](sample_index.md): how the sample library index proves this is more than cleaned notes
+
+Minimal flow:
+
+```text
+raw user fragment
+  -> goal-validator check
+  -> classified sample
+  -> action_plan
+  -> audit_report
+  -> reuse decision
+```
 
 ## Relationship To Mercury Agent
 

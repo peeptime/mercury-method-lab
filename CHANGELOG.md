@@ -2,6 +2,20 @@
 
 ## Unreleased
 
+## 0.7.2 — 外部可见样本路径
+
+### Added
+
+- `DEMO.md`：3 分钟演示一段混乱想法如何变成可复盘项目材料。
+- `examples/`：新增 `ai-consulting-replacement` 完整样本链。
+- `sample_index.md`：解释 `sample-index.json` 与普通文件索引的区别。
+- `npm run index` 现在会扫描 `examples/`，让 demo 样本进入样本级视图。
+
+### Changed
+
+- `README.md` / `README.en.md` 增加首屏 demo 入口，先给外部读者可点击样本，再解释方法论。
+- README 文档索引移除不存在的 0.7.1 迭代指引链接，改指向治理目标和示例样本。
+
 ## 0.7.1 — 样本索引初版
 
 ### Added

@@ -1,0 +1,26 @@
+schema_version: "0.1"
+id: "example-ai-consulting-replacement"
+type: "memory_candidate"
+status: "review_ready"
+sample_type: "假设"
+project_id: "examples.ai-consulting-replacement"
+content: "AI 工具热度不能直接证明传统咨询会被快速替代；必须先看到预算迁移、客户替换或工作流替代证据。"
+source_refs:
+  - "examples/ai-consulting-replacement/raw.md"
+decision_refs:
+  - "examples/ai-consulting-replacement/reuse-decision.md"
+action_refs:
+  - "examples/ai-consulting-replacement/action-plan.md"
+audit_refs:
+  - "examples/ai-consulting-replacement/audit-report.md"
+confidence: "medium"
+risk: "medium"
+reuse_count: 1
+reuse_refs:
+  - "future-ai-replacement-claims"
+feedback_status: "pending"
+feedback_refs: []
+memory_level: "M1"
+owner_role: "memory-curator"
+created_at: "2026-05-04"
+review_at: "2026-05-11"

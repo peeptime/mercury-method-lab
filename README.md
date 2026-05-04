@@ -2,9 +2,30 @@
 
 **面向高频 AI 对话者的"洞察样本沉淀系统"。**
 
-Version: `0.7.1`
+Version: `0.7.2`
 
 English entry: [README.en.md](README.en.md)
+
+---
+
+## 3 分钟看懂
+
+从这里开始，不需要先理解整套方法论：
+
+- [DEMO.md](DEMO.md)：一段混乱想法如何变成可复盘项目材料
+- [examples/](examples/)：完整样本链，展示 raw → goal check → classified sample → action plan → audit report → reuse decision
+- [sample_index.md](sample_index.md)：样本库索引如何证明它不是简单清洗碎片
+
+最小样本：
+
+```text
+用户原始碎片
+  → goal-validator 检查
+  → classified sample
+  → action_plan
+  → audit_report
+  → reuse decision
+```
 
 ---
 
@@ -158,4 +179,5 @@ inbox → raw → segmented → cleaned → uncertain → memory_candidates → 
 - 架构边界：[docs/architecture.md](docs/architecture.md)
 - 判断收口规则：[docs/JUDGMENT-CLOSURE-RULE.md](docs/JUDGMENT-CLOSURE-RULE.md)
 - V8 方法文档：[docs/methods/](docs/methods/)
-- 迭代指引：[docs/ITERATION-GUIDE-0.7.1.md](docs/ITERATION-GUIDE-0.7.1.md)
+- 治理目标：[docs/GOVERNANCE.md](docs/GOVERNANCE.md)
+- 示例样本：[examples/](examples/)
