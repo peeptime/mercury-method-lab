@@ -1,6 +1,6 @@
 # Mercury Method Lab
 
-Version: `0.5.1`
+Version: `0.6.0`
 
 English entry: [README.en.md](README.en.md)
 
@@ -151,4 +151,4 @@ inbox → raw → segmented → cleaned → uncertain → memory_candidates → 
 - 架构边界：[docs/architecture.md](docs/architecture.md)
 - 判断收口规则：[docs/JUDGMENT-CLOSURE-RULE.md](docs/JUDGMENT-CLOSURE-RULE.md)
 - V8 方法文档：[docs/methods/](docs/methods/)
-- 迭代指引：[docs/ITERATION-GUIDE-0.5.1.md](docs/ITERATION-GUIDE-0.5.1.md)
+- 迭代指引：[docs/ITERATION-GUIDE-0.6.0.md](docs/ITERATION-GUIDE-0.6.0.md)

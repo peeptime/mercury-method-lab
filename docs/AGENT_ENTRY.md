@@ -108,6 +108,55 @@ v8-mercury-backend/docs/methods/纠偏压缩PSP-聪明人装聪明验证-v8.5.md
 
 ---
 
+## `/goal` 照妖镜：目标入口质量门
+
+在启动任何 PSP 分析之前，目标描述必须通过 5 维度验证。
+
+### 5 维度检查（Agent 内嵌执行，零进程开销）
+
+```
+用户输入
+  ↓
+Agent 自身执行 5 维度检查（validate 函数内嵌，不新建进程）
+  ↓
+  ├─ 不合格 → 返回照妖镜问题列表，引导重写
+  └─ 合格   → 自动运行四关检验
+              ↓
+          四关通过 → 继续 PSP 分析
+              ↓
+          生成 action_plan artifact（含 Judgment Closure）
+              ↓
+          写盘 → npm run index → npm run validate
+```
+
+### 维度说明
+
+| 维度 | 检查什么 | 典型失败 |
+|------|---------|---------|
+| ① 可交付物 | 有没有具体交付对象 | "更智能"、"优化一下" |
+| ② 可验证性 | 有没有验收标准 | "做完就好" |
+| ③ 时间边界 | 有没有明确截止 | "尽快"、"看情况" |
+| ④ 范围边界 | 有没有说明做到哪里完 | "整个系统重构" |
+| ⑤ 责任归属 | 有没有说明谁判断成功 | 缺责任人 |
+
+### 四关检验（5维度全通过后运行）
+
+| 关卡 | 问题 | 通过信号 |
+|------|------|---------|
+| 案例关 | 它能解释哪个真实案例？ | 提及具体场景/用户/项目 |
+| 模板关 | 它能变成什么表格或流程？ | 提及模板/流程/步骤清单 |
+| 决策关 | 它能帮助谁做什么选择？ | 提及决策/判断标准/优先级 |
+| 反馈关 | 谁用了以后有结果？ | 提及验收/反馈/上线/确认 |
+
+### Agent 模式执行约束
+
+- 验证逻辑直接内嵌 Agent 上下文，不调用 `scripts/goal-validator.mjs` 新建进程
+- 验证不通过时直接返回问题列表，不写盘，不推进分析
+- 四关检验用于判断落地潜力，是概念层约束，不是分析质量评估
+- 四关有任意一关失败 → 目标仍可继续分析，但 artifact 元数据需标注"四关未全过，素材待验证"
+
+---
+
 ## 标准工作流
 
 ```
@@ -222,13 +271,27 @@ npm run v8:analyze -- --file .\path\to\input.md --title "材料标题"
 
 #### Agent 模式(`execution_mode: "agent"`)
 
-Agent 可以自己执行 PSP 分析,但必须保持 Mercury Lab 的存储闭环:
+Agent 可以自己执行 PSP 分析,但必须保持 Mercury Lab 的存储闭环。为了降低 OpenClaw 智能消耗,Agent 模式默认使用封闭任务包:
 
-1. 写入 `00_raw/YYYY-MM-DD-描述.md`,保留原始材料。
-2. 按当前 `analysis_persona` 的固定输出结构生成 `01_segmented/YYYY-MM-DD-描述-v8-analysis.md`。
-3. 写入 `07_audit_reports/YYYY-MM-DD-描述-v8-audit.md`;如果不是独立 red-team adapter,审计中必须注明"此审计由 AI Agent 手工生成,未经过 V8-redteam adapter"。
-4. 运行 `npm run index` 更新索引。
-5. 运行 `npm run validate` 检查 artifact 契约。
+```powershell
+npm run v8:analyze -- --mode agent --text "要分析的原始材料" --title "材料标题"
+npm run v8:analyze -- --mode agent --file .\path\to\input.md --title "材料标题"
+```
+
+脚本会写入:
+
+1. `00_raw/YYYY-MM-DD-描述.md`,保留原始材料。
+2. `submissions/agent-queue/YYYY-MM-DD-描述-v8-agent-task.json`,生成封闭任务包。
+3. JSON 内的 `requested_outputs.segmented`,指定 `01_segmented/` 目标文件。
+4. JSON 内的 `requested_outputs.audit`,指定 `07_audit_reports/` 目标文件。
+
+OpenClaw 读取任务包时必须遵守:
+
+1. 先读 queue JSON 自身,优先使用其中的 `source_text` 和 `embedded_contract`。
+2. 只读 `context_policy.allowed_reads` 列出的文件。
+3. 不扫描 `docs/`、历史 `00_raw/`、历史 `01_segmented/`、历史 `07_audit_reports/`、`11_indexes/`、`.git/`。
+4. 如果任务包信息不足,停止并请求人工复核,不要用全项目扫描补上下文。
+5. 写入分析和审计后运行 `npm run index`,再运行 `npm run validate`。
 
 Agent 模式禁止只在对话里给结论而不落盘。跳过 `00_raw/` 或 `07_audit_reports/` 等于绕过 Mercury Lab。
 
@@ -286,4 +349,4 @@ Mercury Lab 目前主要服务于你自己的使用场景。有朝一日如果�
 
 ---
 
-*最后更新:2026-05-02 | 版本:0.3.4 | 位置:v8-mercury-backend/docs/AGENT_ENTRY.md*
+*最后更新:2026-05-04 | 版本:0.6.0 | 位置:v8-mercury-backend/docs/AGENT_ENTRY.md*
