@@ -1,115 +1,66 @@
 # Mercury Method Lab
 
-**面向高频 AI 对话者的"洞察样本沉淀系统"。**
-
-主打的是：**不让聪明变成垃圾。**
+**不让聪明变成垃圾。**
 
 Version: `0.8.0`
 
-English entry: [README.en.md](README.en.md)
+---
+
+## 这个问题你有没有
+
+你和 AI 聊了一个小时，生成了很多听起来很厉害的想法。
+
+然后呢？
+
+然后它们就停在聊天记录里了。隔两周你再去找，要么找不到了，要么找得到但已经不记得当时为什么觉得它很厉害了。
+
+Mercury Lab 就是来解决这个的。
 
 ---
 
-## 3 分钟看懂
+## 它是什么
 
-从这里开始，不需要先理解整套方法论：
+一个在 AI 想法进入长期记忆之前，先做一次质检的系统。
 
-- [DEMO.md](DEMO.md)：一段混乱想法如何变成可复盘项目材料
-- [docs/AUDIT-CONTRACT.md](docs/AUDIT-CONTRACT.md)：进入 gbrain / Mercury Agent / OpenClaw 记忆前的审计契约
-- [examples/](examples/)：完整样本链，展示 raw → goal check → classified sample → action plan → audit report → reuse decision
-- [sample_index.md](sample_index.md)：样本库索引如何证明它不是简单清洗碎片
+不是帮你想更多，是帮你决定哪些想法值得留下来。
 
-最小样本：
-
-```text
-用户原始碎片
-  → goal-validator 检查
-  → classified sample
-  → action_plan
-  → audit_report
-  → reuse decision
-```
+对 gbrain 和 Mercury Agent 这类系统来说，Mercury Lab 是它们前面的一道闸门：**先把关，再决定要不要存进去。**
 
 ---
 
-## 核心定位
+## 有一个具体的东西叫"前置审计契约"
 
-它不是普通知识库，也不是通用 AI 审计平台，更不是另一个 second brain。
+`docs/AUDIT-CONTRACT.md`
 
-它也不是帮你思考的系统，而是帮你判断哪些思考值得留下、推进、复用。
+在内容进入 gbrain / Mercury Agent / OpenClaw 的记忆之前，它必须先回答几个问题：
 
-更准确地说，它不是"第二前额叶"，而是**前额叶里的一个质检闸门**，也是长期 Agent Brain 前面的 pre-ingestion audit gate。
+- 这是事实还是推测？
+- 有没有反例？
+- 值不值得被记住？
 
-它解决的问题是：**高价值想法经常出现在聊天、碎片、临时判断和项目讨论中，但如果没有目标验证、类型判级、案例绑定、审计记录和复用出口，它们很快会变成干净但无用的知识碎片。**
-
-**Mercury Lab 的目标，是把这些碎片加工成可追踪、可判断、可复用的项目样本。**
-
-对 gbrain、Mercury Agent、OpenClaw 这类系统来说，Mercury Lab 的角色不是替代它们的 memory / graph / retrieval，而是先回答：
-
-```text
-这段内容应该丢弃、冷存、复核，还是升格进入长期记忆？
-```
+回答不了的东西，先不放进去。
 
 ---
 
-## 核心差异：LLM vs Mercury Lab
+## 看一个真实的例子
 
-**LLM 在优化"答案质量"。**
-**Mercury Lab 在优化"判断过程的可靠性"。**
+`DEMO.md` 里有完整的演示：
 
-| 维度 | LLM（默认） | Mercury Lab |
-|------|-------------|-------------|
-| 优化目标 | 给一个"看起来合理且完整"的答案 | 让判断过程"不可跳过、可审计" |
-| 行为倾向 | 补充信息、扩展论证、提高可读性 | 限制推断、暴露假设、保留不确定性 |
-| 输出风格 | 连贯叙述（像顾问） | 结构化约束（像审计员） |
-| 风险 | 说得越多越容易掩盖错误 | 说得越少但更容易发现问题 |
-| 处理不确定性 | 被"合理解释"吸收掉 | 强制显性化（假设 / 缺证据） |
+一段混乱的想法，怎么经过质检，变成一份可以复盘的材料。
 
 ---
 
-## 正确用法
+## 它不做的事情（这才是重点）
 
-```
-LLM（推理模式）生成方案 → Mercury（约束）做审计 → 人做最终决策
-```
+大多数 AI 工具在展示自己"能做什么"。
+这个项目在展示自己**拒绝做什么**。
 
-- 如果只用 Mercury：会觉得它"太慢、太保守"
-- 如果只用 LLM：会逐渐发现"有些地方它说得太顺了"
-- 两个一起用：LLM 负责找可能性，Mercury 负责判断哪些可能性值得信
+- ❌ 不允许把推测存成事实
+- ❌ 不允许同一个人既写材料又审计材料
+- ❌ 不允许跳过质检直接进记忆
+- ❌ 不允许让 AI 自己判断、自己审计、自己通过
 
----
-
-## Mercury Lab 的人格
-
-Mercury Lab 不是"更聪明的 AI"，而是一个有判断人格的 AI 约束系统。
-
-它的默认人格是 **V8.1 现实同频**：
-
-- 先理解"现状为什么合理"
-- 再判断"哪里出现断裂或失真"
-- 不被骗，但也不相信任何人
-
-它的核心价值：**让 AI 输出从"听起来对"变成"有据可查、有迹可循"**。
-
-这不是分析工具，而是 AI 输出的质量门卫。
-
----
-
-## 设计哲学：约束而非功能
-
-**逆向设计：用约束而非功能来定义产品。**
-
-大多数 AI 产品定义自己"能做什么"。
-Mercury Lab 定义自己"不能做什么"。
-
-> 禁止把推测存成事实
-> 禁止同一个人既取证又审计
-> 禁止跳过 artifact 层
-> 禁止让同一 AI 自己判断、自己审计后直接定案
-
-这不是功能限制，而是**把约束变成产品本身**。
-
-当别人在卖"更聪明的 AI"时，Mercury Lab 在卖"更可靠的判断过程"。
+为什么？因为这些地方最容易出"听起来很对但其实站不住脚"的结论。
 
 ---
 
@@ -121,86 +72,39 @@ npm run doctor
 npm run dashboard
 ```
 
-Dashboard 默认地址：`http://127.0.0.1:4788`
+Dashboard 地址：`http://127.0.0.1:4788`
 
-生成给外部 brain 的前置审计 bundle：
+---
+
+## 生成前置审计报告
 
 ```powershell
 npm run index
-npm run export:memory
 npm run export:gbrain
 ```
 
-这些命令只生成 export bundle，不会直接写入 gbrain 或 Mercury Agent 的运行时数据库。
+这些命令只生成报告，不会直接写入任何运行时数据库。
 
 ---
 
-## 执行模式
-
-| 模式 | 消耗 | 速度 |
-|------|------|------|
-| Agent 模式（默认） | AI Agent token | 快 |
-| API 模式 | API token | 慢 |
-
----
-
-## 核心产物：Judgment Audit Report
-
-每次分析输出：
-
-- **原始材料**：00_raw/
-- **结构化分析**：01_segmented/
-- **红队审计**：07_audit_reports/
-- **索引更新**：11_indexes/
-
-`npm run index` 现在会生成两层索引：
-
-- `11_indexes/source-index.json`：文件级 artifact 索引
-- `11_indexes/sample-index.json`：样本级索引，暴露判级、项目绑定、复用和反馈缺口
-
----
-
-## 分工
-
-- **Mercury Agent upstream**：运行时、CLI/Telegram、权限工具、调度器、Second Brain、daemon
-- **Mercury Method Lab**：方法路由、证据链、artifact 状态、记忆候选、决策日志、行动计划、审计报告
-
----
-
-## 禁止事项
-
-- 不允许把推测存成事实
-- 不允许直接覆盖 raw 原始材料
-- 不允许把所有东西都写进长期记忆
-- 不允许让同一个 agent 自己取证、自己判断、自己审计后直接定案
-- 不允许清理掉未解释的异常信号
-
----
-
-## 入库流程
+## 项目是怎么工作的
 
 ```
-inbox → raw → segmented → cleaned → uncertain → memory_candidates → decision_logs / action_plans / audit_reports
+收到一个想法
+  → 先问：它到底是什么？（事实 / 推测 / 假设）
+  → 再问：它通过了质检吗？
+  → 通过了 → 进样本库，可以被以后调用
+  → 没通过 → 存档，但不进长期记忆
+
+不是所有东西都需要被执行。有的写下来就够了。
 ```
-
----
-
-## 工程入口
-
-| 命令 | 说明 |
-|------|------|
-| `npm run doctor` | 检查目录、脚本和运行环境 |
-| `npm run dashboard` | 启动本地 Web GUI（默认 http://127.0.0.1:4788） |
-| `npm run index` | 重建索引 |
-| `npm run validate` | 审计 artifact 结构 |
-| `npm run v8:analyze -- --text "..."` | 用 V8 分析一段文本 |
 
 ---
 
 ## 文档索引
 
-- 架构边界：[docs/architecture.md](docs/architecture.md)
-- 判断收口规则：[docs/JUDGMENT-CLOSURE-RULE.md](docs/JUDGMENT-CLOSURE-RULE.md)
-- V8 方法文档：[docs/methods/](docs/methods/)
-- 治理目标：[docs/GOVERNANCE.md](docs/GOVERNANCE.md)
-- 示例样本：[examples/](examples/)
+- 看一个完整例子 → `DEMO.md`
+- 看前置审计契约 → `docs/AUDIT-CONTRACT.md`
+- 看完整样本链 → `examples/`
+- 看方法论细节 → `docs/`
+- 想了解为什么这样设计 → `docs/GOVERNANCE.md`

@@ -1,55 +1,68 @@
 # Mercury Method Lab
 
-**An insight-sample precipitation system for high-frequency AI conversationalists.**
-
-It keeps smart thoughts from becoming clean but useless waste.
+**It keeps smart thoughts from becoming clean but useless waste.**
 
 Version: `0.8.0`
 
-Mercury Method Lab is a local-first method, evidence, audit, and migration workspace for Mercury Agent-compatible workflows.
+---
 
-It is **not** a fork of [`cosmicstack-labs/mercury-agent`](https://github.com/cosmicstack-labs/mercury-agent). It is a companion layer that keeps method reasoning, evidence chains, memory candidates, decision logs, action plans, and audit reports separate from the runtime.
+## The Problem
 
-It is not a system that thinks for you. It helps decide which thoughts deserve to be kept, advanced, reused, or discarded. Think of it less as a second brain and more as a quality gate inside the judgment loop: a pre-ingestion audit gate before long-term agent memory.
+You had an hour-long conversation with an AI. Generated some genuinely good ideas.
 
-## Start Here
+Then what?
 
-You do not need to understand the whole method first:
+They just sat in the chat history. Two weeks later you either can't find them, or you find them but can't remember why they seemed important.
 
-- [DEMO.md](DEMO.md): how a messy idea becomes reviewable project material
-- [docs/AUDIT-CONTRACT.md](docs/AUDIT-CONTRACT.md): the pre-ingestion audit contract for gbrain, Mercury Agent, OpenClaw, or markdown targets
-- [examples/](examples/): a complete sample chain from raw input to reuse decision
-- [sample_index.md](sample_index.md): how the sample library index proves this is more than cleaned notes
+Mercury Lab solves this.
 
-Minimal flow:
+---
 
-```text
-raw user fragment
-  -> goal-validator check
-  -> classified sample
-  -> action_plan
-  -> audit_report
-  -> reuse decision
-```
+## What It Is
 
-## Relationship To Mercury Agent
+A quality gate that checks AI-generated content before it goes into long-term memory.
 
-| Layer | Owner |
-| --- | --- |
-| Runtime, CLI, Telegram, daemon, scheduler, tools, permissions, Second Brain | Upstream Mercury Agent |
-| Evidence, artifacts, method routing, audit, migration bundles, public practice docs | Mercury Method Lab |
+It does not help you think more. It helps you decide which thoughts are worth keeping.
 
-Current upstream compatibility target:
+For systems like gbrain and Mercury Agent, Mercury Lab sits upstream as a checkpoint: filter first, then decide what deserves to be stored.
 
-```text
-@cosmicstack/mercury-agent >=1.1.0 <2.0.0
-```
+---
 
-Check it with:
+## The Pre-Audit Contract
 
-```powershell
-npm run check:upstream
-```
+See `docs/AUDIT-CONTRACT.md` for the full contract.
+
+Before anything enters gbrain / Mercury Agent / OpenClaw memory, it must answer:
+
+- Is this a fact or a guess?
+- Are there counterexamples?
+- Is it worth remembering?
+
+If it cannot answer these, it does not go in.
+
+---
+
+## A Real Example
+
+`DEMO.md` shows a complete walkthrough:
+
+How a messy, half-formed idea gets processed and comes out as something you can actually reference later.
+
+---
+
+## What It Does NOT Do (this is the important part)
+
+Most AI tools show you what they can do.
+This project shows you what it refuses to do.
+
+- ❌ Cannot store speculation as fact
+- ❌ Cannot have the same person write material and audit it
+- ❌ Cannot skip quality check before entering memory
+- ❌ Cannot let an AI judge, audit, and approve its own conclusion
+
+Why? Because that is exactly where "sounds right but falls apart under pressure" conclusions come from.
+
+---
 
 ## Quick Start
 
@@ -59,101 +72,49 @@ npm run doctor
 npm run dashboard
 ```
 
-Open the local dashboard at:
+Dashboard: `http://127.0.0.1:4788`
 
-```text
-http://127.0.0.1:4788
-```
+---
 
-Generate a pre-audit bundle for external brain systems:
+## Generate Pre-Audit Reports
 
 ```powershell
 npm run index
-npm run export:memory
 npm run export:gbrain
 ```
 
-These commands emit export bundles only. They do not write directly into gbrain, Mercury Agent, or any runtime memory database.
+These commands only generate reports. They do not write directly into any runtime database.
 
-API execution mode needs an LLM token. The default provider is Ark Coding Plan:
+---
 
-```powershell
-$env:ARK_API_KEY="..."
-npm run test:llm
+## How It Works
+
+```
+Received an idea
+  -> What is it really? (fact / speculation / hypothesis)
+  -> Did it pass the quality check?
+  -> Passed -> goes into the sample library, can be called on later
+  -> Not passed -> archived, but does not enter long-term memory
+
+Not everything needs to be acted on. Sometimes writing it down is enough.
 ```
 
-See [docs/DEPLOYMENT-ONBOARDING.md](docs/DEPLOYMENT-ONBOARDING.md).
+---
 
-Provider support now includes hosted OpenAI-compatible APIs and local runtimes:
+## Relationship to Mercury Agent
 
-- `openai`
-- `openai-compatible-custom`
-- `local-openclaw`
-- `ollama-local`
-- `vllm-local`
-- `lm-studio-local`
+Mercury Lab is not a fork. It is a companion layer.
 
-Local providers do not require API keys by default. Hosted providers accept aliases such as `MERCURY_API_KEY`, `OPENAI_API_KEY`, and `MERCURY_OPENAI_API_KEY`.
+| Layer | Who owns it |
+| --- | --- |
+| Runtime, CLI, Telegram, daemon, scheduler, tools, Second Brain | Mercury Agent |
+| Evidence, artifacts, method routing, audit, migration, public practice docs | Mercury Lab |
 
-## Architecture Boundary
+---
 
-This release separates two axes:
+## Docs
 
-- `analysis_persona`: V8.1 / V8.0 / V8.5 judgment posture.
-- `execution_mode`: API / Agent execution channel.
-
-Adding a new skill or management Markdown file should not require architecture refactoring. See [docs/ARCHITECTURE-SHIFT-REPORT.md](docs/ARCHITECTURE-SHIFT-REPORT.md).
-
-## Submission Layer
-
-Users do not need to touch internal directories such as `00_raw/`.
-
-Public intake paths:
-
-- GitHub Issues for non-Git users.
-- `submissions/viewpoints/*.md` for markdown/Git users.
-- `submissions/agent-queue/*.json` for OpenClaw-like, Hermes-like, or future agents.
-
-Promote a viewpoint into raw evidence:
-
-```powershell
-npm run import:viewpoint -- submissions/viewpoints/2026-05-01-example-viewpoint.md
-```
-
-See [docs/agent-first-submission-layer.md](docs/agent-first-submission-layer.md).
-
-## Core Loop
-
-```text
-capture -> normalize -> validate -> reason -> decide -> act -> audit -> export -> review
-```
-
-The project keeps Markdown/YAML artifacts as the source of truth. JSON and SQLite indexes are generated views.
-
-`npm run index` now writes two generated views:
-
-- `11_indexes/source-index.json`: file-level artifact index
-- `11_indexes/sample-index.json`: sample-level index for grading, project binding, reuse, and feedback gaps
-
-## Key Docs
-
-- Project positioning: [docs/project-positioning.md](docs/project-positioning.md)
-- Architecture shift report: [docs/ARCHITECTURE-SHIFT-REPORT.md](docs/ARCHITECTURE-SHIFT-REPORT.md)
-- Deployment onboarding: [docs/DEPLOYMENT-ONBOARDING.md](docs/DEPLOYMENT-ONBOARDING.md)
-- Judgment closure rule: [docs/JUDGMENT-CLOSURE-RULE.md](docs/JUDGMENT-CLOSURE-RULE.md)
-- Upstream compatibility: [docs/upstream-mercury-agent-compatibility.md](docs/upstream-mercury-agent-compatibility.md)
-- Memory migration: [docs/memory-architecture-migration.md](docs/memory-architecture-migration.md)
-- Rule routing: [docs/rule-routing.md](docs/rule-routing.md)
-- Agile roadmap: [docs/agile-roadmap.md](docs/agile-roadmap.md)
-- Publication plan: [docs/publication-plan.md](docs/publication-plan.md)
-- License/source policy: [docs/license-and-source-policy.md](docs/license-and-source-policy.md)
-- Agent-first submission layer: [docs/agent-first-submission-layer.md](docs/agent-first-submission-layer.md)
-- User submission guide: [docs/user-submission-guide.en.md](docs/user-submission-guide.en.md)
-- GUI intake workflow: [docs/gui-intake-workflow.md](docs/gui-intake-workflow.md)
-- System wiki decision: [docs/system-wiki-decision.md](docs/system-wiki-decision.md)
-
-## Third-Party Skill Pack Boundary
-
-Third-party prompt or skill packs can be studied as examples, but they must not be copied into this repository unless their license and source policy allow it.
-
-`dbskill` is treated as a study-only reference. The useful gap is creator and commercial diagnosis; the implementation must be original to Mercury Method Lab.
+- See a full example → `DEMO.md`
+- See the pre-audit contract → `docs/AUDIT-CONTRACT.md`
+- See a complete sample chain → `examples/`
+- Understand why it is designed this way → `docs/GOVERNANCE.md`
