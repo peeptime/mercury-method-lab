@@ -47,12 +47,12 @@ await writeFile(rawPath, renderRawArtifact({ title, source, methodProfile, execu
 if (executionMode === "agent") {
   await writeFile(
     agentQueuePath,
-    `${JSON.stringify(renderAgentQueueEnvelope({ title, source, methodProfile, methodsConfig, now, reviewAt, id, rawPath, segmentedPath, auditPath }), null, 2)}\n`,
+    `${JSON.stringify(renderAgentQueueEnvelope({ title, source, methodProfile, methodsConfig, args, now, reviewAt, id, rawPath, segmentedPath, auditPath }), null, 2)}\n`,
     "utf8"
   );
 
-  let indexResult = { ok: false, skipped: true, message: "skipped by --no-index" };
-  if (!args.noIndex) {
+  let indexResult = skippedIndexResult({ args, executionMode });
+  if (shouldRebuildIndex({ args, executionMode, methodsConfig })) {
     indexResult = rebuildIndex();
   }
 
@@ -94,8 +94,8 @@ await writeFile(
   "utf8"
 );
 
-let indexResult = { ok: false, skipped: true, message: "skipped by --no-index" };
-if (!args.noIndex) {
+let indexResult = skippedIndexResult({ args, executionMode });
+if (shouldRebuildIndex({ args, executionMode, methodsConfig })) {
   indexResult = rebuildIndex();
 }
 
@@ -124,6 +124,7 @@ function parseArgs(argv) {
     provider: "",
     persona: "",
     mode: "",
+    index: false,
     noIndex: false,
     help: false
   };
@@ -148,6 +149,8 @@ function parseArgs(argv) {
       result.persona = readValue();
     } else if (flag === "--mode" || flag === "--execution-mode") {
       result.mode = readValue();
+    } else if (flag === "--index") {
+      result.index = true;
     } else if (flag === "--no-index") {
       result.noIndex = true;
     } else if (!arg.startsWith("-") && !result.file && !result.text) {
@@ -179,7 +182,8 @@ function printUsage() {
     "  --provider <name>  Override config/model-providers.json active provider.",
     "  --persona <name>   Override config/methods.json analysis_persona for this run.",
     "  --slug <slug>      Override output filename slug.",
-    "  --no-index         Skip rebuilding 11_indexes/source-index.json.",
+    "  --index            Rebuild 11_indexes/*.json after writing artifacts. API mode defaults to indexing.",
+    "  --no-index         Skip rebuilding 11_indexes/*.json.",
     "",
     "Environment:",
     "  Uses MERCURY_MODEL_PROVIDER or config/model-providers.json active_provider.",
@@ -277,6 +281,27 @@ async function loadMethodProfile(config, personaOverride) {
     },
     docs
   };
+}
+
+function shouldRebuildIndex({ args, executionMode, methodsConfig }) {
+  if (args.noIndex) {
+    return false;
+  }
+  if (args.index) {
+    return true;
+  }
+  if (executionMode === "agent") {
+    return methodsConfig.agent_auto_rebuild_index === true;
+  }
+  return methodsConfig.auto_rebuild_index !== false;
+}
+
+function skippedIndexResult({ args, executionMode }) {
+  let message = "skipped by --no-index";
+  if (!args.noIndex && executionMode === "agent" && !args.index) {
+    message = "skipped by default in agent mode; pass --index or set agent_auto_rebuild_index=true to rebuild";
+  }
+  return { ok: false, skipped: true, message };
 }
 
 async function runV8Analysis({ title, source, methodProfile, modelConfig, rawPath }) {
@@ -424,7 +449,7 @@ ${source.text}
 `;
 }
 
-function renderAgentQueueEnvelope({ title, source, methodProfile, methodsConfig, now, reviewAt, id, rawPath, segmentedPath, auditPath }) {
+function renderAgentQueueEnvelope({ title, source, methodProfile, methodsConfig, args, now, reviewAt, id, rawPath, segmentedPath, auditPath }) {
   const requiredSections = getRequiredAnalysisSections();
   const contextPolicy = buildAgentContextPolicy({ methodsConfig, methodProfile, rawPath, segmentedPath, auditPath });
   return {
@@ -445,7 +470,7 @@ function renderAgentQueueEnvelope({ title, source, methodProfile, methodsConfig,
     requested_outputs: {
       segmented: rel(segmentedPath),
       audit: rel(auditPath),
-      index: "11_indexes/source-index.json"
+      index: shouldRebuildIndex({ args, executionMode: "agent", methodsConfig }) ? "11_indexes/source-index.json" : null
     },
     context_policy: contextPolicy,
     embedded_contract: {
@@ -454,7 +479,7 @@ function renderAgentQueueEnvelope({ title, source, methodProfile, methodsConfig,
       output_language: "Markdown, Chinese preferred when input is Chinese.",
       required_analysis_sections: requiredSections,
       audit_required_headings: getRequiredAuditHeadings(),
-      completion_rule: "Write segmented and audit artifacts, then run npm run index unless this task was generated with --no-index.",
+      completion_rule: "Write segmented and audit artifacts. Rebuild indexes only when the envelope requested_outputs.index is not null.",
       stop_rule: "If required context is missing from this envelope, read only the paths in context_policy.allowed_reads before asking for human review."
     },
     instructions: [
@@ -464,7 +489,7 @@ function renderAgentQueueEnvelope({ title, source, methodProfile, methodsConfig,
       "Use the active persona summary in persona_stance. Open method_docs[0] only if the embedded contract is insufficient.",
       "Write the structured PSP analysis to requested_outputs.segmented.",
       "Write an audit report to requested_outputs.audit and state that it was generated in agent mode.",
-      "Run npm run index after writing artifacts unless the caller passed --no-index.",
+      "Do not run npm run index unless requested_outputs.index is not null.",
       "Do not call the model provider API from scripts/run_v8_analysis.mjs in agent mode."
     ],
     required_analysis_sections: requiredSections,

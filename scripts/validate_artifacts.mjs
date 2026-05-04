@@ -1,8 +1,10 @@
-import { readdir, readFile } from "node:fs/promises";
+import { readdir, readFile, stat } from "node:fs/promises";
 import { dirname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
+const excludedDirs = new Set([".git", "node_modules", ".cache", "dist", "build"]);
+const maxTextFileBytes = 2 * 1024 * 1024;
 
 const requiredDirs = [
   "00_inbox",
@@ -45,6 +47,9 @@ async function listFiles(dir) {
   for (const entry of entries) {
     const path = join(dir, entry.name);
     if (entry.isDirectory()) {
+      if (excludedDirs.has(entry.name)) {
+        continue;
+      }
       output.push(...await listFiles(path));
     } else {
       output.push(path);
@@ -129,8 +134,14 @@ for (const file of files) {
     continue;
   }
 
-  const text = await readFile(file, "utf8");
   const fileRel = rel(file);
+  const fileStat = await stat(file);
+  if (fileStat.size > maxTextFileBytes) {
+    warnings.push(`${fileRel}: skipped large text-like file (${fileStat.size} bytes)`);
+    continue;
+  }
+
+  const text = await readFile(file, "utf8");
 
   for (const pattern of secretPatterns) {
     if (pattern.test(text)) {

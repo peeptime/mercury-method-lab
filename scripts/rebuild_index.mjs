@@ -7,6 +7,7 @@ const indexDir = join(root, "11_indexes");
 const sqlitePath = join(indexDir, "mercury-index.sqlite");
 const jsonPath = join(indexDir, "source-index.json");
 const sampleJsonPath = join(indexDir, "sample-index.json");
+const maxTextFileBytes = 2 * 1024 * 1024;
 
 const sourceDirs = [
   "00_inbox",
@@ -32,7 +33,7 @@ for (const file of files) {
   const fileStat = await stat(file);
   const relPath = relative(root, file).replaceAll("\\", "/");
   const ext = relPath.split(".").pop()?.toLowerCase() || "";
-  const text = await tryReadText(file, ext);
+  const text = await tryReadText(file, ext, fileStat.size);
   const metadata = text ? parseMetadata(text, relPath) : {};
 
   records.push({
@@ -87,7 +88,12 @@ if (sqlite.ok) {
 
 async function listFiles(dir) {
   const output = [];
-  const entries = await readdir(dir, { withFileTypes: true });
+  let entries = [];
+  try {
+    entries = await readdir(dir, { withFileTypes: true });
+  } catch {
+    return output;
+  }
   for (const entry of entries) {
     const path = join(dir, entry.name);
     if (entry.isDirectory()) {
@@ -99,8 +105,11 @@ async function listFiles(dir) {
   return output;
 }
 
-async function tryReadText(file, ext) {
+async function tryReadText(file, ext, sizeBytes) {
   if (!["md", "yaml", "yml", "json", "txt"].includes(ext)) {
+    return "";
+  }
+  if (sizeBytes > maxTextFileBytes) {
     return "";
   }
   try {

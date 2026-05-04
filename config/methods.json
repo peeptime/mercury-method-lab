@@ -14,6 +14,8 @@
     "api": "使用 PSP 执行脚本 + API token（确定性高，成本高）",
     "agent": "使用 AI Agent 智能做 PSP 分析（成本低，质量依赖 Agent）"
   },
+  "auto_rebuild_index": true,
+  "agent_auto_rebuild_index": false,
   "agent_context_policy": {
     "mode": "closed_task_pack",
     "purpose": "Agent 模式默认使用封闭任务包，避免 OpenClaw 为补上下文扫描整个项目。",

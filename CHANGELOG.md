@@ -2,6 +2,21 @@
 
 ## Unreleased
 
+## 0.7.6 — Agent 模式性能护栏
+
+### Changed
+
+- `scripts/run_v8_analysis.mjs`：Agent 模式默认不再重建索引，避免 OpenClaw / Agent 在封闭任务包后又触发全量索引扫描；如确实需要，可传 `--index` 或设置 `agent_auto_rebuild_index=true`。
+- Agent 任务包中的执行说明改为：只有 `requested_outputs.index` 非空时才运行 `npm run index`，避免默认消耗额外上下文和文件系统预算。
+- `config/methods.json` 新增 `auto_rebuild_index` 与 `agent_auto_rebuild_index`，把 API 模式和 Agent 模式的索引策略拆开。
+
+### Performance
+
+- `scripts/validate_artifacts.mjs` 跳过 `.git`、`node_modules`、构建缓存目录，并跳过 2MB 以上的文本类文件，降低仓库增长后的验证成本。
+- `scripts/rebuild_index.mjs` 对缺失目录和 2MB 以上文本类文件做安全跳过，减少全量索引在大文件/临时导出上的卡顿风险。
+
+---
+
 ## 0.7.5 — `/goal` 输出收口修正
 
 ### Fixed

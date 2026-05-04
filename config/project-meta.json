@@ -1,7 +1,7 @@
 {
   "project_name": "Mercury Method Lab",
   "package_name": "mercury-method-lab",
-  "version": "0.7.5",
+  "version": "0.7.6",
   "codename": "Open Orbit",
   "status": "architecture-hardening",
   "position": "A companion method, evidence, audit, and migration lab for Mercury Agent-compatible workflows.",

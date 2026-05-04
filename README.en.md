@@ -4,7 +4,7 @@
 
 It keeps smart thoughts from becoming clean but useless waste.
 
-Version: `0.7.5`
+Version: `0.7.6`
 
 Mercury Method Lab is a local-first method, evidence, audit, and migration workspace for Mercury Agent-compatible workflows.
 

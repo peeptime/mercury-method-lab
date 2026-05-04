@@ -4,7 +4,7 @@
 
 主打的是：**不让聪明变成垃圾。**
 
-Version: `0.7.5`
+Version: `0.7.6`
 
 English entry: [README.en.md](README.en.md)
 
