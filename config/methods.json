@@ -1,5 +1,5 @@
 {
-  "version": "0.5.1",
+  "version": "0.7.0",
   "active_method": "v8",
   "analysis_persona": "v8.1-reality-sync",
   "analysis_persona_description": {
@@ -13,6 +13,24 @@
   "execution_mode_description": {
     "api": "使用 PSP 执行脚本 + API token（确定性高，成本高）",
     "agent": "使用 AI Agent 智能做 PSP 分析（成本低，质量依赖 Agent）"
+  },
+  "agent_context_policy": {
+    "mode": "closed_task_pack",
+    "purpose": "Agent 模式默认使用封闭任务包，避免 OpenClaw 为补上下文扫描整个项目。",
+    "max_project_files_to_read": 3,
+    "read_order": [
+      "submissions/agent-queue/<task>.json",
+      "raw_artifact",
+      "method_docs[0] only if embedded_contract is insufficient"
+    ],
+    "forbidden_globs": [
+      "00_raw/** except raw_artifact",
+      "01_segmented/** except requested_outputs.segmented",
+      "07_audit_reports/** except requested_outputs.audit",
+      "11_indexes/**",
+      ".git/**",
+      "docs/** except listed method_docs"
+    ]
   },
   "methods": {
     "v8": {

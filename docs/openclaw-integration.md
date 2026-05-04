@@ -15,6 +15,27 @@ Mercury exposes enough structure for a local agent to understand and call it:
 - Permissions: [../config/permissions.json](../config/permissions.json)
 - State machine: [../config/state-machine.json](../config/state-machine.json)
 
+## Agent Mode Cost Control
+
+OpenClaw should not inspect the whole Mercury Lab project for every analysis task.
+
+In `execution_mode: "agent"`, run:
+
+```powershell
+npm run v8:analyze -- --mode agent --text "input" --title "title"
+```
+
+The script writes a closed task pack to `submissions/agent-queue/*.json`. OpenClaw should treat that JSON as the execution boundary:
+
+- read the queue JSON first
+- prefer embedded `source_text` and `embedded_contract`
+- read only `context_policy.allowed_reads`
+- avoid historical artifacts, indexes, `.git/`, and broad `docs/` scans
+- write only the requested segmented and audit outputs
+- stop for human review when more context is needed
+
+This keeps Agent mode from spending its reasoning budget rediscovering project structure.
+
 ## Local Provider Slot
 
 `local-openclaw` is reserved in `config/model-providers.json`.
@@ -42,4 +63,3 @@ npm run test:llm
 ```
 
 If the runtime does not require an API key, leave `OPENCLAW_API_KEY` empty.
-

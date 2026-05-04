@@ -47,7 +47,7 @@ await writeFile(rawPath, renderRawArtifact({ title, source, methodProfile, execu
 if (executionMode === "agent") {
   await writeFile(
     agentQueuePath,
-    `${JSON.stringify(renderAgentQueueEnvelope({ title, source, methodProfile, now, reviewAt, id, rawPath, segmentedPath, auditPath }), null, 2)}\n`,
+    `${JSON.stringify(renderAgentQueueEnvelope({ title, source, methodProfile, methodsConfig, now, reviewAt, id, rawPath, segmentedPath, auditPath }), null, 2)}\n`,
     "utf8"
   );
 
@@ -424,51 +424,115 @@ ${source.text}
 `;
 }
 
-function renderAgentQueueEnvelope({ title, source, methodProfile, now, reviewAt, id, rawPath, segmentedPath, auditPath }) {
+function renderAgentQueueEnvelope({ title, source, methodProfile, methodsConfig, now, reviewAt, id, rawPath, segmentedPath, auditPath }) {
+  const requiredSections = getRequiredAnalysisSections();
+  const contextPolicy = buildAgentContextPolicy({ methodsConfig, methodProfile, rawPath, segmentedPath, auditPath });
   return {
     schema_version: "0.1",
     task_type: "v8-agent-analysis",
     id: `agent-task-${id}`,
     status: "pending_agent_execution",
+    context_mode: "closed_task_pack",
     created_at: now.toISOString(),
     review_at: reviewAt,
     method: methodProfile.methodName,
     analysis_persona: methodProfile.personaName,
     persona_label: methodProfile.persona.label || methodProfile.personaName,
+    persona_stance: methodProfile.persona.stance || "",
     source_ref: source.ref,
     raw_artifact: rel(rawPath),
+    source_text: source.text,
     requested_outputs: {
       segmented: rel(segmentedPath),
       audit: rel(auditPath),
       index: "11_indexes/source-index.json"
     },
+    context_policy: contextPolicy,
+    embedded_contract: {
+      purpose: "Complete this task from the envelope and raw artifact. Avoid broad repository exploration.",
+      method_boundary: "Use only the active analysis persona. Do not merge V8 personas unless this task explicitly asks for contrast.",
+      output_language: "Markdown, Chinese preferred when input is Chinese.",
+      required_analysis_sections: requiredSections,
+      audit_required_headings: getRequiredAuditHeadings(),
+      completion_rule: "Write segmented and audit artifacts, then run npm run index unless this task was generated with --no-index.",
+      stop_rule: "If required context is missing from this envelope, read only the paths in context_policy.allowed_reads before asking for human review."
+    },
     instructions: [
-      "Use the active persona documents listed in method_docs.",
+      "Start from this JSON envelope. Treat it as the complete task pack.",
+      "Do not scan the repository, docs tree, historical artifacts, or indexes for background context.",
+      "Read only context_policy.allowed_reads, and prefer source_text in this envelope over opening raw_artifact.",
+      "Use the active persona summary in persona_stance. Open method_docs[0] only if the embedded contract is insufficient.",
       "Write the structured PSP analysis to requested_outputs.segmented.",
       "Write an audit report to requested_outputs.audit and state that it was generated in agent mode.",
       "Run npm run index after writing artifacts unless the caller passed --no-index.",
       "Do not call the model provider API from scripts/run_v8_analysis.mjs in agent mode."
     ],
-    required_analysis_sections: [
-      "第 0 层：语义嗅探与分流",
-      "第一层：输入层",
-      "第二层：结构定位",
-      "第三层：权力分析",
-      "第四层：杠杆点识别",
-      "第五层：路径判断",
-      "第六层：系统影响",
-      "第七层：对抗性交叉验证",
-      "评分",
-      "审计",
-      "最终结论",
-      "后续建议",
-      "停止条件",
-      "推翻条件",
-      "复盘时间",
-      "记忆建议"
-    ],
+    required_analysis_sections: requiredSections,
     method_docs: methodProfile.docs.map((doc) => rel(doc.path))
   };
+}
+
+function buildAgentContextPolicy({ methodsConfig, methodProfile, rawPath, segmentedPath, auditPath }) {
+  const configured = methodsConfig.agent_context_policy || {};
+  const allowedReads = [
+    rel(rawPath),
+    ...methodProfile.docs.slice(0, 1).map((doc) => rel(doc.path))
+  ];
+  return {
+    mode: configured.mode || "closed_task_pack",
+    max_project_files_to_read: configured.max_project_files_to_read ?? 3,
+    allowed_reads: allowedReads,
+    write_targets: [rel(segmentedPath), rel(auditPath)],
+    read_order: [
+      "this envelope source_text",
+      rel(rawPath),
+      ...methodProfile.docs.slice(0, 1).map((doc) => `${rel(doc.path)} only if embedded_contract is insufficient`)
+    ],
+    forbidden_globs: configured.forbidden_globs || [
+      "00_raw/** except raw_artifact",
+      "01_segmented/** except requested_outputs.segmented",
+      "07_audit_reports/** except requested_outputs.audit",
+      "11_indexes/**",
+      ".git/**",
+      "docs/** except listed method_docs"
+    ],
+    budget_note: "If you need more than these files, stop and request human review instead of exploring."
+  };
+}
+
+function getRequiredAnalysisSections() {
+  return [
+    "第 0 层：语义嗅探与分流",
+    "第一层：输入层",
+    "第二层：结构定位",
+    "第三层：权力分析",
+    "第四层：杠杆点识别",
+    "第五层：路径判断",
+    "第六层：系统影响",
+    "第七层：对抗性交叉验证",
+    "评分",
+    "审计",
+    "最终结论",
+    "后续建议",
+    "停止条件",
+    "推翻条件",
+    "复盘时间",
+    "记忆建议"
+  ];
+}
+
+function getRequiredAuditHeadings() {
+  return [
+    "## 被审计结论",
+    "## 关键假设",
+    "## 最可能错误点",
+    "## 外部证据检查",
+    "## 停止条件复核",
+    "## 记忆建议复核",
+    "## 对抗性交叉验证",
+    "## 审计结论",
+    "## 下一步"
+  ];
 }
 
 function renderSegmentedArtifact({ title, source, analysis, completeness, methodProfile, now, reviewAt, id, rawPath, modelConfig }) {
