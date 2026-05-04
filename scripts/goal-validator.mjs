@@ -57,7 +57,8 @@ export function validate(text) {
   }
 
   const goal = text.trim();
-  const dimensions = runDimensions(goal);
+  const intent = inferIntent(goal);
+  const dimensions = runDimensions(goal, { intent });
   const failed = dimensions.filter((d) => !d.passed);
 
   // 四关检验（只在全部5维度通过后运行）
@@ -66,6 +67,7 @@ export function validate(text) {
   return {
     ok: failed.length === 0,
     goal,
+    intent,
     dimensions,
     fix_questions: failed.length > 0 ? buildFixQuestions(failed, goal) : [],
     reformulated_goal: failed.length === 0
@@ -144,7 +146,7 @@ function checkVerifiable(text) {
 // 维度三：时间边界
 // ─────────────────────────────────────────────────────────
 
-function checkTimebound(text) {
+function checkTimebound(text, options = {}) {
   const timeSignals = [
     "截止", "deadline", "前",
     "本周", "今天", "明天", "下周一", "月底",
@@ -155,9 +157,9 @@ function checkTimebound(text) {
 
   const vagueTime = ["尽快", "有空", "之后再说", "看情况", "差不多", "先这样"];
 
-  const hasTime = timeSignals.some((t) => text.toLowerCase().includes(t.toLowerCase()));
+  const hasTime = hasExplicitTimeExpression(text);
   const hasVague = vagueTime.some((v) => text.includes(v));
-  const passed = hasTime && !hasVague;
+  const passed = options.intent === "archived" ? true : hasTime && !hasVague;
 
   return {
     dimension: "timebound",
@@ -167,7 +169,9 @@ function checkTimebound(text) {
       "没有明确截止时间。" + NL +
       "请给出具体日期或时间范围（如：本周五、下周一、3天内）。"
     ],
-    hint: "包含明确截止日期或时间范围"
+    hint: options.intent === "archived"
+      ? "无明确时间表达，按 archived 冷存储处理，不触发提醒"
+      : "包含明确截止日期或时间范围"
   };
 }
 
@@ -277,11 +281,11 @@ function runFourGates(text) {
 
 const NL = "\n       ";
 
-function runDimensions(text) {
+function runDimensions(text, options = {}) {
   return [
     checkDeliverable(text),
     checkVerifiable(text),
-    checkTimebound(text),
+    checkTimebound(text, options),
     checkScopebound(text),
     checkOwnable(text)
   ];
@@ -437,16 +441,22 @@ function fillTemplate(template, result, date) {
   const goal = result.goal;
   const title = goal.split("\n")[0].slice(0, 80);
   const criteria = extractAcceptanceCriteria(goal);
-  const deadline = extractDeadline(goal);
+  const deadline = extractDeadline(goal, date);
+  const intent = result.intent || inferIntent(goal);
+  const reminder = getReminderIntensity(intent);
+  const feedbackExpectedFrom = getFeedbackExpectedFrom(intent);
 
   const meta = [
-    "- schema_version: \"0.1\"",
+    "- schema_version: \"0.2\"",
     "- type: action_plan",
     "- status: draft",
     "- owner_role: operator",
     "- created_at: " + formatDate(date),
     "- review_at: " + (deadline || ""),
     "- verified_at: " + formatDateTime(date),
+    "- intent: " + intent + "           # archived | immediate | watchful",
+    "- reminder_intensity: " + reminder + "  # none | light | strict（仅 intent=immediate 时有效）",
+    "- feedback_expected_from: " + feedbackExpectedFrom,
     ""
   ].join("\n");
 
@@ -474,6 +484,16 @@ function fillTemplate(template, result, date) {
       ].join("\n")
     : "";
 
+  // Judgment Closure（结论优先，开口存在但不主动推）
+  const closureSection = [
+    "## Judgment Closure",
+    "",
+    "- **结论摘要**：" + trunc(goal.split("\n")[0], 60) + "（直接给出，不做延伸推荐）",
+    "- **弱推荐**：（如有）很弱的建议，不转移焦点",
+    "- **继续入口**：如果想继续讨论，这里是方向（存在，不主动推）",
+    ""
+  ].join("\n");
+
   let out = "# Goal Action Plan: " + title + "\n\n" +
     template
       .replace("# Action Plan Template", "")
@@ -487,32 +507,113 @@ function fillTemplate(template, result, date) {
         "## Acceptance Criteria\n\n" + acceptanceBody + "\n"
       );
 
-  // 如果四关结果存在，在 Goal 后插入
-  if (fourGatesSection) {
-    out = out.replace(
-      "**验证状态：通过**",
-      "**验证状态：通过**\n\n" + fourGatesSection
-    );
-  }
+  out = stripSection(out, "四关检验");
+  out = stripSection(out, "Judgment Closure");
+  out = stripSection(out, "Next Review");
 
-  return out;
+  const tailSections = [
+    fourGatesSection,
+    closureSection,
+    buildNextReviewSection({
+      deadline,
+      feedbackExpectedFrom,
+      intent,
+      reminder
+    })
+  ].filter(Boolean);
+
+  return out.trimEnd() + "\n\n" + tailSections.join("\n").trimEnd() + "\n";
 }
 
-function extractDeadline(goal) {
-  const m = goal.match(/(\d{4}[-/]\d{2}[-/]\d{2})/);
-  if (m) return m[1];
+function inferIntent(goal) {
+  return hasExplicitTimeExpression(goal) ? "immediate" : "archived";
+}
 
-  const relativeMap = [
-    ["本周五", 5], ["下周一", 7], ["明天", 1],
-    ["3天内", 3], ["一周内", 7], ["两周内", 14]
+function getReminderIntensity(intent) {
+  if (intent === "immediate") return "strict";
+  if (intent === "watchful") return "light";
+  return "none";
+}
+
+function getFeedbackExpectedFrom(intent) {
+  if (intent === "immediate") return "operator";
+  if (intent === "watchful") return "observer";
+  return "none";
+}
+
+function buildNextReviewSection({ deadline, feedbackExpectedFrom, intent, reminder }) {
+  const notes = {
+    archived: "intent=archived：本 artifact 为洞察存档，无需执行跟进。",
+    immediate: "intent=immediate：本 artifact 需要执行闭环，按 review_at 严格跟进。",
+    watchful: "intent=watchful：本 artifact 先存档观望，仅保留轻提醒。"
+  };
+
+  return [
+    "## Next Review",
+    "",
+    "- review_at: " + (deadline || ""),
+    "- intent: " + intent,
+    "- reminder_intensity: " + reminder,
+    "- feedback_expected_from: " + feedbackExpectedFrom,
+    "",
+    "> " + notes[intent],
+    ""
+  ].join("\n");
+}
+
+function hasExplicitTimeExpression(goal) {
+  const normalized = goal.replace(/\s+/g, "");
+  const patterns = [
+    /\d{4}[-/年]\d{1,2}[-/月]\d{1,2}日?/,
+    /\d{1,2}月\d{1,2}日/,
+    /\d{1,2}:\d{2}/,
+    /(今天|今日|今晚|明天|明日|明晚|后天|本周|下周|周内|本月|月底|本月底)/,
+    /(本|下)?周[一二三四五六日天]/,
+    /\d+\s*(分钟|小时|天|日|周)内/,
+    /(截止|最晚|不晚于|到).{0,12}(今天|今日|明天|明日|后天|本周|下周|月底|\d{1,2}月\d{1,2}日|\d{4}[-/年]\d{1,2}[-/月]\d{1,2}日?)/
   ];
-  for (const [label, days] of relativeMap) {
-    if (goal.includes(label)) {
-      const d = new Date();
-      d.setDate(d.getDate() + days);
-      return formatDate(d);
-    }
+  return patterns.some((pattern) => pattern.test(normalized));
+}
+
+function extractDeadline(goal, baseDate = new Date()) {
+  const normalized = goal.replace(/\s+/g, "");
+  const absoluteDate = normalized.match(/(\d{4})[-/年](\d{1,2})[-/月](\d{1,2})日?/);
+  if (absoluteDate) {
+    return formatDateParts(absoluteDate[1], absoluteDate[2], absoluteDate[3]);
   }
+
+  const monthDay = normalized.match(/(\d{1,2})月(\d{1,2})日/);
+  if (monthDay) {
+    return formatDateParts(baseDate.getFullYear(), monthDay[1], monthDay[2]);
+  }
+
+  const relativeDays = [
+    ["今天", 0], ["今日", 0], ["今晚", 0],
+    ["明天", 1], ["明日", 1], ["明晚", 1],
+    ["后天", 2],
+    ["本周", daysUntilWeekday(baseDate, 5)],
+    ["周内", daysUntilWeekday(baseDate, 5)],
+    ["下周", daysUntilWeekday(baseDate, 8)],
+    ["月底", daysUntilMonthEnd(baseDate)],
+    ["本月底", daysUntilMonthEnd(baseDate)]
+  ];
+  for (const [label, days] of relativeDays) {
+    if (normalized.includes(label)) return addDays(baseDate, days);
+  }
+
+  const weekdayMatch = normalized.match(/(本|下)?周([一二三四五六日天])/);
+  if (weekdayMatch) {
+    const target = "一二三四五六日天".indexOf(weekdayMatch[2]) + 1;
+    const offset = daysUntilWeekday(baseDate, target + (weekdayMatch[1] === "下" ? 7 : 0));
+    return addDays(baseDate, offset);
+  }
+
+  const dayWindow = normalized.match(/(\d+)(天|日)内/);
+  if (dayWindow) return addDays(baseDate, Number(dayWindow[1]));
+
+  const weekWindow = normalized.match(/(\d+)周内/);
+  if (weekWindow) return addDays(baseDate, Number(weekWindow[1]) * 7);
+
   return "";
 }
 
@@ -522,12 +623,16 @@ function getDefaultTemplate(date) {
     "",
     "## Artifact Metadata",
     "",
-    "- schema_version: \"0.1\"",
+    "- schema_version: \"0.2\"",
     "- type: action_plan",
     "- status: draft",
     "- owner_role: operator",
     "- created_at: " + formatDate(date),
     "- review_at: ",
+    "- verified_at: ",
+    "- intent: archived           # archived | immediate | watchful",
+    "- reminder_intensity: none   # none | light | strict",
+    "- feedback_expected_from: none",
     "",
     "## Goal",
     "",
@@ -553,6 +658,41 @@ function getDefaultTemplate(date) {
 // ─────────────────────────────────────────────────────────
 // 工具函数
 // ─────────────────────────────────────────────────────────
+
+function stripSection(markdown, heading) {
+  const pattern = new RegExp("\\n?## " + escapeRegExp(heading) + "\\n[\\s\\S]*?(?=\\n## |$)", "g");
+  return markdown.replace(pattern, "");
+}
+
+function escapeRegExp(value) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function formatDateParts(year, month, day) {
+  const yyyy = String(year).padStart(4, "0");
+  const mm = String(month).padStart(2, "0");
+  const dd = String(day).padStart(2, "0");
+  return `${yyyy}-${mm}-${dd}`;
+}
+
+function addDays(date, days) {
+  const d = new Date(date);
+  d.setDate(d.getDate() + days);
+  return formatDate(d);
+}
+
+function daysUntilWeekday(date, targetDay) {
+  const current = date.getDay() || 7;
+  const normalizedTarget = ((targetDay - 1) % 7) + 1;
+  const weekOffset = targetDay > 7 ? 7 : 0;
+  const diff = normalizedTarget - current;
+  return diff >= 0 ? diff + weekOffset : diff + 7 + weekOffset;
+}
+
+function daysUntilMonthEnd(date) {
+  const end = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+  return Math.max(0, Math.ceil((end - date) / 86400000));
+}
 
 function trunc(str, len) {
   return str.length > len ? str.slice(0, len) + "..." : str;

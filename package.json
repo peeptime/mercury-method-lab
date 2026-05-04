@@ -1,6 +1,6 @@
 {
   "name": "mercury-method-lab",
-  "version": "0.7.3",
+  "version": "0.7.5",
   "private": true,
   "type": "module",
   "description": "AI 判断输出的审计基础设施。给 AI 的判断过程留下不可跳过的架构约束，解决概率模型带来的意图命中偏差和认知曲线盲区。",

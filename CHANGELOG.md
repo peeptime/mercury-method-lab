@@ -2,6 +2,47 @@
 
 ## Unreleased
 
+## 0.7.5 — `/goal` 输出收口修正
+
+### Fixed
+
+- 修复 `goal-validator.mjs` 在验证状态行中间硬插入四关检验与 Judgment Closure，导致 Markdown 渲染错位的问题。
+- 生成 action_plan 时会先移除模板中已有的 `四关检验`、`Judgment Closure`、`Next Review` section，再统一追加受控尾部，避免重复注入。
+- intent 推断改为“明确时间表达 → immediate，否则 archived”，不再把“尽快”这类弱时间词自动判成 strict reminder。
+- 时间维度对 `archived` 改为冷存储通过，避免“无明确时间 → archived”却无法生成 artifact 的逻辑矛盾。
+
+### Changed
+
+- `09_templates/action_plan_template.md` 升级到 schema v0.2，补齐 `intent`、`reminder_intensity`、`feedback_expected_from` 与 Judgment Closure 骨架。
+- `feedback_expected_from` 随 action_plan 生成写入 metadata 与 Next Review，保留反馈入口但不转成热提醒。
+
+---
+
+## 0.7.4 — 冷存储原则 + intent 字段落地
+
+> 核心讨论：2026-05-04 用户与 AI 协作完成
+
+### Added
+
+- `09_templates/action_plan_template.md`（v0.2）：
+  - 新增 `intent` 字段（archived / immediate / watchful）
+  - 新增 Judgment Closure section（结论摘要 / 弱推荐 / 继续入口）
+- `scripts/goal-validator.mjs`：
+  - 生成 action_plan 时自动推断 intent：有时间词 → immediate，否则 archived
+  - 自动注入 Judgment Closure 骨架
+  - intent=archived 时在 Next Review 标注"无需执行跟进"
+- `docs/STRATEGIC-RETHINK.md`（v0.3.0）：完整记录本次讨论过程
+- `docs/GOVERNANCE.md`（v0.3.0）：新增交互原则、存储原则、intent 分类说明
+
+### Design Notes
+
+- **冷存储，不是热提醒**：用户不推进是正常结束，不需要提醒
+- **结论优先，开口次之，推荐要弱**：洞察在那里，给一个清晰结论是最健康的；开口存在但不主动推
+- **intent 分类**：archived（洞察存档，无提醒）/ immediate（立即执行，严格提醒）/ watchful（观望，轻提醒）
+- **Judgment Closure 优化**：结论摘要直接给出；弱推荐很弱不转移焦点；继续入口存在但不突出
+
+---
+
 ## 0.7.3 — 定位语收紧
 
 ### Changed
