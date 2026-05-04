@@ -1,0 +1,22 @@
+{
+  "name": "mercury-v8-iter",
+  "version": "0.9.0",
+  "description": "Mercury V8 方法论迭代专用 Skill，支持迭代指导生成、审计报告处理、文档一致性检查",
+  "author": "project_owner",
+  "created": "2026-05-04",
+  "lastUpdated": "2026-05-04",
+  "status": "active",
+  "depends": ["mercury-lab", "redteam-auditor"],
+  "provenance": {
+    "authors": "project_owner + QClaw",
+    "ai_assisted": true,
+    "humanReviewed": true,
+    "reviewer": "project_owner",
+    "audit_ref": "docs/METHODOLOGY-INTEGRITY.md"
+  },
+  "relatedReports": [
+    "docs/ITERATION-GUIDE-0.9.md",
+    "docs/METHODOLOGY-INTEGRITY.md",
+    ".skills/mercury-v8-iter/references/audit-reports-index.md"
+  ]
+}
