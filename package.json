@@ -21,6 +21,7 @@
     "test:llm": "node scripts/test_ark_coding_plan.mjs",
     "test:ark": "node scripts/test_ark_coding_plan.mjs",
     "test:skill": "node scripts/run_mercury_skill_test.mjs",
+    "goal:validate": "node scripts/goal-validator.mjs",
     "start:llm": "node scripts/start_mercury_provider.mjs",
     "start:ark": "node scripts/start_mercury_provider.mjs",
     "start:ark:legacy": "powershell -ExecutionPolicy Bypass -File scripts/start_mercury_ark.ps1"

@@ -5,6 +5,9 @@ import { createReadStream } from "node:fs";
 import { basename, dirname, extname, join, normalize, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 
+// goal-validator API
+const { validate: goalValidate, createActionPlan: goalCreateActionPlan } = await import("./goal-validator.mjs").catch(() => ({ validate: null, createActionPlan: null }));
+
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
 const dashboardRoot = join(root, "dashboard");
 const port = Number(process.env.MERCURY_DASHBOARD_PORT || 4788);
@@ -30,7 +33,8 @@ const commandAllowlist = new Map([
   ["index", ["run", "index"]],
   ["validate", ["run", "validate"]],
   ["sync:skills", ["run", "sync:skills"]],
-  ["test:llm", ["run", "test:llm"]]
+  ["test:llm", ["run", "test:llm"]],
+  ["goal:validate", ["run", "goal:validate"]]
 ]);
 
 const createTypeConfig = {
@@ -142,6 +146,31 @@ const server = createServer(async (req, res) => {
     if (url.pathname === "/api/capability" && req.method === "PATCH") {
       const body = await readJson(req);
       return sendJson(res, await setCapabilityStatus(body.key, body.status));
+    }
+
+    // ── /goal 照妖镜 API ──────────────────────────────────────
+
+    if (url.pathname === "/api/goal/validate" && req.method === "POST") {
+      if (!goalValidate) {
+        return sendJson(res, { ok: false, error: "goal-validator not available" }, 500);
+      }
+      const body = await readJson(req);
+      const result = goalValidate(body.text || "");
+      return sendJson(res, { ok: true, result });
+    }
+
+    if (url.pathname === "/api/goal/create" && req.method === "POST") {
+      if (!goalValidate || !goalCreateActionPlan) {
+        return sendJson(res, { ok: false, error: "goal-validator not available" }, 500);
+      }
+      const body = await readJson(req);
+      const validation = goalValidate(body.text || "");
+      if (!validation.ok) {
+        return sendJson(res, { ok: false, result: validation });
+      }
+      const filePath = await goalCreateActionPlan(validation);
+      validation.created_path = filePath;
+      return sendJson(res, { ok: true, result: validation });
     }
 
     return serveStatic(req, res, url.pathname);
