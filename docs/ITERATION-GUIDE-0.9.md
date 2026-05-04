@@ -298,19 +298,17 @@ action-translator:  [Read, Grep, Write]           # 需要写行动方案
 
 ### 🟢 P2 — 有价值，应该做但可以延迟到v0.9.x
 
-#### P2-1：定义"审计成功"的可测量结果
+#### P2-1：~~定义"审计成功"的可测量结果~~ — **DECLINED**
+> ⚠️ **重要发现（2026-05-04 23:02）：任何可被agent读取的量化成功指标，都会成为agent的gaming目标。这叫"必然攻击的需求"。详见 `docs/AUDIT-METRICS-DECLINED.md`**
 
-```markdown
-指标1：promote率 < X%
-  → 初始阈值：promote_rate < 15%
-  → 测量方式：npm run index 后统计 source-index.json 中 routing_decision 分布
-
-指标2：所有 M3+ 级记忆有 audit_ref
-  → 测量方式：遍历 04_memory_candidates/ 中 memory_level ≥ M3 的文件
-
-指标3：discard 理由具体化率 ≥ 80%
-  → 测量方式：grep -r "routing_decision: discard" 04_memory_candidates/ 并抽查
+**修订结论：**
 ```
+KEEP：定性的AUDIT-CONTRACT规则（source_refs必填、推测不为事实等）
+KILL：任何agent可读取并优化的量化成功指标
+保留：失败模式检测（系统拒绝触发规则的content，而非达到某个百分比）
+```
+**正确方向：测量"特定失败模式的缺失"，而非"成功达到某个百分比"。**
+见 `docs/AUDIT-METRICS-DECLINED.md`
 
 #### P2-2：给 V8 后端审计报告的 P1 行动止血
 
