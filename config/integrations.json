@@ -7,6 +7,18 @@
       "enable_condition": "Set MERCURY_MARKITDOWN_ENABLED=true and make Python 3.10+ available.",
       "entrypoint": "npm run ingest:doc -- <file-or-url> [output-name]",
       "default_policy": "Do not use in the core V8-Mercury flow unless source material is not already markdown or plain text."
+    },
+    "gbrain": {
+      "status": "export_only",
+      "purpose": "Optional external agent brain target. Mercury Lab emits pre-audit bundles but does not import or write to gbrain by default.",
+      "entrypoint": "npm run export:gbrain",
+      "default_policy": "Use Mercury Lab as memory hygiene before gbrain-owned ingestion."
+    },
+    "mercury_agent_second_brain": {
+      "status": "export_only",
+      "purpose": "Optional Mercury Agent Second Brain target. Mercury Lab emits reviewed import candidates without writing to runtime SQLite directly.",
+      "entrypoint": "npm run export:agent",
+      "default_policy": "Use schema-aware adapters only; never bypass the runtime memory owner."
     }
   }
 }

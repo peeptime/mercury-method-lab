@@ -4,7 +4,7 @@
 
 主打的是：**不让聪明变成垃圾。**
 
-Version: `0.7.6`
+Version: `0.8.0`
 
 English entry: [README.en.md](README.en.md)
 
@@ -15,6 +15,7 @@ English entry: [README.en.md](README.en.md)
 从这里开始，不需要先理解整套方法论：
 
 - [DEMO.md](DEMO.md)：一段混乱想法如何变成可复盘项目材料
+- [docs/AUDIT-CONTRACT.md](docs/AUDIT-CONTRACT.md)：进入 gbrain / Mercury Agent / OpenClaw 记忆前的审计契约
 - [examples/](examples/)：完整样本链，展示 raw → goal check → classified sample → action plan → audit report → reuse decision
 - [sample_index.md](sample_index.md)：样本库索引如何证明它不是简单清洗碎片
 
@@ -33,15 +34,21 @@ English entry: [README.en.md](README.en.md)
 
 ## 核心定位
 
-它不是普通知识库，也不是通用 AI 审计平台。
+它不是普通知识库，也不是通用 AI 审计平台，更不是另一个 second brain。
 
 它也不是帮你思考的系统，而是帮你判断哪些思考值得留下、推进、复用。
 
-更准确地说，它不是"第二前额叶"，而是**前额叶里的一个质检闸门**。
+更准确地说，它不是"第二前额叶"，而是**前额叶里的一个质检闸门**，也是长期 Agent Brain 前面的 pre-ingestion audit gate。
 
 它解决的问题是：**高价值想法经常出现在聊天、碎片、临时判断和项目讨论中，但如果没有目标验证、类型判级、案例绑定、审计记录和复用出口，它们很快会变成干净但无用的知识碎片。**
 
 **Mercury Lab 的目标，是把这些碎片加工成可追踪、可判断、可复用的项目样本。**
+
+对 gbrain、Mercury Agent、OpenClaw 这类系统来说，Mercury Lab 的角色不是替代它们的 memory / graph / retrieval，而是先回答：
+
+```text
+这段内容应该丢弃、冷存、复核，还是升格进入长期记忆？
+```
 
 ---
 
@@ -115,6 +122,16 @@ npm run dashboard
 ```
 
 Dashboard 默认地址：`http://127.0.0.1:4788`
+
+生成给外部 brain 的前置审计 bundle：
+
+```powershell
+npm run index
+npm run export:memory
+npm run export:gbrain
+```
+
+这些命令只生成 export bundle，不会直接写入 gbrain 或 Mercury Agent 的运行时数据库。
 
 ---
 

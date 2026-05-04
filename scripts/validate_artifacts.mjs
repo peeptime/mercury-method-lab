@@ -22,6 +22,30 @@ const requiredDirs = [
   "11_indexes"
 ];
 
+const validationDirs = [
+  ...requiredDirs,
+  ".github",
+  "config",
+  "dashboard",
+  "docs",
+  "examples",
+  "schemas",
+  "scripts",
+  "submissions"
+];
+
+const rootFiles = [
+  ".env.example",
+  ".gitattributes",
+  ".gitignore",
+  "CHANGELOG.md",
+  "DEMO.md",
+  "package.json",
+  "README.en.md",
+  "README.md",
+  "sample_index.md"
+];
+
 const secretPatterns = [
   /ARK_API_KEY[ \t]*=[ \t]*["']?[A-Za-z0-9_\-]{12,}/i,
   /OPENAI_API_KEY[ \t]*=[ \t]*["']?[A-Za-z0-9_\-]{12,}/i,
@@ -43,7 +67,12 @@ const warnings = [];
 
 async function listFiles(dir) {
   const output = [];
-  const entries = await readdir(dir, { withFileTypes: true });
+  let entries = [];
+  try {
+    entries = await readdir(dir, { withFileTypes: true });
+  } catch {
+    return output;
+  }
   for (const entry of entries) {
     const path = join(dir, entry.name);
     if (entry.isDirectory()) {
@@ -127,7 +156,17 @@ for (const dir of requiredDirs) {
   }
 }
 
-const files = await listFiles(root);
+const fileSet = new Set();
+for (const dir of validationDirs) {
+  for (const file of await listFiles(join(root, dir))) {
+    fileSet.add(file);
+  }
+}
+for (const file of rootFiles) {
+  fileSet.add(join(root, file));
+}
+
+const files = [...fileSet];
 
 for (const file of files) {
   if (!/\.(md|yaml|yml|json|mjs|ps1|example)$/i.test(file)) {
@@ -142,6 +181,14 @@ for (const file of files) {
   }
 
   const text = await readFile(file, "utf8");
+
+  if (fileRel.endsWith(".json")) {
+    try {
+      JSON.parse(text);
+    } catch (error) {
+      errors.push(`${fileRel}: invalid JSON (${error.message})`);
+    }
+  }
 
   for (const pattern of secretPatterns) {
     if (pattern.test(text)) {

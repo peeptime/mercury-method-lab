@@ -1,6 +1,6 @@
 {
   "name": "mercury-method-lab",
-  "version": "0.7.6",
+  "version": "0.8.0",
   "private": true,
   "type": "module",
   "description": "AI 判断输出的审计基础设施。给 AI 的判断过程留下不可跳过的架构约束，解决概率模型带来的意图命中偏差和认知曲线盲区。",
@@ -9,6 +9,9 @@
     "dashboard": "node scripts/dashboard_server.mjs",
     "doctor": "node scripts/doctor.mjs",
     "index": "node scripts/rebuild_index.mjs",
+    "export:memory": "node scripts/export_memory_bundle.mjs",
+    "export:gbrain": "node scripts/export_memory_bundle.mjs --target gbrain",
+    "export:agent": "node scripts/export_memory_bundle.mjs --target mercury_agent",
     "import:viewpoint": "node scripts/import_viewpoint.mjs",
     "ingest:doc": "node scripts/ingest_document.mjs",
     "v8:analyze": "node scripts/run_v8_analysis.mjs",

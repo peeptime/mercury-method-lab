@@ -1,0 +1,54 @@
+{
+  "version": "0.1",
+  "position": "pre_ingestion_audit_gate",
+  "default_target": "markdown",
+  "contract_ref": "docs/AUDIT-CONTRACT.md",
+  "direct_runtime_write_allowed": false,
+  "targets": {
+    "markdown": {
+      "status": "active",
+      "mode": "portable_export",
+      "default_output": "10_exports/memory-preaudit-bundle.json",
+      "write_policy": "filesystem_export_only"
+    },
+    "mercury_agent": {
+      "status": "planned",
+      "mode": "export_adapter",
+      "default_output": "10_exports/mercury-agent-preaudit-bundle.json",
+      "write_policy": "do_not_write_sqlite_directly",
+      "relationship": "Runtime agent and Second Brain target. Mercury Lab only emits reviewed import candidates."
+    },
+    "gbrain": {
+      "status": "allowed",
+      "mode": "export_adapter",
+      "default_output": "10_exports/gbrain-preaudit-bundle.json",
+      "write_policy": "do_not_call_gbrain_import_by_default",
+      "relationship": "External agent brain target. Mercury Lab provides memory hygiene before gbrain-owned ingestion."
+    }
+  },
+  "routing_decisions": [
+    "discard",
+    "archive",
+    "review",
+    "promote"
+  ],
+  "promotion_rules": {
+    "required_for_any_backend": [
+      "sample_type is not missing",
+      "source_refs is not empty",
+      "risk is not high",
+      "status is approved or audited for durable memory"
+    ],
+    "required_for_high_memory_level": [
+      "memory_level is M3 or M4",
+      "audit_refs or decision_refs is not empty",
+      "review_at is present"
+    ],
+    "never_promote": [
+      "status is rejected",
+      "sample_type is 废料",
+      "type is raw",
+      "type is inbox_source"
+    ]
+  }
+}

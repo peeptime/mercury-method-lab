@@ -4,19 +4,20 @@
 
 It keeps smart thoughts from becoming clean but useless waste.
 
-Version: `0.7.6`
+Version: `0.8.0`
 
 Mercury Method Lab is a local-first method, evidence, audit, and migration workspace for Mercury Agent-compatible workflows.
 
 It is **not** a fork of [`cosmicstack-labs/mercury-agent`](https://github.com/cosmicstack-labs/mercury-agent). It is a companion layer that keeps method reasoning, evidence chains, memory candidates, decision logs, action plans, and audit reports separate from the runtime.
 
-It is not a system that thinks for you. It helps decide which thoughts deserve to be kept, advanced, reused, or discarded. Think of it less as a second brain and more as a quality gate inside the judgment loop.
+It is not a system that thinks for you. It helps decide which thoughts deserve to be kept, advanced, reused, or discarded. Think of it less as a second brain and more as a quality gate inside the judgment loop: a pre-ingestion audit gate before long-term agent memory.
 
 ## Start Here
 
 You do not need to understand the whole method first:
 
 - [DEMO.md](DEMO.md): how a messy idea becomes reviewable project material
+- [docs/AUDIT-CONTRACT.md](docs/AUDIT-CONTRACT.md): the pre-ingestion audit contract for gbrain, Mercury Agent, OpenClaw, or markdown targets
 - [examples/](examples/): a complete sample chain from raw input to reuse decision
 - [sample_index.md](sample_index.md): how the sample library index proves this is more than cleaned notes
 
@@ -63,6 +64,16 @@ Open the local dashboard at:
 ```text
 http://127.0.0.1:4788
 ```
+
+Generate a pre-audit bundle for external brain systems:
+
+```powershell
+npm run index
+npm run export:memory
+npm run export:gbrain
+```
+
+These commands emit export bundles only. They do not write directly into gbrain, Mercury Agent, or any runtime memory database.
 
 API execution mode needs an LLM token. The default provider is Ark Coding Plan:
 

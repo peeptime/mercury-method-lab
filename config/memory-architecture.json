@@ -4,6 +4,8 @@
   "source_of_truth": "markdown_yaml_artifacts",
   "migration_allowed": true,
   "migration_position": "Memory may move to a new runtime architecture, but evidence sovereignty and reversible migration must be preserved.",
+  "pre_ingestion_audit_contract": "docs/AUDIT-CONTRACT.md",
+  "memory_targets": "config/memory-targets.json",
   "memory_layers": {
     "evidence": {
       "path": "00_raw/",
@@ -28,6 +30,10 @@
     "runtime_memory": {
       "preferred_external_path": "~/.mercury/memory/",
       "role": "Upstream Mercury Agent runtime recall, including Second Brain if enabled."
+    },
+    "external_brain_targets": {
+      "preferred_export": "10_exports/*-preaudit-bundle.json",
+      "role": "gbrain, Mercury Agent, OpenClaw, or markdown import queues. Export-only until a schema-aware adapter owns ingestion."
     }
   },
   "migration_gates": [

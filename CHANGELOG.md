@@ -2,6 +2,29 @@
 
 ## Unreleased
 
+## 0.8.0 — Memory Pre-Audit Contract
+
+### Added
+
+- `docs/AUDIT-CONTRACT.md`：明确 Mercury Lab 是长期 Agent Brain 前的 pre-ingestion audit gate，不是 second brain、检索引擎或通用 Skill 框架。
+- `config/memory-targets.json`：声明 `markdown`、`mercury_agent`、`gbrain` 三类目标后端，默认只做 export-only handoff，不直接写运行时数据库。
+- `scripts/export_memory_bundle.mjs`：新增 `npm run export:memory`、`npm run export:gbrain`、`npm run export:agent`，从 `11_indexes/sample-index.json` 生成 pre-audit bundle。
+- `schemas/memory-preaudit-bundle.schema.json`：定义外部 brain 接收前的 bundle 结构。
+
+### Changed
+
+- `README.md` / `README.en.md`：定位更新为“长期 Agent Brain 前置审计闸门”，并补充 gbrain / Mercury Agent / OpenClaw 的接入边界。
+- `docs/GOVERNANCE.md`：升级到 v0.4.0，明确 Mercury Lab 不负责 memory graph / retrieval，只负责入脑前判级与迁移许可。
+- `scripts/rebuild_index.mjs`：sample index 新增 `intent`、`reminder_intensity`、`feedback_expected_from`、`target_backend`、`stop_condition`、`falsify_condition` 等迁移审计字段。
+- `config/integrations.json` 与 `config/memory-architecture.json` 补充 gbrain / Mercury Agent Second Brain 的 export-only 接入说明。
+
+### Performance
+
+- `export_memory_bundle.mjs` 只读 `sample-index.json`，不扫描 artifact 正文，不触发索引重建，不写外部运行时数据库。
+- `validate_artifacts.mjs` 改为显式扫描项目关键目录和根文件，避免未来无关大目录拖慢验证。
+
+---
+
 ## 0.7.6 — Agent 模式性能护栏
 
 ### Changed

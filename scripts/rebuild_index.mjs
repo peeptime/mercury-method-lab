@@ -56,6 +56,12 @@ for (const file of files) {
     reuse_count: parseInteger(metadata.reuse_count),
     feedback_status: metadata.feedback_status || inferFeedbackStatus(relPath, metadata),
     feedback_refs: parseRefs(metadata.feedback_refs),
+    intent: metadata.intent || "",
+    reminder_intensity: metadata.reminder_intensity || "",
+    feedback_expected_from: metadata.feedback_expected_from || "",
+    target_backend: metadata.target_backend || "",
+    stop_condition: metadata.stop_condition || metadata.stop_conditions || "",
+    falsify_condition: metadata.falsify_condition || metadata.falsify_conditions || metadata.overturn_condition || "",
     memory_level: metadata.memory_level || "",
     confidence: metadata.confidence || "",
     risk: metadata.risk || "",
@@ -266,6 +272,12 @@ function buildSampleIndex(records) {
       reuse_refs: record.reuse_refs,
       feedback_status: record.feedback_status,
       feedback_refs: record.feedback_refs,
+      intent: record.intent,
+      reminder_intensity: record.reminder_intensity,
+      feedback_expected_from: record.feedback_expected_from,
+      target_backend: record.target_backend,
+      stop_condition: record.stop_condition,
+      falsify_condition: record.falsify_condition,
       memory_level: record.memory_level,
       confidence: record.confidence,
       risk: record.risk,
@@ -288,11 +300,18 @@ function summarizeSampleGaps(records) {
   return {
     total_records: records.length,
     missing_sample_type: count((record) => record.sample_type_source === "missing"),
+    missing_source_refs: count((record) => record.source_refs.length === 0),
     missing_project_id: count((record) => record.project_id === "unassigned"),
     missing_reuse_tracking: count((record) => record.reuse_count === 0 && record.reuse_refs.length === 0),
     missing_feedback_for_decision_or_action: count((record) => (
       (record.type === "decision_log" || record.type === "action_plan")
       && record.feedback_status === "missing"
+    )),
+    missing_intent_for_action_plan: count((record) => record.type === "action_plan" && !record.intent),
+    high_memory_without_audit_or_decision: count((record) => (
+      (record.memory_level === "M3" || record.memory_level === "M4")
+      && record.audit_refs.length === 0
+      && record.decision_refs.length === 0
     ))
   };
 }
@@ -322,6 +341,10 @@ async function tryBuildSqlite(records) {
       project_id TEXT,
       reuse_count INTEGER,
       feedback_status TEXT,
+      intent TEXT,
+      reminder_intensity TEXT,
+      feedback_expected_from TEXT,
+      target_backend TEXT,
       memory_level TEXT,
       confidence TEXT,
       risk TEXT,
@@ -333,9 +356,10 @@ async function tryBuildSqlite(records) {
   const insert = db.prepare(`
     INSERT INTO artifacts (
       path, directory, name, extension, type, status, owner_role, created_at, review_at,
-      sample_type, project_id, reuse_count, feedback_status, memory_level, confidence, risk,
+      sample_type, project_id, reuse_count, feedback_status, intent, reminder_intensity,
+      feedback_expected_from, target_backend, memory_level, confidence, risk,
       size_bytes, updated_at
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `);
 
   for (const record of records) {
@@ -353,6 +377,10 @@ async function tryBuildSqlite(records) {
       record.project_id,
       record.reuse_count,
       record.feedback_status,
+      record.intent,
+      record.reminder_intensity,
+      record.feedback_expected_from,
+      record.target_backend,
       record.memory_level,
       record.confidence,
       record.risk,

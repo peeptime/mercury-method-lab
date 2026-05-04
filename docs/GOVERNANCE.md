@@ -1,6 +1,6 @@
 # Mercury Lab 目标定义
 
-> 版本：0.3.1
+> 版本：0.4.0
 > 日期：2026-05-04
 > 定位：面向高频 AI 对话者的「洞察样本沉淀系统」
 
@@ -8,11 +8,22 @@
 
 ## 核心定位
 
-Mercury Lab 不是普通知识库，也不是通用 AI 审计平台。
+Mercury Lab 不是普通知识库，也不是通用 AI 审计平台，更不是另一个 second brain。
 
 它解决的问题是：高价值想法经常出现在聊天、碎片、临时判断和项目讨论中，但如果没有目标验证、类型判级、案例绑定、审计记录和复用出口，它们很快会变成干净但无用的知识碎片。
 
-**Mercury Lab 的目标，是把这些碎片加工成可追踪、可判断、可复用的项目样本。**
+**Mercury Lab 的目标，是把这些碎片加工成可追踪、可判断、可复用的项目样本，并在它们进入长期 Agent Brain 前完成前置审计。**
+
+它和 gbrain / Mercury Agent / OpenClaw 的关系是：
+
+| 系统 | 负责什么 |
+|------|----------|
+| Mercury Lab | 入脑前审计、样本判级、冷存/复核/升格/淘汰 |
+| Mercury Agent | 运行时 agent、权限、token、Second Brain |
+| gbrain | 长期 brain、检索、图谱、MCP、技能运行 |
+| OpenClaw | Agent 执行环境与任务消费 |
+
+Mercury Lab 不直接写入这些系统的运行时数据库，只输出 pre-audit bundle。
 
 ---
 
@@ -101,6 +112,7 @@ action_plan 模板新增 `intent`、`reminder_intensity`、`feedback_expected_fr
 | 核心缺失 | 复用追踪 | ⚠️ 未做 |
 | 核心缺失 | 旧 artifact 判级标签回填 | ⚠️ 未做 |
 | 支撑层 | OpenClaw Skill 说明 | ⚠️ 审计发现问题 |
+| 接入层 | memory pre-audit bundle | ✅ v0.8.0 |
 
 ---
 
@@ -123,3 +135,9 @@ action_plan 模板新增 `intent`、`reminder_intensity`、`feedback_expected_fr
    - 确保 action_plan / decision_log metadata 中存在 `feedback_expected_from`
    - 反馈字段用于记录责任来源，不自动触发提醒
    - `archived` 样本允许 `feedback_expected_from=none`
+
+5. **外部 brain 接入**
+   - 通过 `docs/AUDIT-CONTRACT.md` 约束迁移边界
+   - 通过 `config/memory-targets.json` 声明目标后端
+   - 通过 `npm run export:memory` / `npm run export:gbrain` 生成可审计导出包
+   - 禁止默认直接写入 Mercury Agent / gbrain 运行时数据库
