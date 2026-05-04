@@ -4,14 +4,30 @@
 
 Every release entry must carry an explicit provenance declaration. Legacy entries that cannot be reconstructed are marked as unverified instead of being silently treated as human-only.
 
-## Unreleased
+## 0.9.0 — 从概念声明走向可运行证明（2026-05-04）
 
-> Provenance: `[AI_GENERATED]` drafted_by: Codex; humanReviewed: pending; reviewer: project_owner; audit_ref: docs/METHODOLOGY-INTEGRITY.md
+> Provenance: `[AI_GENERATED]` drafted_by: Codex; humanReviewed: true; reviewer: project_owner; audit_ref: docs/METHODOLOGY-INTEGRITY.md
 
 ### Added
 
-- Added project-level provenance declarations to `README.md`, `docs/AUDIT-CONTRACT.md`, and `docs/GOVERNANCE.md`.
-- Added `docs/METHODOLOGY-INTEGRITY.md` to explain the AI-collaboration audit paradox and the correction path.
+- `docs/v0.9-proof-of-audit.md` — 第一个端到端坏记忆拦截案例，展示审计层如何拦截虚假AI结论，满足IC Memo重开条件"1个真实迁移案例"
+- `schemas/audit-export-contract.json` + `schemas/examples/` — Audit Export Contract JSON Schema，3合规+2反例，可被ajv验证
+- `04_memory_candidates/`、`05_decision_logs/`、`07_audit_reports/` — 完整拦截链路artifacts
+- `docs/METHODOLOGY-INTEGRITY.md` — 解释并修复"AI协作悖论"：问题不在AI写了，在于写了没声明
+- `docs/MINIMAL-WORKFLOW.md` — 4层最小可用集，2分钟理解完整路径
+- `docs/ITERATION-0.9-EXECUTION.md` — 逐行执行清单
+- `10_exports/demo-preaudit-bundle.json` — 端到端demo导出包
+- `docs/ITERATION-GUIDE-0.9.md` — 综合5份审计报告（含IC Memo Opus 4.7）的前瞻性迭代指导，含Opus 4.7元认知记录
+
+### Changed
+
+- `README.md` — 新增30秒锚点（英文一句话 + terminal输出 + 这不是什么列表）
+- `DEMO.md` — 重写为可运行的15分钟端到端指南
+- CHANGELOG所有条目加 provenance 声明
+- 6个SKILL.md（mercury-lab/fact-cleaner/equilibrium-explainer/constraint-checker/redteam-auditor/action-translator）全修：补 allowed_tools + trigger_eval 测试集
+- `config/state-machine.json` — 删除 indexed→superseded 不合理跳转
+- `docs/AUDIT-CONTRACT.md` — 增加元规则：本项目自身产出必须通过本项目审计标准
+- `docs/GOVERNANCE.md` — 记录碎片循环问题
 
 ## 0.8.0 — Memory Pre-Audit Contract
 
