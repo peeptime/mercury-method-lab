@@ -4,7 +4,37 @@
 
 Version: `0.8.0`
 
+```yaml
+provenance:
+  authors: project_owner + Codex
+  ai_assisted: true
+  human_reviewed: pending
+  audited_by: Mercury Lab self-audit
+  audit_ref: docs/METHODOLOGY-INTEGRITY.md
+```
+
 ---
+
+## One Sentence
+
+A pre-ingestion audit gate that prevents AI-generated speculation from polluting long-term memory systems.
+
+## 30 秒判断锚点
+
+```text
+input: plausible AI claim
+gate: source_refs missing + audit_refs missing
+routing_decision: discard
+reason: hypothesis cannot be promoted as memory without evidence
+output: archived proof, no runtime DB write
+```
+
+## 它不是什么
+
+- 不是 second brain
+- 不是 RAG 工具
+- 不是 AI 写作助手
+- 是一道入脑前审计闸门
 
 ## 这个问题你有没有
 
@@ -104,6 +134,8 @@ npm run export:gbrain
 ## 文档索引
 
 - 看一个完整例子 → `DEMO.md`
+- 看最小工作流 → `docs/MINIMAL-WORKFLOW.md`
+- 看 v0.9 审计证明 → `docs/v0.9-proof-of-audit.md`
 - 看前置审计契约 → `docs/AUDIT-CONTRACT.md`
 - 看完整样本链 → `examples/`
 - 看方法论细节 → `docs/`

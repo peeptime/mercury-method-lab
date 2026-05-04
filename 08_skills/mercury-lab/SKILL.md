@@ -1,6 +1,7 @@
 ---
 name: mercury-lab
 description: "Mercury Method Lab 工作流入口。当用户提到 Mercury、Mercury Lab、V8、token中转分析、事件研判、结构判断，或涉及 Z:\\AI 202604\\trae01\\v8-mercury-backend 项目时触发。负责：任务路由、方法调用、artifact 状态管理、审计闭环、GitHub 同步。兼容 GitHub (https://github.com/peeptime/mercury-method-lab) 与本地工作目录。"
+allowed_tools: [Read, Grep, Write, Bash]
 ---
 
 # Mercury Method Lab
@@ -22,6 +23,15 @@ Mercury Lab 是 AI 推理质量的约束器——不是聊天界面，是执行�
 - 用户提到 `Z:\AI 202604\trae01` 或 `v8-mercury-backend`
 - 用户提到 token 中转、token中转红海
 - 用户要求：分析、审计、整理、迭代 Mercury Lab 项目
+
+## Trigger Eval
+
+| Should trigger | Should not trigger |
+|---|---|
+| 帮我跑 V8 | 纯闲聊 |
+| 做个分析 | 与 Mercury 无关的翻译 |
+| 输入这段对话 | 随机百科问答 |
+| 迭代 v8-mercury-backend | 不需要 artifact 的短问题 |
 
 ---
 

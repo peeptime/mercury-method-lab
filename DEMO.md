@@ -1,80 +1,90 @@
-# Demo: From Messy Thought To Reviewable Sample
+# Demo: Run The Audit Gate
 
-This demo answers the first GitHub question: "What do I put in, and what comes out?"
+This demo shows the shortest path from a messy AI claim to a routing decision.
 
-Mercury Method Lab is not trying to replace ChatGPT. It turns high-value AI conversation fragments into project materials that can be classified, audited, reused, and later challenged.
+## What You Need
 
-Its job is simple: keep smart thoughts from becoming clean but useless waste. It does not think for you; it acts as a quality gate for which thoughts should be kept, advanced, reused, or discarded.
+- Node.js 20+
+- PowerShell
 
-## Raw Input
-
-```text
-AI 工具最近很火。是不是传统咨询会被快速替代？
-我要不要把项目方向改成 AI 咨询替代？
-```
-
-## What A Normal Chat Often Does
-
-It usually produces a plausible essay:
-
-- AI will automate some consulting work.
-- Strategy work still needs humans.
-- Companies should adopt AI carefully.
-- You should explore opportunities.
-
-That may be useful, but it hides the decision state. You still do not know whether this is a fact, a hypothesis, a weak signal, a decision, or an action plan.
-
-## What Mercury Produces
-
-Mercury turns the fragment into a chain:
-
-| Step | Output | Why It Matters |
-|---|---|---|
-| 1. Goal check | The input is analyzable but not decision-ready. | Prevents vague excitement from becoming a project direction. |
-| 2. Classified sample | Type: `hypothesis`; confidence: `medium`; risk: `medium`. | The idea is stored as a sample, not promoted to truth. |
-| 3. Action plan | Collect evidence for budget migration, customer replacement, and workflow substitution. | Creates a next verification action. |
-| 4. Audit report | Main risk: confusing media heat with structural replacement. | Makes the likely error visible. |
-| 5. Reuse decision | Reuse this as a weak-signal checklist for future AI-replacement claims. | The sample becomes a reusable judgment asset. |
-
-## Result
-
-The original fragment:
-
-```text
-"AI consulting replacement seems hot."
-```
-
-Becomes:
-
-```text
-Weak signal, not yet a strategic pivot.
-Track evidence of budget migration before changing direction.
-Reuse this sample whenever a new "AI will replace X" claim appears.
-```
-
-## Files
-
-The complete example is in [examples/ai-consulting-replacement/](examples/ai-consulting-replacement/):
-
-- [raw.md](examples/ai-consulting-replacement/raw.md)
-- [goal-check.md](examples/ai-consulting-replacement/goal-check.md)
-- [classified-sample.yaml](examples/ai-consulting-replacement/classified-sample.yaml)
-- [action-plan.md](examples/ai-consulting-replacement/action-plan.md)
-- [audit-report.md](examples/ai-consulting-replacement/audit-report.md)
-- [reuse-decision.md](examples/ai-consulting-replacement/reuse-decision.md)
-
-## Try It Locally
+## 1. Install And Check
 
 ```powershell
 npm install
 npm run validate
+```
+
+Expected output:
+
+```text
+OK validated ... files
+```
+
+## 2. Rebuild The Sample Index
+
+```powershell
 npm run index
 ```
 
-For a real run:
+Expected output files:
 
-```powershell
-npm run v8:analyze -- --mode agent --text "AI 工具最近很火。是不是传统咨询会被快速替代？" --title "AI consulting replacement check"
+- `11_indexes/source-index.json`
+- `11_indexes/sample-index.json`
+
+Expected terminal shape:
+
+```text
+Indexed ... records
+Wrote 11_indexes/source-index.json
+Wrote 11_indexes/sample-index.json
 ```
 
-Agent mode writes a bounded task pack instead of asking the agent to inspect the whole repository.
+## 3. Export Routing Decisions
+
+```powershell
+npm run export:memory -- --include-archive --out 10_exports/demo-preaudit-bundle.json
+```
+
+Expected output file:
+
+- `10_exports/demo-preaudit-bundle.json`
+
+Expected terminal shape:
+
+```json
+{
+  "ok": true,
+  "target_backend": "markdown",
+  "output": "10_exports/demo-preaudit-bundle.json"
+}
+```
+
+## 4. Inspect The Bad-Memory Intercept
+
+Open these files in order:
+
+- `00_raw/2026-05-03-20260503t141705z-ai变现路子审计-v8-2维度迁移分析.md`
+- `04_memory_candidates/2026-05-04-ai-monetization-bad-memory.md`
+- `07_audit_reports/2026-05-04-bad-memory-intercept-audit.md`
+- `05_decision_logs/2026-05-04-bad-memory-intercept-decision.md`
+- `docs/v0.9-proof-of-audit.md`
+
+The important line is:
+
+```yaml
+routing_decision: discard
+```
+
+## What Happened
+
+The raw input was only a list of AI monetization paths. A plausible analysis produced a tempting conclusion about two “migratable” capabilities. The bad candidate turned that into a confident long-term memory.
+
+Mercury Lab blocks it because the candidate has no durable source trace, no audit trace, and no review path.
+
+## If You Get Stuck
+
+If `npm run index` fails, run `npm run validate` first and fix the named file.
+
+If `export:memory` says `sample-index.json` is missing, run `npm run index`.
+
+If the bundle exports zero promoted records, that is acceptable for this demo. The goal is to prove the gate can route unsafe memory away from durable recall.

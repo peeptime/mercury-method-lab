@@ -2,6 +2,7 @@
 name: equilibrium-explainer
 description: Explain why a market, organizational, or consensus equilibrium still holds and what would actually break it.
 version: 0.1.0
+allowed_tools: [Read, Grep]
 ---
 
 # Equilibrium Explainer
@@ -24,3 +25,11 @@ version: 0.1.0
 - 哪些变化会破坏它：
 - V8.0 可能误拆的地方：
 
+## Trigger Eval
+
+| Should trigger | Should not trigger |
+|---|---|
+| 帮我理解这个矛盾 | 直接做决策 |
+| 两边都有道理怎么办 | 写行动方案 |
+| 为什么这个结构还没崩 | 清洗事实来源 |
+| 当前均衡靠什么维持 | 红队审计结论 |

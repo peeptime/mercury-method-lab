@@ -2,6 +2,7 @@
 name: action-translator
 description: Turn structural judgments into short, concrete actions with triggers, stop conditions, and review timing.
 version: 0.1.0
+allowed_tools: [Read, Grep, Write]
 ---
 
 # Action Translator
@@ -25,3 +26,11 @@ version: 0.1.0
 - 验收标准：
 - 下一次复盘时间：
 
+## Trigger Eval
+
+| Should trigger | Should not trigger |
+|---|---|
+| 帮我落地 | 帮我分析 |
+| 怎么执行 | 判断这个结论对不对 |
+| 具体怎么做 | 清洗来源 |
+| 给我行动步骤 | 找反例 |

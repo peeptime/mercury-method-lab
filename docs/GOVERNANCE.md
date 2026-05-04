@@ -4,6 +4,15 @@
 > 日期：2026-05-04
 > 定位：面向高频 AI 对话者的「洞察样本沉淀系统」
 
+```yaml
+provenance:
+  authors: project_owner + Codex
+  ai_assisted: true
+  human_reviewed: pending
+  audited_by: Mercury Lab self-audit
+  audit_ref: docs/METHODOLOGY-INTEGRITY.md
+```
+
 ---
 
 ## 核心定位

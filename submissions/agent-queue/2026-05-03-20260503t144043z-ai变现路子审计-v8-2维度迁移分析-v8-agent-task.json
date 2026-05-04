@@ -1,0 +1,46 @@
+{
+  "schema_version": "0.1",
+  "task_type": "v8-agent-analysis",
+  "id": "agent-task-20260503t144043z-ai变现路子审计-v8-2维度迁移分析",
+  "status": "pending_agent_execution",
+  "created_at": "2026-05-03T14:40:43.585Z",
+  "review_at": "2026-05-03",
+  "method": "v8",
+  "analysis_persona": "v8.2-dimension-radar",
+  "persona_label": "V8.2 维度迁移雷达",
+  "source_ref": "cli:--text",
+  "raw_artifact": "00_raw/2026-05-03-20260503t144043z-ai变现路子审计-v8-2维度迁移分析.md",
+  "requested_outputs": {
+    "segmented": "01_segmented/2026-05-03-20260503t144043z-ai变现路子审计-v8-2维度迁移分析-v8-analysis.md",
+    "audit": "07_audit_reports/2026-05-03-20260503t144043z-ai变现路子审计-v8-2维度迁移分析-v8-audit.md",
+    "index": "11_indexes/source-index.json"
+  },
+  "instructions": [
+    "Use the active persona documents listed in method_docs.",
+    "Write the structured PSP analysis to requested_outputs.segmented.",
+    "Write an audit report to requested_outputs.audit and state that it was generated in agent mode.",
+    "Run npm run index after writing artifacts unless the caller passed --no-index.",
+    "Do not call the model provider API from scripts/run_v8_analysis.mjs in agent mode."
+  ],
+  "required_analysis_sections": [
+    "第 0 层：语义嗅探与分流",
+    "第一层：输入层",
+    "第二层：结构定位",
+    "第三层：权力分析",
+    "第四层：杠杆点识别",
+    "第五层：路径判断",
+    "第六层：系统影响",
+    "第七层：对抗性交叉验证",
+    "评分",
+    "审计",
+    "最终结论",
+    "后续建议",
+    "停止条件",
+    "推翻条件",
+    "复盘时间",
+    "记忆建议"
+  ],
+  "method_docs": [
+    "docs/methods/PSP-V8.2-维度迁移雷达-技术叙事审计人格.md"
+  ]
+}

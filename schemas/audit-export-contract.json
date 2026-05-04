@@ -1,0 +1,127 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.v8-mercury/audit-export-contract.json",
+  "title": "Mercury Lab Audit Export Contract",
+  "description": "A minimal, auditable routing contract for one memory candidate before export into a long-term memory backend. Designed for AJV or any JSON Schema 2020-12 validator.",
+  "type": "object",
+  "required": [
+    "source_refs",
+    "audit_refs",
+    "confidence",
+    "risk",
+    "blockers",
+    "review_path",
+    "memory_level",
+    "routing_decision"
+  ],
+  "properties": {
+    "source_refs": {
+      "description": "Evidence paths or URLs that support the candidate. Required for every non-raw export decision.",
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "audit_refs": {
+      "description": "Audit report paths that explain the route. Required even for discard decisions.",
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "confidence": {
+      "type": "string",
+      "enum": ["low", "medium", "high"]
+    },
+    "risk": {
+      "type": "string",
+      "enum": ["low", "medium", "high"]
+    },
+    "blockers": {
+      "description": "Specific unmet audit-contract rules. Use [] only when routing_decision is promote.",
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "review_path": {
+      "description": "Human or red-team review trace that lets a future reader reopen the decision.",
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "memory_level": {
+      "type": "string",
+      "enum": ["M0", "M1", "M2", "M3", "M4"]
+    },
+    "routing_decision": {
+      "type": "string",
+      "enum": ["discard", "archive", "review", "promote"]
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "routing_decision": {
+            "const": "promote"
+          }
+        },
+        "required": ["routing_decision"]
+      },
+      "then": {
+        "properties": {
+          "blockers": {
+            "maxItems": 0
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "routing_decision": {
+            "const": "discard"
+          }
+        },
+        "required": ["routing_decision"]
+      },
+      "then": {
+        "properties": {
+          "blockers": {
+            "minItems": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "memory_level": {
+            "enum": ["M3", "M4"]
+          }
+        },
+        "required": ["memory_level"]
+      },
+      "then": {
+        "properties": {
+          "audit_refs": {
+            "minItems": 1
+          },
+          "review_path": {
+            "minItems": 1
+          }
+        }
+      }
+    }
+  ],
+  "additionalProperties": false
+}

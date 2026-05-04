@@ -4,7 +4,7 @@
   "transitions": {
     "staged": ["deferred", "indexed", "draft", "rejected"],
     "deferred": ["indexed", "draft", "rejected"],
-    "indexed": ["draft", "superseded", "rejected"],
+    "indexed": ["draft", "rejected"],
     "draft": ["review_ready", "rejected"],
     "review_ready": ["audited", "rejected"],
     "audited": ["approved", "rejected"],

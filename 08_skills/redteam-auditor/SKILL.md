@@ -2,6 +2,7 @@
 name: redteam-auditor
 description: Challenge V8.0's strongest conclusion by attacking key assumptions and low-frequency high-loss error paths.
 version: 0.1.0
+allowed_tools: [Read, Grep, Write]
 ---
 
 # Redteam Auditor
@@ -25,3 +26,11 @@ version: 0.1.0
 - 需要重新取证的地方：
 - 审计结论：保留 / 降权 / 暂停 / 推翻
 
+## Trigger Eval
+
+| Should trigger | Should not trigger |
+|---|---|
+| 帮我审计一下 | 帮我写一个方案 |
+| 这个结论有问题吗 | 整理事实来源 |
+| 找找漏洞 | 解释为什么现状稳定 |
+| 攻击最强结论 | 直接安排下一步执行 |

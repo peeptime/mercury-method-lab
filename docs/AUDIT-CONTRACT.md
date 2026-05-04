@@ -4,6 +4,15 @@
 > Date: 2026-05-04
 > Position: pre-ingestion audit gate for agent memory systems
 
+```yaml
+provenance:
+  authors: project_owner + Codex
+  ai_assisted: true
+  human_reviewed: pending
+  audited_by: Mercury Lab self-audit
+  audit_ref: docs/METHODOLOGY-INTEGRITY.md
+```
+
 Mercury Lab is not a second brain, a retrieval engine, or a general skill framework.
 
 It is the narrow audit layer before content enters long-term agent memory such as Mercury Agent, gbrain, or a markdown archive.
@@ -53,6 +62,7 @@ These rules are not plugin points:
 - `action_plan` must include `intent`.
 - `intent=archived` must not trigger reminders.
 - Runtime databases must not be written directly without a schema-aware adapter.
+- Mercury Lab documents, changelog entries, examples, and skills must pass the same provenance and audit standards they impose on downstream memory.
 
 ## Customizable Surface
 
@@ -93,18 +103,16 @@ Mercury Lab does not own retrieval, embedding, graph traversal, or long-term rec
 
 A pre-audit export must include:
 
-- `schema_version`
-- `generated_at`
-- `target_backend`
-- `contract_ref`
-- `source_index_ref`
 - `routing_decision`
 - `source_refs`
 - `audit_refs`
 - `memory_level`
 - `confidence`
 - `risk`
-- `review_at`
+- `review_path`
 - `blockers`
+
+The minimal machine-verifiable contract is `schemas/audit-export-contract.json`.
+Bundle-level metadata such as `schema_version`, `generated_at`, `target_backend`, `contract_ref`, and `source_index_ref` may wrap this record contract, but must not bypass it.
 
 The absence of a blocker is not proof of truth. It only means the candidate passes the current ingestion gate.

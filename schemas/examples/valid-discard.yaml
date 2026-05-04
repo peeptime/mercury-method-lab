@@ -1,0 +1,15 @@
+source_refs:
+  - 00_raw/2026-05-03-20260503t141705z-ai变现路子审计-v8-2维度迁移分析.md
+audit_refs:
+  - 07_audit_reports/2026-05-04-bad-memory-intercept-audit.md
+confidence: low
+risk: high
+blockers:
+  - source_refs_required: candidate makes a market conclusion without durable evidence
+  - audit_refs_required: red-team review required before any memory promotion
+  - no_hypothesis_as_fact: speculative replacement claim is stated as if proven
+review_path:
+  - docs/AUDIT-CONTRACT.md#non-negotiable-rules
+  - docs/v0.9-proof-of-audit.md
+memory_level: M0
+routing_decision: discard

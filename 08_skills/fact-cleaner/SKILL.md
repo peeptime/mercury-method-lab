@@ -2,6 +2,7 @@
 name: fact-cleaner
 description: Clean an input event into facts, speculation, gaps, source quality, and memory-safe candidates.
 version: 0.1.0
+allowed_tools: [Read, Grep]
 ---
 
 # Fact Cleaner
@@ -25,3 +26,11 @@ version: 0.1.0
 - 不可入库项：
 - 可入库候选项：
 
+## Trigger Eval
+
+| Should trigger | Should not trigger |
+|---|---|
+| 整理信息 | 写长文 |
+| 哪些是事实 | 分析趋势 |
+| 来源是否可靠 | 制定行动方案 |
+| 清洗材料 | 做最终决策 |

@@ -1,0 +1,10 @@
+source_refs:
+  - examples/ai-consulting-replacement/raw.md
+audit_refs: []
+confidence: medium
+risk: medium
+blockers: []
+review_path:
+  - examples/ai-consulting-replacement/reuse-decision.md
+memory_level: M1
+routing_decision: promote

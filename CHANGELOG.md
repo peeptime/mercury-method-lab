@@ -1,8 +1,21 @@
 # Changelog
 
+## Provenance Policy
+
+Every release entry must carry an explicit provenance declaration. Legacy entries that cannot be reconstructed are marked as unverified instead of being silently treated as human-only.
+
 ## Unreleased
 
+> Provenance: `[AI_GENERATED]` drafted_by: Codex; humanReviewed: pending; reviewer: project_owner; audit_ref: docs/METHODOLOGY-INTEGRITY.md
+
+### Added
+
+- Added project-level provenance declarations to `README.md`, `docs/AUDIT-CONTRACT.md`, and `docs/GOVERNANCE.md`.
+- Added `docs/METHODOLOGY-INTEGRITY.md` to explain the AI-collaboration audit paradox and the correction path.
+
 ## 0.8.0 — Memory Pre-Audit Contract
+
+> Provenance: `[LEGACY_PROVENANCE_UNKNOWN]` humanReviewed: unknown; reviewer: pending; risk: historical release note predates explicit provenance policy
 
 ### Added
 
@@ -27,6 +40,8 @@
 
 ## 0.7.6 — Agent 模式性能护栏
 
+> Provenance: `[LEGACY_PROVENANCE_UNKNOWN]` humanReviewed: unknown; reviewer: pending; risk: historical release note predates explicit provenance policy
+
 ### Changed
 
 - `scripts/run_v8_analysis.mjs`：Agent 模式默认不再重建索引，避免 OpenClaw / Agent 在封闭任务包后又触发全量索引扫描；如确实需要，可传 `--index` 或设置 `agent_auto_rebuild_index=true`。
@@ -41,6 +56,8 @@
 ---
 
 ## 0.7.5 — `/goal` 输出收口修正
+
+> Provenance: `[LEGACY_PROVENANCE_UNKNOWN]` humanReviewed: unknown; reviewer: pending; risk: historical release note predates explicit provenance policy
 
 ### Fixed
 
@@ -58,7 +75,7 @@
 
 ## 0.7.4 — 冷存储原则 + intent 字段落地
 
-> 核心讨论：2026-05-04 用户与 AI 协作完成
+> Provenance: `[AI_ASSISTED]` source: "2026-05-04 用户与 AI 协作完成"; humanReviewed: true-by-claim; reviewer: project_owner; audit_ref: docs/METHODOLOGY-INTEGRITY.md
 
 ### Added
 
@@ -83,6 +100,8 @@
 
 ## 0.7.3 — 定位语收紧
 
+> Provenance: `[LEGACY_PROVENANCE_UNKNOWN]` humanReviewed: unknown; reviewer: pending; risk: historical release note predates explicit provenance policy
+
 ### Changed
 
 - `README.md` 首屏增加主打语：「不让聪明变成垃圾」。
@@ -91,6 +110,8 @@
 - `README.en.md` 和 `DEMO.md` 同步补充 quality gate 定位。
 
 ## 0.7.2 — 外部可见样本路径
+
+> Provenance: `[LEGACY_PROVENANCE_UNKNOWN]` humanReviewed: unknown; reviewer: pending; risk: historical release note predates explicit provenance policy
 
 ### Added
 
@@ -106,6 +127,8 @@
 
 ## 0.7.1 — 样本索引初版
 
+> Provenance: `[LEGACY_PROVENANCE_UNKNOWN]` humanReviewed: unknown; reviewer: pending; risk: historical release note predates explicit provenance policy
+
 ### Added
 
 - `npm run index` 现在同时生成 `11_indexes/sample-index.json`，作为样本库的机器可读视图。
@@ -119,6 +142,8 @@
 - `docs/GOVERNANCE.md` 升级到 v0.2.1：样本库索引从“未做”调整为“初版已做”，后续重点转向检索、复用追踪和反馈回填。
 
 ## 0.7.0 — 核心定位声明 + 碎片循环问题确认
+
+> Provenance: `[LEGACY_PROVENANCE_UNKNOWN]` humanReviewed: unknown; reviewer: pending; risk: historical release note predates explicit provenance policy
 
 ### Changed
 
@@ -143,6 +168,8 @@
 
 ## 0.6.0 — `/goal` 照妖镜 + Agent 内嵌验证
 
+> Provenance: `[LEGACY_PROVENANCE_UNKNOWN]` humanReviewed: unknown; reviewer: pending; risk: historical release note predates explicit provenance policy
+
 将目标质量门内化为 Agent 内嵌逻辑，实现零进程开销验证。与 v0.5.2 的 agent_context_policy 一脉相承：Agent 模式不能只是"不调 API"，还必须把任务边界收窄成可直接执行的闭合上下文包。
 
 ### Added
@@ -165,6 +192,8 @@
 
 ## 0.5.2 — Agent Context Budget
 
+> Provenance: `[LEGACY_PROVENANCE_UNKNOWN]` humanReviewed: unknown; reviewer: pending; risk: historical release note predates explicit provenance policy
+
 Reduce OpenClaw / Agent mode intelligence spend by making V8 agent tasks self-contained and explicitly bounded.
 
 ### Added
@@ -175,6 +204,8 @@ Reduce OpenClaw / Agent mode intelligence spend by making V8 agent tasks self-co
 - Documentation for OpenClaw context budgeting in `docs/AGENT_ENTRY.md`, `docs/openclaw-integration.md`, and `submissions/agent-queue/README.md`.
 
 ## 0.5.1 — Execution Mode Guard
+
+> Provenance: `[LEGACY_PROVENANCE_UNKNOWN]` humanReviewed: unknown; reviewer: pending; risk: historical release note predates explicit provenance policy
 
 Fix V8 analysis startup and mode switching so persona configuration remains parseable and agent mode does not spend API tokens.
 
@@ -187,6 +218,8 @@ Fix V8 analysis startup and mode switching so persona configuration remains pars
 - Hardened CLI parsing for `--persona v8.2-dimension-radar`, `--persona=v8.2-dimension-radar`, and `-p v8.2-dimension-radar`.
 
 ## 0.3.6 — Judgment Closure
+
+> Provenance: `[LEGACY_PROVENANCE_UNKNOWN]` humanReviewed: unknown; reviewer: pending; risk: historical release note predates explicit provenance policy
 
 Tighten PSP outputs so analysis closes with stop conditions, falsification signals, review timing, and memory-level advice. Expand model provider support for hosted OpenAI-compatible APIs and local open-source runtimes.
 
@@ -201,6 +234,8 @@ Tighten PSP outputs so analysis closes with stop conditions, falsification signa
 
 ## 0.3.5 — Deployment Gate
 
+> Provenance: `[LEGACY_PROVENANCE_UNKNOWN]` humanReviewed: unknown; reviewer: pending; risk: historical release note predates explicit provenance policy
+
 Release candidate cleanup: clarify upstream boundary, reduce onboarding friction, and make deployment readiness visible in Dashboard.
 
 ### Added
@@ -210,6 +245,8 @@ Release candidate cleanup: clarify upstream boundary, reduce onboarding friction
 - Dashboard deployment readiness card showing Node/OS/provider/API key/persona/execution mode/batch path/OpenClaw/MarkItDown status.
 
 ## 0.3.4 — Persona Axis
+
+> Provenance: `[LEGACY_PROVENANCE_UNKNOWN]` humanReviewed: unknown; reviewer: pending; risk: historical release note predates explicit provenance policy
 
 Architecture pollution fix: split PSP analysis persona from execution mode.
 
@@ -234,6 +271,8 @@ Architecture pollution fix: split PSP analysis persona from execution mode.
 
 ## 0.3.3 — Execution Mode
 
+> Provenance: `[LEGACY_PROVENANCE_UNKNOWN]` humanReviewed: unknown; reviewer: pending; risk: historical release note predates explicit provenance policy
+
 Execution mode feature release.
 
 ### Added
@@ -245,6 +284,8 @@ Execution mode feature release.
 - `docs/EXECUTION-MODE-DESIGN.md` 执行模式设计文档
 
 ## 0.2.0 — Open Orbit
+
+> Provenance: `[LEGACY_PROVENANCE_UNKNOWN]` humanReviewed: unknown; reviewer: pending; risk: historical release note predates explicit provenance policy
 
 Architecture hardening release.
 
@@ -278,5 +319,7 @@ Architecture hardening release.
 - Integration mode: companion workspace, not fork and not vendor copy.
 
 ## 0.1.0
+
+> Provenance: `[LEGACY_PROVENANCE_UNKNOWN]` humanReviewed: unknown; reviewer: pending; risk: historical release note predates explicit provenance policy
 
 Initial local V8 Mercury backend workspace.

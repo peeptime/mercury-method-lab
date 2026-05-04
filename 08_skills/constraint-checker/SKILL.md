@@ -2,6 +2,7 @@
 name: constraint-checker
 description: Check whether a judgment or plan is blocked by time, money, people, tech, legal, or coordination constraints.
 version: 0.1.0
+allowed_tools: [Read, Grep]
 ---
 
 # Constraint Checker
@@ -26,3 +27,11 @@ version: 0.1.0
 - 够不着的部分：
 - 需要暂缓的部分：
 
+## Trigger Eval
+
+| Should trigger | Should not trigger |
+|---|---|
+| 这样做有什么限制 | 随便问问 |
+| 边界在哪里 | 写营销文案 |
+| 什么情况下不能用 | 总结邮件 |
+| 现实约束是什么 | 生成完整方案 |
