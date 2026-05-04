@@ -1,6 +1,8 @@
 # Mercury Method Lab
 
-Version: `0.6.0`
+**An insight-sample precipitation system for high-frequency AI conversationalists.**
+
+Version: `0.7.0`
 
 Mercury Method Lab is a local-first method, evidence, audit, and migration workspace for Mercury Agent-compatible workflows.
 

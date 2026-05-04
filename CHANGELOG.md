@@ -2,6 +2,29 @@
 
 ## Unreleased
 
+## 0.7.0 — 核心定位声明 + 碎片循环问题确认
+
+### Changed
+
+- `README.md`：核心定位升级为「面向高频 AI 对话者的洞察样本沉淀系统」，替换旧版「意图识别的保险」定位
+- 明确 Mercury Lab 的本质边界：**不是**普通知识库，**不是**通用 AI 审计平台
+- 明确核心问题：高价值碎片若不经过目标验证、类型判级、案例绑定、审计记录和复用出口，会变成干净但无用的知识碎片
+
+### Added
+
+- `docs/GOVERNANCE.md`（v0.2.0）：核心目标定义、判级类型表、核心数据流、架构优先级、下一步方向
+- `08_skills/SKILL-DESIGN-GUIDE.md`：Skill 最佳实践存档（按需加载 / 渐进式披露 / allowed_tools / trigger_eval / 验证闭环）
+- `08_skills/SKILL-AUDIT.md`：项目 Skill 审计报告 + 碎片循环问题发现
+
+### Known Issues（v0.7.0 已知缺失）
+
+- **样本库无索引**：artifact 存在于各目录，但没有检索和相似案例发现机制
+- **复用无追踪**：没有引用计数、复用记录和淘汰机制
+- **判级无回填**：artifact metadata 中缺少判级类型标签（废料/素材/案例/模板/决策/action/Skill）
+- **反馈无入口**：decision_log 和 action_plan 的执行结果没有强制回填机制
+
+---
+
 ## 0.6.0 — `/goal` 照妖镜 + Agent 内嵌验证
 
 将目标质量门内化为 Agent 内嵌逻辑，实现零进程开销验证。与 v0.5.2 的 agent_context_policy 一脉相承：Agent 模式不能只是"不调 API"，还必须把任务边界收窄成可直接执行的闭合上下文包。

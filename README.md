@@ -1,18 +1,20 @@
 # Mercury Method Lab
 
-Version: `0.6.0`
+**面向高频 AI 对话者的"洞察样本沉淀系统"。**
+
+Version: `0.7.0`
 
 English entry: [README.en.md](README.en.md)
 
 ---
 
-## 核心定位：意图识别的保险
+## 核心定位
 
-大模型做的是"意图识别命中"：给定输入，输出最可能的答案。
+它不是普通知识库，也不是通用 AI 审计平台。
 
-这意味着：AI 不知道自己的输出"什么时候在说废话"。
+它解决的问题是：**高价值想法经常出现在聊天、碎片、临时判断和项目讨论中，但如果没有目标验证、类型判级、案例绑定、审计记录和复用出口，它们很快会变成干净但无用的知识碎片。**
 
-**Mercury Lab 是这个过程的保险。**
+**Mercury Lab 的目标，是把这些碎片加工成可追踪、可判断、可复用的项目样本。**
 
 ---
 
@@ -151,4 +153,4 @@ inbox → raw → segmented → cleaned → uncertain → memory_candidates → 
 - 架构边界：[docs/architecture.md](docs/architecture.md)
 - 判断收口规则：[docs/JUDGMENT-CLOSURE-RULE.md](docs/JUDGMENT-CLOSURE-RULE.md)
 - V8 方法文档：[docs/methods/](docs/methods/)
-- 迭代指引：[docs/ITERATION-GUIDE-0.6.0.md](docs/ITERATION-GUIDE-0.6.0.md)
+- 迭代指引：[docs/ITERATION-GUIDE-0.7.0.md](docs/ITERATION-GUIDE-0.7.0.md)
