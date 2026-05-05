@@ -2,7 +2,61 @@
 
 **It keeps smart thoughts from becoming clean but useless waste.**
 
-Version: `0.8.0`
+Version: `0.9.0`
+
+```yaml
+provenance:
+  authors: project_owner + QClaw
+  ai_assisted: true
+  human_reviewed: true
+  reviewer: project_owner
+  audit_ref: docs/METHODOLOGY-INTEGRITY.md
+```
+
+---
+
+## One Sentence
+
+A pre-ingestion audit gate that prevents AI-generated speculation from polluting long-term memory systems — built with **provenance transparency**, **failure-mode detection**, and **no gaming targets**.
+
+---
+
+## 30-Second Anchor
+
+```
+input: a plausible-sounding AI conclusion
+gate:  source_refs present? ❌  audit_refs present? ❌
+routing_decision: discard
+reason: hypothesis cannot be promoted without evidence
+output: archived proof, no runtime DB write
+```
+
+```
+✅ Mercury Lab runs this check before anything enters long-term memory
+❌ Most memory tools skip the check and promote everything
+```
+
+---
+
+## What It Is NOT
+
+- NOT a second brain
+- NOT a RAG tool
+- NOT an AI writing assistant
+- NOT a general-purpose Skill framework
+- IS an audit gate for memory ingestion
+
+---
+
+## Release Gate (must pass before any release)
+
+```powershell
+npm run validate   # audit all artifacts for provenance declarations
+npm run index     # rebuild JSON index
+npm run doctor    # diagnose system state
+```
+
+All three must pass before the project is considered reproducible.
 
 ---
 
@@ -18,49 +72,47 @@ Mercury Lab solves this.
 
 ---
 
-## What It Is
+## Core Principles
 
-A quality gate that checks AI-generated content before it goes into long-term memory.
-
-It does not help you think more. It helps you decide which thoughts are worth keeping.
-
-For systems like gbrain and Mercury Agent, Mercury Lab sits upstream as a checkpoint: filter first, then decide what deserves to be stored.
-
----
-
-## The Pre-Audit Contract
-
-See `docs/AUDIT-CONTRACT.md` for the full contract.
-
-Before anything enters gbrain / Mercury Agent / OpenClaw memory, it must answer:
-
-- Is this a fact or a guess?
-- Are there counterexamples?
-- Is it worth remembering?
-
-If it cannot answer these, it does not go in.
+```
+❌ Cannot store speculation as fact
+❌ Cannot have the same person write material and audit it
+❌ Cannot skip quality check before entering memory
+❌ Cannot let an AI judge, audit, and approve its own conclusion
+❌ Cannot define "success metrics" readable by agents (they become gaming targets)
+```
 
 ---
 
-## A Real Example
+## v0.9.0: Methodology Integrity
 
-`DEMO.md` shows a complete walkthrough:
+### The AI Collaboration Paradox → Fixed
 
-How a messy, half-formed idea gets processed and comes out as something you can actually reference later.
+The project rule says "AI cannot self-audit." But the CHANGELOG said "AI collaborated on this." This is an audit contradiction.
 
----
+**The fix:**
 
-## What It Does NOT Do (this is the important part)
+```
+The problem is not "AI wrote it."
+The problem is "AI wrote it without declaring it."
 
-Most AI tools show you what they can do.
-This project shows you what it refuses to do.
+All outputs now require a provenance declaration:
+  [AI_GENERATED]   ← AI drafted, human reviewed
+  [HUMAN_ONLY]    ← pure human, no AI involved
+  [AI_ASSISTED]   ← AI assisted, human verified
+```
 
-- ❌ Cannot store speculation as fact
-- ❌ Cannot have the same person write material and audit it
-- ❌ Cannot skip quality check before entering memory
-- ❌ Cannot let an AI judge, audit, and approve its own conclusion
+See `docs/METHODOLOGY-INTEGRITY.md`
 
-Why? Because that is exactly where "sounds right but falls apart under pressure" conclusions come from.
+### The Necessarily-Attacked Surface → Identified
+
+When attempting to define "audit success metrics" (e.g., "promote rate < 15%"), we discovered:
+
+> **Any quantified success metric readable by an agent becomes a gaming target.**
+
+The correct audit direction is not measuring "success to a percentage" — it is detecting "absence of specific failure modes."
+
+See `docs/AUDIT-METRICS-DECLINED.md`
 
 ---
 
@@ -68,22 +120,45 @@ Why? Because that is exactly where "sounds right but falls apart under pressure"
 
 ```powershell
 npm install
-npm run doctor
-npm run dashboard
+npm run doctor       # diagnose system state
+npm run validate     # audit provenance
+npm run index        # rebuild index
+npm run dashboard    # http://127.0.0.1:4788
 ```
-
-Dashboard: `http://127.0.0.1:4788`
 
 ---
 
-## Generate Pre-Audit Reports
+## End-to-End Demo
 
-```powershell
-npm run index
-npm run export:gbrain
+`docs/v0.9-proof-of-audit.md` shows the complete interception chain:
+
+```
+Raw AI conversation
+  → enters 00_raw/
+  → passes through fact-cleaner / redteam-auditor / constraint-checker
+  → 04_memory_candidates/ marks routing_decision = discard
+  → 05_decision_logs/ records never_promote violation reason
+  → 07_audit_reports/ generates audit report
+  → 10_exports/demo-preaudit-bundle.json outputs the audit bundle
+
+Anyone can walk through this in 15 minutes.
 ```
 
-These commands only generate reports. They do not write directly into any runtime database.
+---
+
+## The Minimal Workflow (4 Layers)
+
+```
+00_raw/                    ← raw material entry
+  ↓ fact-cleaner / redteam-auditor
+04_memory_candidates/      ← routing_decision: discard / archive / review / promote
+  ↓ audited
+07_audit_reports/       ← audit trail (unforgegable)
+  ↓ approved
+Long-term memory (OpenClaw / gbrain / Mercury Agent)
+```
+
+Full 12-layer directory structure in `docs/MINIMAL-WORKFLOW.md`
 
 ---
 
@@ -101,20 +176,36 @@ Not everything needs to be acted on. Sometimes writing it down is enough.
 
 ---
 
+## Docs Index
+
+| What you want | Where to go |
+|---|---|
+| End-to-end interception case | `docs/v0.9-proof-of-audit.md` |
+| Minimal workflow | `docs/MINIMAL-WORKFLOW.md` |
+| Pre-audit contract | `docs/AUDIT-CONTRACT.md` |
+| AI collaboration paradox fix | `docs/METHODOLOGY-INTEGRITY.md` |
+| Why success metrics are dangerous | `docs/AUDIT-METRICS-DECLINED.md` |
+| v0.9 full iteration guide | `docs/ITERATION-GUIDE-0.9.0.md` |
+| Version history | `CHANGELOG.md` |
+| Governance principles | `docs/GOVERNANCE.md` |
+
+---
+
 ## Relationship to Mercury Agent
 
 Mercury Lab is not a fork. It is a companion layer.
 
-| Layer | Who owns it |
+| Layer | Owner |
 | --- | --- |
 | Runtime, CLI, Telegram, daemon, scheduler, tools, Second Brain | Mercury Agent |
 | Evidence, artifacts, method routing, audit, migration, public practice docs | Mercury Lab |
 
 ---
 
-## Docs
+## Tech Stack
 
-- See a full example → `DEMO.md`
-- See the pre-audit contract → `docs/AUDIT-CONTRACT.md`
-- See a complete sample chain → `examples/`
-- Understand why it is designed this way → `docs/GOVERNANCE.md`
+- Node.js + native `node:http` (no framework dependency)
+- Markdown/YAML as the only source of truth
+- JSON Schema for artifact validation
+- `npm run` as the single command entry point
+- OpenClaw agent compatible

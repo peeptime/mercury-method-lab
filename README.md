@@ -2,14 +2,14 @@
 
 **不让聪明变成垃圾。**
 
-Version: `0.8.0`
+Version: `0.9.0`
 
 ```yaml
 provenance:
-  authors: project_owner + Codex
+  authors: project_owner + QClaw
   ai_assisted: true
-  human_reviewed: pending
-  audited_by: Mercury Lab self-audit
+  human_reviewed: true
+  reviewer: project_owner
   audit_ref: docs/METHODOLOGY-INTEGRITY.md
 ```
 
@@ -17,24 +17,48 @@ provenance:
 
 ## One Sentence
 
-A pre-ingestion audit gate that prevents AI-generated speculation from polluting long-term memory systems.
+A pre-ingestion audit gate that prevents AI-generated speculation from polluting long-term memory systems — built with **provenance transparency**, **failure-mode detection**, and **no gaming targets**.
+
+---
 
 ## 30 秒判断锚点
 
-```text
-input: plausible AI claim
-gate: source_refs missing + audit_refs missing
+```
+input: a plausible-sounding AI conclusion
+gate:  source_refs present? ❌  audit_refs present? ❌
 routing_decision: discard
-reason: hypothesis cannot be promoted as memory without evidence
+reason: hypothesis cannot be promoted without evidence
 output: archived proof, no runtime DB write
 ```
+
+```
+✅ Mercury Lab runs this check before anything enters long-term memory
+❌ Most memory tools skip the check and promote everything
+```
+
+---
 
 ## 它不是什么
 
 - 不是 second brain
 - 不是 RAG 工具
 - 不是 AI 写作助手
+- 不是通用 Skill 框架
 - 是一道入脑前审计闸门
+
+---
+
+## 发布验收（必须通过才能 release）
+
+```powershell
+npm run validate   # 审计所有 artifact 的 provenance 声明
+npm run index     # 重建 JSON 索引
+npm run doctor    # 诊断系统状态
+```
+
+三步通过，才说明当前处于可复现状态。
+
+---
 
 ## 这个问题你有没有
 
@@ -48,49 +72,48 @@ Mercury Lab 就是来解决这个的。
 
 ---
 
-## 它是什么
+## 核心原则
 
-一个在 AI 想法进入长期记忆之前，先做一次质检的系统。
-
-不是帮你想更多，是帮你决定哪些想法值得留下来。
-
-对 gbrain 和 Mercury Agent 这类系统来说，Mercury Lab 是它们前面的一道闸门：**先把关，再决定要不要存进去。**
-
----
-
-## 有一个具体的东西叫"前置审计契约"
-
-`docs/AUDIT-CONTRACT.md`
-
-在内容进入 gbrain / Mercury Agent / OpenClaw 的记忆之前，它必须先回答几个问题：
-
-- 这是事实还是推测？
-- 有没有反例？
-- 值不值得被记住？
-
-回答不了的东西，先不放进去。
+```
+❌ 不允许把推测存成事实
+❌ 不允许同一个人既写材料又审计材料
+❌ 不允许跳过质检直接进记忆
+❌ 不允许让 AI 自己判断、自己审计、自己通过
+❌ 不定义可被 agent 读取的"成功指标"（这会变成 gaming 目标）
+```
 
 ---
 
-## 看一个真实的例子
+## v0.9.0 新增：方法论自洽性
 
-`DEMO.md` 里有完整的演示：
+> **这是 v0.9.0 最重要的变化。**
 
-一段混乱的想法，怎么经过质检，变成一份可以复盘的材料。
+### AI 协作悖论 → 已修复
 
----
+项目规则说"不允许 AI 自审"，但 CHANGELOG 自承"AI 协作完成"。这是审计悖论。
 
-## 它不做的事情（这才是重点）
+**修复方式：**
 
-大多数 AI 工具在展示自己"能做什么"。
-这个项目在展示自己**拒绝做什么**。
+```
+问题不在"AI写了"，在于"写了但没声明"。
 
-- ❌ 不允许把推测存成事实
-- ❌ 不允许同一个人既写材料又审计材料
-- ❌ 不允许跳过质检直接进记忆
-- ❌ 不允许让 AI 自己判断、自己审计、自己通过
+所有产出现在必须有 provenance 声明：
+  [AI_GENERATED]   ← AI起草，有 human review
+  [HUMAN_ONLY]     ← 纯人工，无AI参与
+  [AI_ASSISTED]    ← AI辅助，human审核
+```
 
-为什么？因为这些地方最容易出"听起来很对但其实站不住脚"的结论。
+详见 `docs/METHODOLOGY-INTEGRITY.md`
+
+### 必然攻击的需求 → 已识别
+
+试图定义"审计成功指标"（如 promote率 < 15%）时发现：
+
+> **任何可被 agent 读取的量化成功指标，都会成为 gaming 目标。**
+
+正确的审计方向不是测量"成功达到某个百分比"，而是检测"特定失败模式的缺失"。
+
+详见 `docs/AUDIT-METRICS-DECLINED.md`
 
 ---
 
@@ -98,22 +121,45 @@ Mercury Lab 就是来解决这个的。
 
 ```powershell
 npm install
-npm run doctor
-npm run dashboard
+npm run doctor       # 诊断系统状态
+npm run validate     # 审计 provenance
+npm run index        # 重建索引
+npm run dashboard    # http://127.0.0.1:4788
 ```
-
-Dashboard 地址：`http://127.0.0.1:4788`
 
 ---
 
-## 生成前置审计报告
+## 看一个端到端案例
 
-```powershell
-npm run index
-npm run export:gbrain
+`docs/v0.9-proof-of-audit.md` 展示了完整的拦截链路：
+
+```
+一段真实AI对话
+  → 进入 00_raw/
+  → 经过 fact-cleaner / redteam-auditor / constraint-checker
+  → 04_memory_candidates/ 标记 routing_decision = discard
+  → 05_decision_logs/ 记录 never_promote 违反原因
+  → 07_audit_reports/ 生成审计报告
+  → 10_exports/demo-preaudit-bundle.json 输出审计包
 ```
 
-这些命令只生成报告，不会直接写入任何运行时数据库。
+任何人都能在 15 分钟内走完这条路。
+
+---
+
+## 它的工作流（最小 4 层）
+
+```
+00_raw/                    ← 原始材料入口
+  ↓ fact-cleaner / redteam-auditor
+04_memory_candidates/      ← routing_decision: discard / archive / review / promote
+  ↓ audited
+07_audit_reports/         ← 审计轨迹（不可伪造）
+  ↓ approved
+长期记忆（OpenClaw / gbrain / Mercury Agent）
+```
+
+完整 12 层目录结构见 `docs/MINIMAL-WORKFLOW.md`
 
 ---
 
@@ -133,10 +179,25 @@ npm run export:gbrain
 
 ## 文档索引
 
-- 看一个完整例子 → `DEMO.md`
-- 看最小工作流 → `docs/MINIMAL-WORKFLOW.md`
-- 看 v0.9 审计证明 → `docs/v0.9-proof-of-audit.md`
-- 看前置审计契约 → `docs/AUDIT-CONTRACT.md`
-- 看完整样本链 → `examples/`
-- 看方法论细节 → `docs/`
-- 想了解为什么这样设计 → `docs/GOVERNANCE.md`
+| 你要做什么 | 去哪里 |
+|-----------|--------|
+| 看端到端拦截案例 | `docs/v0.9-proof-of-audit.md` |
+| 看最小工作流 | `docs/MINIMAL-WORKFLOW.md` |
+| 看前置审计契约 | `docs/AUDIT-CONTRACT.md` |
+| 看 AI 协作悖论修复 | `docs/METHODOLOGY-INTEGRITY.md` |
+| 看"为什么不能定义成功指标" | `docs/AUDIT-METRICS-DECLINED.md` |
+| 看 v0.9 完整迭代规划 | `docs/ITERATION-GUIDE-0.9.0.md` |
+| 继续迭代/讨论项目 | 激活 `mercury-v8-iter` Skill |
+| 看版本历史 | `CHANGELOG.md` |
+| 看完整样本链 | `examples/` |
+| 了解治理原则 | `docs/GOVERNANCE.md` |
+
+---
+
+## 技术栈
+
+- Node.js + 原生 `node:http`（无框架依赖）
+- Markdown/YAML 作为唯一 source of truth
+- JSON Schema 验证 artifact 结构
+- `npm run` 作为唯一命令入口
+- 支持 OpenClaw agent 直接调用
