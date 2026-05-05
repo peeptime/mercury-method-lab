@@ -1,5 +1,21 @@
 # ai-consulting-replacement-example
 
+## Artifact Metadata
+
+- schema_version: 0.1
+- type: action_plan
+- status: draft
+- owner_role: operator
+- sample_type: 行动计划
+- project_id: examples.ai-consulting-replacement
+- source_refs: examples/ai-consulting-replacement/raw.md
+- audit_refs: examples/ai-consulting-replacement/audit-report.md
+- created_at: 2026-05-02
+- review_at: 2026-05-02
+- intent: watchful
+- reminder_intensity: light
+- feedback_expected_from: operator
+
 ## 现在立刻做什么
 - 记录事件并锁定为“弱信号，未证实”
 
@@ -26,4 +42,3 @@
 
 ## 下一次复盘时间
 2026-05-02
-

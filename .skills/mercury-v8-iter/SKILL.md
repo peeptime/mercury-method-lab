@@ -22,18 +22,19 @@ Z:\AI 202604\trae01\v8-mercury-backend
 ### 1. 迭代指导生成
 
 当用户说"帮我看看这个项目"或"下一步是什么"时：
-1. 读取 `docs/ITERATION-GUIDE-LATEST.md`（最新迭代指南）
-2. 读取 `CHANGELOG.md`（了解当前版本和历史）
-3. 读取 `docs/METHODOLOGY-INTEGRITY.md`（检查方法论一致性状态）
-4. 结合 MEMORY.md 中的历史记录，生成当前迭代建议
+1. 先读取 `MEMORY.md` 和 `docs/ITERATION-GUIDE-LATEST.md`。
+2. 只读取用户请求直接涉及的文件。
+3. 需要详细历史时，优先读取 `.skills/mercury-v8-iter/references/audit-reports-index.md`。
+4. 只有当验收标准或历史依据存在争议时，才按章节读取 `docs/ITERATION-GUIDE-0.9.md`、`CHANGELOG.md` 或 `docs/METHODOLOGY-INTEGRITY.md`。
 
 ### 2. 审计报告处理
 
 当用户提供新的审计报告或外部评估时：
 1. 与已有审计报告对比（新发现 vs 重复）
-2. 更新 `docs/ITERATION-GUIDE-LATEST.md`
-3. 在 MEMORY.md 中记录关键发现
-4. 生成 changelog 条目草稿
+2. 先更新 `.skills/mercury-v8-iter/references/audit-reports-index.md` 摘要
+3. 必要时更新 `docs/ITERATION-GUIDE-LATEST.md`
+4. 在 `MEMORY.md` 中记录关键发现
+5. 生成 changelog 条目草稿
 
 ### 3. 文档一致性检查
 
@@ -60,19 +61,21 @@ docs/ITERATION-GUIDE-LATEST.md（若有）
 
 | 文件 | 用途 |
 |------|------|
+| `MEMORY.md` | 低成本跨会话交接，先读 |
+| `docs/ITERATION-GUIDE-LATEST.md` | 当前迭代方向，先读 |
 | `CHANGELOG.md` | 版本历史 + provenance 声明 |
-| `docs/ITERATION-GUIDE-LATEST.md` | 当前迭代方向（主入口） |
 | `docs/METHODOLOGY-INTEGRITY.md` | AI协作悖论处理规范 |
 | `docs/AUDIT-CONTRACT.md` | 审计契约（5条不可妥协规则） |
 | `docs/MINIMAL-WORKFLOW.md` | 4层最小工作流 |
-| `MEMORY.md`（本地） | 迭代历史 + 决策记录 |
+| `docs/AGENT-CONTEXT-BUDGET.md` | agent token/context 降耗规则 |
 
 ## 禁止行为
 
 - 不自动 commit 所有文件（必须先列出变更让用户确认）
 - 不删除任何 artifact 文件
 - 不修改 `config/` 目录下的权限相关文件
-- 不在未读 ITERATION-GUIDE-LATEST.md 的情况下生成新的迭代建议
+- 不在未读 `MEMORY.md` 和 `docs/ITERATION-GUIDE-LATEST.md` 的情况下生成新的迭代建议
+- 不把长文档全文读取作为默认第一步
 
 ## 工具权限
 

@@ -11,6 +11,8 @@
 - created_at: 2026-05-04
 - review_at: 2026-05-11
 - verified_at: 2026-05-04 08:20:50
+- intent: immediate
+- reminder_intensity: strict
 
 
 ## Goal

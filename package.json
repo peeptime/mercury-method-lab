@@ -1,6 +1,7 @@
 {
   "name": "mercury-method-lab",
-  "version": "0.8.0",
+  "version": "1.0.0",
+  "codename": "1.0.0 Feature Freeze",
   "private": true,
   "type": "module",
   "description": "AI 判断输出的审计基础设施。给 AI 的判断过程留下不可跳过的架构约束，解决概率模型带来的意图命中偏差和认知曲线盲区。",
@@ -17,6 +18,7 @@
     "v8:analyze": "node scripts/run_v8_analysis.mjs",
     "sync:skills": "node scripts/sync_skills.mjs",
     "validate": "node scripts/validate_artifacts.mjs",
+    "release:gate": "powershell -ExecutionPolicy Bypass -File scripts/release_gate.ps1 -CleanKnownGenerated",
     "sync:commit": "node scripts/sync_commit_surfaces.mjs --write",
     "sync:check": "node scripts/sync_commit_surfaces.mjs --check",
     "hooks:install": "node scripts/install_git_hooks.mjs",

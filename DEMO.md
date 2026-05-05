@@ -1,6 +1,7 @@
 # Demo: Run The Audit Gate
 
 This demo shows the shortest path from a messy AI claim to a routing decision.
+It is also the release smoke test for the v0.9.0 hardening line.
 
 ## What You Need
 
@@ -55,7 +56,10 @@ Expected terminal shape:
 {
   "ok": true,
   "target_backend": "markdown",
-  "output": "10_exports/demo-preaudit-bundle.json"
+  "output": "10_exports/demo-preaudit-bundle.json",
+  "summary": {
+    "discard": 1
+  }
 }
 ```
 
@@ -80,6 +84,19 @@ routing_decision: discard
 The raw input was only a list of AI monetization paths. A plausible analysis produced a tempting conclusion about two “migratable” capabilities. The bad candidate turned that into a confident long-term memory.
 
 Mercury Lab blocks it because the candidate has no durable source trace, no audit trace, and no review path.
+
+## Release Gate
+
+Before tagging a release, run:
+
+```powershell
+npm run validate
+npm run index
+npm run export:memory -- --include-archive
+npm run sync:check
+```
+
+The release is not ready if these commands fail or if the bad-memory intercept no longer exports with `routing_decision: discard`.
 
 ## If You Get Stuck
 

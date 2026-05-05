@@ -13,6 +13,9 @@
 - audit_refs: examples/ai-consulting-replacement/audit-report.md
 - reuse_count: 1
 - feedback_status: pending
+- intent: watchful
+- reminder_intensity: light
+- feedback_expected_from: operator
 - created_at: 2026-05-04
 - review_at: 2026-05-11
 

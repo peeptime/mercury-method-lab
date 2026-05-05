@@ -213,13 +213,17 @@ function inferSampleType(path, metadata) {
 
   const type = metadata.type || inferType(path);
   const map = {
+    source_manifest: "素材",
     raw: "素材",
+    segmented: "素材",
     cleaned: "观察",
     uncertain: "假设",
     memory_candidate: "素材",
+    framework_document: "素材",
     decision_log: "决策",
     action_plan: "行动计划",
     audit_report: "审计",
+    example: "案例",
     export: "模板"
   };
   return map[type] || "未判级";
@@ -256,7 +260,7 @@ function parseInteger(value) {
 
 function buildSampleIndex(records) {
   const sampleRecords = records
-    .filter((record) => !record.name?.toLowerCase().startsWith("readme"))
+    .filter(shouldIncludeSampleRecord)
     .map((record) => ({
       path: record.path,
       type: record.type,
@@ -295,12 +299,22 @@ function buildSampleIndex(records) {
   };
 }
 
+function shouldIncludeSampleRecord(record) {
+  if (record.name?.toLowerCase().startsWith("readme")) {
+    return false;
+  }
+
+  // Generated bundles and manifests are control-plane surfaces, not reusable samples.
+  return !["export", "source_manifest"].includes(record.type);
+}
+
 function summarizeSampleGaps(records) {
   const count = (predicate) => records.filter(predicate).length;
+  const requiresSourceRefs = (record) => !["raw", "inbox_source", "source_manifest", "export"].includes(record.type);
   return {
     total_records: records.length,
     missing_sample_type: count((record) => record.sample_type_source === "missing"),
-    missing_source_refs: count((record) => record.source_refs.length === 0),
+    missing_source_refs: count((record) => requiresSourceRefs(record) && record.source_refs.length === 0),
     missing_project_id: count((record) => record.project_id === "unassigned"),
     missing_reuse_tracking: count((record) => record.reuse_count === 0 && record.reuse_refs.length === 0),
     missing_feedback_for_decision_or_action: count((record) => (

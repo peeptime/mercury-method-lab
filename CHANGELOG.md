@@ -4,6 +4,33 @@
 
 Every release entry must carry an explicit provenance declaration. Legacy entries that cannot be reconstructed are marked as unverified instead of being silently treated as human-only.
 
+## 1.0.0 — Feature Freeze（2026-05-05）
+
+> Provenance: `[AI_GENERATED]` drafted_by: Codex; humanReviewed: pending; reviewer: project_owner; audit_ref: docs/ITERATION-HANDOFF-1.0.0.md
+
+### Added
+
+- `AGENTS.md` — fresh-agent entrypoint for low-context work.
+- `MEMORY.md` — short cross-session handoff for freeze/reactivation work.
+- `docs/ITERATION-GUIDE-LATEST.md` — current iteration anchor for future agents.
+- `docs/CHECKLIST-REACTIVATION.md` — six-month reactivation checklist.
+- `docs/AGENT-CONTEXT-BUDGET.md` — context-cost and session-splitting policy.
+- `scripts/release_gate.ps1` + `npm run release:gate` — one-command release gate with generated bundle cleanup.
+- `install/` — macOS/Linux, Windows, and Termux install scripts plus install guide.
+- `.github/workflows/ci.yml` — cross-platform GitHub Actions gate for install, doctor, validate, and index.
+
+### Changed
+
+- Version surfaces now declare `1.0.0` and `1.0.0 Feature Freeze`.
+- Mercury iteration skill reads low-context handoff files before long guides.
+- Sample indexing excludes generated exports/manifests from reusable memory samples and fills stable sample-type inference.
+
+### Next Candidates
+
+- `1.0.x`: critical bug fixes only.
+- `1.1.0`: Codex 5.5 adaptation and MCP server activation if the platform support is real.
+- `1.2.0`: plugin system and internationalization if external demand appears.
+
 ## 0.9.0 — 从概念声明走向可运行证明（2026-05-04）
 
 > Provenance: `[AI_GENERATED]` drafted_by: Codex; humanReviewed: true; reviewer: project_owner; audit_ref: docs/METHODOLOGY-INTEGRITY.md
@@ -21,6 +48,9 @@ Every release entry must carry an explicit provenance declaration. Legacy entrie
 
 ### Changed
 
+- Release hardening pass (2026-05-05): package/version surfaces now declare `0.9.0`, README/DEMO include a release gate, and sample indexing excludes generated exports/manifests from reusable memory samples.
+- Agent context budget pass (2026-05-05): added `MEMORY.md`, `docs/ITERATION-GUIDE-LATEST.md`, and `docs/AGENT-CONTEXT-BUDGET.md`; updated Mercury iteration skills to read low-context handoff files before long guides.
+- Project-level agent portability pass (2026-05-05): added `AGENTS.md` and `npm run release:gate` so fresh coding agents can follow the low-context release workflow without local memory or private skills.
 - `README.md` — 新增30秒锚点（英文一句话 + terminal输出 + 这不是什么列表）
 - `DEMO.md` — 重写为可运行的15分钟端到端指南
 - CHANGELOG所有条目加 provenance 声明

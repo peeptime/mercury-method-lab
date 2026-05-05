@@ -10,6 +10,8 @@
 - decision_refs: 
 - created_at: 2026-04-26
 - review_at: 2026-04-27
+- intent: immediate
+- reminder_intensity: strict
 - id: mercury-gui-lifecycle-workbench-rollout
 
 ## Goal

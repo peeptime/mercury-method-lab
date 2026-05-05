@@ -29,6 +29,7 @@ const validationDirs = [
   "dashboard",
   "docs",
   "examples",
+  "install",
   "schemas",
   "scripts",
   "submissions"
@@ -40,6 +41,8 @@ const rootFiles = [
   ".gitignore",
   "CHANGELOG.md",
   "DEMO.md",
+  "AGENTS.md",
+  "MEMORY.md",
   "package.json",
   "README.en.md",
   "README.md",
