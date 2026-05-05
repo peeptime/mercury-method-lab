@@ -13,10 +13,11 @@ This file is the short cross-session handoff. Keep it under 120 lines. Do not pa
 
 ## Current Snapshot
 
-- Current public version: `1.0.0`
+- Current public version: `1.0.1`
 - Current posture: feature freeze, six-month cooling period
 - Core proof: `docs/v0.9-proof-of-audit.md`
-- Release gate: `npm run validate`, `npm run index`, `npm run export:memory -- --include-archive`, `npm run sync:check`
+- Fast checks: `npm run validate:incr`, `npm run index:incr`, `npm run guide:latest`
+- Release gate: `npm run release:gate`
 - Bad-memory proof must continue to export `routing_decision: discard`
 
 ## Known Open Risks
@@ -29,6 +30,7 @@ This file is the short cross-session handoff. Keep it under 120 lines. Do not pa
 ## Token Economy Rules
 
 - Start small: read this file and `docs/ITERATION-GUIDE-LATEST.md` before opening long docs.
+- Run `validate:incr` and `index:incr` before full scans during exploration.
 - Read full `docs/ITERATION-GUIDE-0.9.md` only for disputed v0.9 acceptance criteria.
 - For README/changelog/version updates, inspect only the affected sections and release surfaces.
 - End long work with a short handoff here instead of relying on conversation memory.

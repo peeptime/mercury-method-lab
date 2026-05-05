@@ -16,8 +16,10 @@ Use this when Mercury Method Lab is reactivated after the 1.0.x freeze period.
 1. Read `MEMORY.md`.
 2. Read `docs/ITERATION-GUIDE-LATEST.md`.
 3. Read this checklist.
-4. Run `npm run doctor`.
-5. Run `npm run release:gate`.
+4. Run `npm run validate:incr`.
+5. Run `npm run index:incr`.
+6. Run `npm run doctor`.
+7. Run `npm run release:gate` before committing or releasing.
 
 Do not start by reading the full changelog or old iteration guides.
 
@@ -42,6 +44,8 @@ Do not start by reading the full changelog or old iteration guides.
 ## Release Gate
 
 ```powershell
+npm run validate:incr
+npm run index:incr
 npm run release:gate
 ```
 
@@ -63,6 +67,8 @@ If `export:memory` reports `discard: 1`, that is expected for the proof chain.
 - Confirm `package.json` and `config/project-meta.json` versions match.
 - Confirm `README.md` and `README.en.md` show the same version.
 - Add a changelog entry with provenance.
+- Run `npm run validate:incr`.
+- Run `npm run index:incr`.
 - Run `npm run release:gate`.
 - Keep generated bundles out of the commit unless explicitly required.
 

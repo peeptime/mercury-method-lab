@@ -22,6 +22,14 @@ Default rules:
 - Do not paste raw reports into `MEMORY.md`.
 - Do not treat total tokens alone as a cost diagnosis; separate input, cached input, output, and reasoning tokens when available.
 
+Fast exploration commands:
+
+```powershell
+npm run validate:incr
+npm run index:incr
+npm run guide:latest
+```
+
 ## Release Gate
 
 Use the project gate instead of manually rediscovering checks:

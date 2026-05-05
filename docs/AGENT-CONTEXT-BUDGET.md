@@ -55,6 +55,18 @@ End each segment by updating `MEMORY.md` with only the current state, remaining 
 4. Use search to locate sections before opening long files.
 5. Read full long docs only when the answer depends on their detailed wording.
 
+## Incremental Commands
+
+Use these before full scans during exploration:
+
+```powershell
+npm run validate:incr
+npm run index:incr
+npm run guide:latest
+```
+
+Use `npm run release:gate` before commits or releases.
+
 ## Write Policy
 
 - Prefer one small patch over repeated rewrites.

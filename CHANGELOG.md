@@ -4,6 +4,22 @@
 
 Every release entry must carry an explicit provenance declaration. Legacy entries that cannot be reconstructed are marked as unverified instead of being silently treated as human-only.
 
+## 1.0.1 — Incremental Reactivation Fix（2026-05-05）
+
+> Provenance: `[AI_GENERATED]` drafted_by: Codex; humanReviewed: pending; reviewer: project_owner; audit_ref: docs/ITERATION-HANDOFF-1.0.0.md
+
+### Added
+
+- `npm run validate:incr` — validates changed text files and core release surfaces for low-context exploration.
+- `npm run index:incr` — skips indexing when no source artifacts changed and falls back to canonical indexing when needed.
+- `npm run guide:latest` — regenerates `docs/ITERATION-GUIDE-LATEST.md` from version surfaces.
+
+### Changed
+
+- `npm run release:gate` now runs `guide:latest`, `validate:incr`, and `index:incr` before the full release checks.
+- `npm run doctor` now verifies the incremental/reactivation scripts exist.
+- Reactivation docs now start with incremental commands before full scans.
+
 ## 1.0.0 — Feature Freeze（2026-05-05）
 
 > Provenance: `[AI_GENERATED]` drafted_by: Codex; humanReviewed: pending; reviewer: project_owner; audit_ref: docs/ITERATION-HANDOFF-1.0.0.md
@@ -18,6 +34,7 @@ Every release entry must carry an explicit provenance declaration. Legacy entrie
 - `scripts/release_gate.ps1` + `npm run release:gate` — one-command release gate with generated bundle cleanup.
 - `install/` — macOS/Linux, Windows, and Termux install scripts plus install guide.
 - `.github/workflows/ci.yml` — cross-platform GitHub Actions gate for install, doctor, validate, and index.
+- `npm run validate:incr`, `npm run index:incr`, and `npm run guide:latest` — low-context reactivation commands for future agents.
 
 ### Changed
 

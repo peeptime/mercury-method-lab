@@ -1,6 +1,6 @@
 {
   "name": "mercury-method-lab",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "codename": "1.0.0 Feature Freeze",
   "private": true,
   "type": "module",
@@ -18,7 +18,10 @@
     "v8:analyze": "node scripts/run_v8_analysis.mjs",
     "sync:skills": "node scripts/sync_skills.mjs",
     "validate": "node scripts/validate_artifacts.mjs",
+    "validate:incr": "node scripts/validate_incremental.mjs",
     "release:gate": "powershell -ExecutionPolicy Bypass -File scripts/release_gate.ps1 -CleanKnownGenerated",
+    "index:incr": "node scripts/rebuild_index_incremental.mjs",
+    "guide:latest": "node scripts/generate_latest_guide.mjs",
     "sync:commit": "node scripts/sync_commit_surfaces.mjs --write",
     "sync:check": "node scripts/sync_commit_surfaces.mjs --check",
     "hooks:install": "node scripts/install_git_hooks.mjs",

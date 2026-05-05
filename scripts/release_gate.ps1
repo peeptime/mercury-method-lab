@@ -55,7 +55,10 @@ Write-Host "Release gate root: $root"
 Write-Host "Package: $($package.name)@$($package.version)"
 
 $cheapOrder = @(
+  "guide:latest",
   "sync:check",
+  "validate:incr",
+  "index:incr",
   "validate",
   "doctor",
   "lint",

@@ -1,7 +1,7 @@
 {
   "project_name": "Mercury Method Lab",
   "package_name": "mercury-method-lab",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "codename": "1.0.0 Feature Freeze",
   "status": "feature-freeze",
   "position": "A companion method, evidence, audit, and migration lab for Mercury Agent-compatible workflows.",

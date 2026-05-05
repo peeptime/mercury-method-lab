@@ -2,7 +2,7 @@
 
 **不让聪明变成垃圾。**
 
-Version: `1.0.0`
+Version: `1.0.1`
 
 ```yaml
 provenance:
@@ -187,7 +187,7 @@ npm run dashboard    # http://127.0.0.1:4788
 | 看前置审计契约 | `docs/AUDIT-CONTRACT.md` |
 | 看 AI 协作悖论修复 | `docs/METHODOLOGY-INTEGRITY.md` |
 | 看"为什么不能定义成功指标" | `docs/AUDIT-METRICS-DECLINED.md` |
-| 看 v1.0 冻结指南 | `docs/ITERATION-GUIDE-1.0.0.md` |
+| 看 v1.0 冻结指南 | `docs/ITERATION-GUIDE-1.0.1.md` |
 | 继续迭代/讨论项目 | 激活 `mercury-v8-iter` Skill |
 | 看版本历史 | `CHANGELOG.md` |
 | 看完整样本链 | `examples/` |
