@@ -2,7 +2,7 @@
 
 **It keeps smart thoughts from becoming clean but useless waste.**
 
-Version: `1.0.2`
+Version: `1.1.0`
 
 ```yaml
 provenance:
@@ -17,7 +17,9 @@ provenance:
 
 ## One Sentence
 
-A memory-audit layer for intercepting AI outputs that sound smart but should not enter long-term memory yet, built with **provenance transparency**, **failure-mode detection**, and **no gaming targets**.
+Mercury Method Lab is an evidence-first audit layer for AI-generated memory, agent outputs, and FDE delivery artifacts.
+
+It does not make agents do more work. It decides whether the work agents already produced deserves to be retained.
 
 ---
 
@@ -43,6 +45,26 @@ output: archived proof, no runtime DB write
 The short-term reactivation does not expand features. It accumulates real interception cases first.
 
 `docs/PROOF-PACK-001.md` records the first proof-pack seed: each case explains why the source narrative sounds plausible, what evidence is missing, how it could pollute long-term memory, and how Mercury should route it.
+
+---
+
+## Evidence-First Audit Packets
+
+`examples/audit-packets/` contains runnable audit packet examples:
+
+```powershell
+npm run audit    # writes dist/audit-results.json
+npm run report   # writes dist/reports/index.html
+npm run test     # verifies routing decisions and HTML output
+```
+
+Audit output uses four routing decisions:
+
+```text
+accept / revise / quarantine / discard
+```
+
+Markdown/YAML are the trusted record. HTML is the human delivery layer.
 
 ---
 
@@ -129,6 +151,9 @@ See `docs/AUDIT-METRICS-DECLINED.md`
 ```powershell
 npm install
 npm run doctor       # diagnose system state
+npm run audit        # audit packet examples
+npm run report       # generate HTML audit reports
+npm run test         # test the audit loop
 npm run validate     # audit provenance
 npm run index        # rebuild index
 npm run dashboard    # http://127.0.0.1:4788
@@ -193,7 +218,7 @@ Not everything needs to be acted on. Sometimes writing it down is enough.
 | Pre-audit contract | `docs/AUDIT-CONTRACT.md` |
 | AI collaboration paradox fix | `docs/METHODOLOGY-INTEGRITY.md` |
 | Why success metrics are dangerous | `docs/AUDIT-METRICS-DECLINED.md` |
-| v1.0 freeze guide | `docs/ITERATION-GUIDE-1.0.2.md` |
+| v1.0 freeze guide | `docs/ITERATION-GUIDE-1.1.0.md` |
 | Version history | `CHANGELOG.md` |
 | Governance principles | `docs/GOVERNANCE.md` |
 

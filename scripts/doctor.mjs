@@ -23,7 +23,9 @@ const requiredPaths = [
   "config",
   "data",
   "docs",
+  "examples/audit-packets",
   "schemas",
+  "schemas/audit-packet.schema.json",
   "scripts",
   "dashboard",
   "dashboard/index.html",
@@ -61,6 +63,7 @@ for (const path of requiredPaths) {
 const packageJson = JSON.parse(await readFile(join(root, "package.json"), "utf8"));
 for (const scriptName of [
   "dashboard",
+  "audit",
   "doctor",
   "guide:latest",
   "index",
@@ -68,7 +71,9 @@ for (const scriptName of [
   "import:viewpoint",
   "ingest:doc",
   "release:gate",
+  "report",
   "sync:skills",
+  "test",
   "validate",
   "validate:incr",
   "test:llm",

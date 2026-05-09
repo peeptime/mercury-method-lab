@@ -1,0 +1,18 @@
+id: valid_project_decision_001
+title: "Evidence-backed project decision"
+type: project_decision
+sample_type: audit_packet
+claim: "Mercury Method Lab should keep Markdown/YAML as source of truth and use HTML as a delivery/reporting layer."
+source_refs:
+  - docs/AGENT-CONTEXT-BUDGET.md
+  - docs/PROOF-PACK-001.md
+audit_refs:
+  - docs/AUDIT-METRICS-DECLINED.md
+  - docs/CHECKLIST-REACTIVATION.md
+context:
+  summary: "The project repeatedly separates durable audit records from human-facing reports."
+  risk: "Low; the decision preserves existing source-of-truth policy."
+risk_level: low
+boundary: "Applies to Mercury Method Lab repository outputs, not all user projects."
+expected_decision: accept
+expected_blockers: []

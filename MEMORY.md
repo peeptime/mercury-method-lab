@@ -13,10 +13,11 @@ This file is the short cross-session handoff. Keep it under 120 lines. Do not pa
 
 ## Current Snapshot
 
-- Current public version: `1.0.2`
-- Current posture: feature freeze, six-month cooling period
+- Current public version: `1.1.0`
+- Current posture: evidence-first audit layer
 - Core proof: `docs/v0.9-proof-of-audit.md`
 - Current proof pack: `docs/PROOF-PACK-001.md`
+- Current runnable audit loop: `npm run audit`, `npm run report`, `npm run test`
 - Fast checks: `npm run validate:incr`, `npm run index:incr`, `npm run guide:latest`
 - Release gate: `npm run release:gate`
 - Bad-memory proof must continue to export `routing_decision: discard`
@@ -42,4 +43,5 @@ This file is the short cross-session handoff. Keep it under 120 lines. Do not pa
 - Reduce generated-output noise in sample/export flows.
 - Add real Proof Pack cases when they reinforce named failure modes.
 - Continue metadata cleanup where sources are real and already present.
-- During `1.0.x`, fix critical bugs only; defer new artifact types, adapters, AI scoring, RAG, or fine-tuning audit features.
+- Keep Audit Packets small and evidence-first; do not turn this into a general Agent framework.
+- Defer backend adapters, AI scoring, RAG, or fine-tuning audit features.

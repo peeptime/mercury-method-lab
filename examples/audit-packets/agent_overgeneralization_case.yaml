@@ -1,0 +1,17 @@
+id: agent_overgeneralization_001
+title: "Agent summary with overgeneralized delivery rule"
+type: agent_project_summary
+sample_type: audit_packet
+claim: "All future FDE handoffs must use the same customer-memory template."
+source_refs:
+  - docs/EVIDENCE-FIRST-AUDIT-LAYER.md
+audit_refs:
+  - docs/AUDIT-METRICS-DECLINED.md
+context:
+  summary: "A template helped one simulated handoff, but the packet tries to turn one case into a universal rule."
+  risk: "A useful delivery pattern could become rigid project memory."
+risk_level: medium
+boundary: "Applies only as a reusable pattern candidate, not a mandatory global rule."
+expected_decision: revise
+expected_blockers:
+  - overgeneralization

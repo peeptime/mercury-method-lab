@@ -2,7 +2,7 @@
 
 **不让聪明变成垃圾。**
 
-Version: `1.0.2`
+Version: `1.1.0`
 
 ```yaml
 provenance:
@@ -17,7 +17,9 @@ provenance:
 
 ## One Sentence
 
-一个专门拦截"听起来聪明但不该进入长期记忆"的 AI 记忆审计层，核心手段是 **provenance transparency**、**failure-mode detection** 和 **no gaming targets**。
+Mercury Method Lab 是一个面向 AI 长期记忆、Agent 输出和 FDE 交付物的证据优先审计层。
+
+它不负责让 AI 更能干活，而是负责判断 AI 干出来的东西是否有资格留下来。
 
 ---
 
@@ -43,6 +45,26 @@ output: archived proof, no runtime DB write
 短期重启不做功能膨胀，先积累真实拦截判例。
 
 `docs/PROOF-PACK-001.md` 记录第一组坏记忆审计样本：每个案例说明原始叙事为什么可信、缺什么证据、如果进入长期记忆会造成什么污染，以及 Mercury 应该如何路由。
+
+---
+
+## Evidence-First Audit Packets
+
+`examples/audit-packets/` 里有可运行的审计包样例：
+
+```powershell
+npm run audit    # 生成 dist/audit-results.json
+npm run report   # 生成 dist/reports/index.html
+npm run test     # 验证四类 routing decision 和 HTML 输出
+```
+
+审计输出使用四档路由：
+
+```text
+accept / revise / quarantine / discard
+```
+
+Markdown/YAML 是可信记录，HTML 是给人看的交付层。
 
 ---
 
@@ -131,6 +153,9 @@ Mercury Lab 就是来解决这个的。
 ```powershell
 npm install
 npm run doctor       # 诊断系统状态
+npm run audit        # 审计 Audit Packet 样例
+npm run report       # 生成 HTML 审计报告
+npm run test         # 跑审计闭环测试
 npm run validate     # 审计 provenance
 npm run index        # 重建索引
 npm run dashboard    # http://127.0.0.1:4788
@@ -195,7 +220,9 @@ npm run dashboard    # http://127.0.0.1:4788
 | 看前置审计契约 | `docs/AUDIT-CONTRACT.md` |
 | 看 AI 协作悖论修复 | `docs/METHODOLOGY-INTEGRITY.md` |
 | 看"为什么不能定义成功指标" | `docs/AUDIT-METRICS-DECLINED.md` |
-| 看 v1.0 冻结指南 | `docs/ITERATION-GUIDE-1.0.2.md` |
+| 看 Evidence-First Audit Packet 闭环 | `docs/EVIDENCE-FIRST-AUDIT-LAYER.md` |
+| 看 HTML 审计报告样例 | `dist/reports/index.html`（运行 `npm run report` 后生成） |
+| 看 v1.0 冻结指南 | `docs/ITERATION-GUIDE-1.1.0.md` |
 | 继续迭代/讨论项目 | 激活 `mercury-v8-iter` Skill |
 | 看版本历史 | `CHANGELOG.md` |
 | 看完整样本链 | `examples/` |

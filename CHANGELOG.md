@@ -4,6 +4,25 @@
 
 Every release entry must carry an explicit provenance declaration. Legacy entries that cannot be reconstructed are marked as unverified instead of being silently treated as human-only.
 
+## 1.1.0 — Evidence-First Audit Layer（2026-05-09）
+
+> Provenance: `[AI_GENERATED]` drafted_by: Codex; humanReviewed: pending; reviewer: project_owner; audit_ref: user iteration brief 2026-05-09
+
+### Added
+
+- `examples/audit-packets/` — four runnable Audit Packet examples covering `accept`, `revise`, `quarantine`, and `discard`.
+- `scripts/audit-core/` — local structural audit rules for source refs, audit refs, unsafe memory writes, circular reasoning, overgeneralization, stale context, and unclear boundaries.
+- `npm run audit` — audits packets and writes `dist/audit-results.json`.
+- `npm run report` — generates clean HTML reports under `dist/reports/`.
+- `npm run test` — verifies routing decisions, refusal points, FDE human-review behavior, and HTML report generation.
+- `docs/EVIDENCE-FIRST-AUDIT-LAYER.md` and `schemas/audit-packet.schema.json`.
+
+### Changed
+
+- README now frames Mercury as an evidence-first audit layer for AI-generated memory, Agent outputs, and FDE delivery artifacts.
+- `npm run doctor`, `npm run release:gate`, and GitHub CI now include the audit/report/test loop.
+- Latest iteration guide now points fresh agents to Audit Packets as the runnable review unit.
+
 ## 1.0.2 — Proof Pack Reactivation Patch（2026-05-09）
 
 > Provenance: `[AI_GENERATED]` drafted_by: Codex; humanReviewed: pending; reviewer: project_owner; audit_ref: docs/NEXT-PHASE-MEMORY.md

@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/mercury/audit-packet.schema.json",
+  "title": "Mercury Audit Packet",
+  "type": "object",
+  "required": [
+    "id",
+    "title",
+    "type",
+    "claim",
+    "source_refs",
+    "audit_refs",
+    "context",
+    "risk_level"
+  ],
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string"
+    },
+    "claim": {
+      "type": "string"
+    },
+    "source_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "audit_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "context": {
+      "type": "object"
+    },
+    "risk_level": {
+      "enum": [
+        "low",
+        "medium",
+        "high"
+      ]
+    },
+    "expected_decision": {
+      "enum": [
+        "accept",
+        "revise",
+        "quarantine",
+        "discard"
+      ]
+    },
+    "expected_blockers": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": true
+}

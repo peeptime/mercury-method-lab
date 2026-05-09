@@ -1,0 +1,16 @@
+id: fde_customer_delivery_001
+title: "Customer knowledge-base agent delivery summary"
+type: fde_customer_delivery
+sample_type: audit_packet
+claim: "The client is ready to let an internal AI agent rewrite the knowledge base."
+source_refs:
+  - examples/audit-packets/field-interview-notes-2026-05-09.md
+audit_refs: []
+context:
+  summary: "The FDE interview found interest in agent-assisted cleanup, but department owners disagreed on what should become canonical memory."
+  risk: "A premature delivery conclusion could make the customer believe consensus exists."
+risk_level: high
+boundary: "Applies only to the simulated customer-delivery sample; not a real deployment approval."
+expected_decision: quarantine
+expected_blockers:
+  - missing_audit_refs

@@ -1,0 +1,16 @@
+id: agent_project_summary_001
+title: "Agent project summary with circular proof"
+type: agent_project_summary
+sample_type: audit_packet
+claim: "The migration is complete because the AI summary says every blocker was resolved."
+source_refs: []
+audit_refs: []
+context:
+  summary: "The project agent generated a confident closeout, but the only proof is the same agent's own summary."
+  risk: "Circular reasoning could close a project with unresolved migration work."
+risk_level: medium
+expected_decision: discard
+expected_blockers:
+  - missing_source_refs
+  - missing_audit_refs
+  - circular_reasoning
