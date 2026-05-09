@@ -2,7 +2,7 @@
 
 **不让聪明变成垃圾。**
 
-Version: `1.2.0`
+Version: `1.2.1`
 
 ```yaml
 provenance:
@@ -42,6 +42,15 @@ output: archived proof, no runtime DB write
 
 ## Proof Pack 001
 
+Cycle 02 的当前规则写在 `docs/CYCLE-02-COMMITMENT.md`：不发 `v1.3.0`，不新增主要框架名，先把 Proof Pack 001、Failure Mode Dictionary、review ledger 和 charter user records 做实。
+
+低 token 复位入口：
+
+```powershell
+npm run cycle:status
+npm run cycle:check
+```
+
 短期重启不做功能膨胀，先积累真实拦截判例。
 
 `docs/PROOF-PACK-001.md` 记录第一组坏记忆审计样本：每个案例说明原始叙事为什么可信、缺什么证据、如果进入长期记忆会造成什么污染，以及 Mercury 应该如何路由。
@@ -58,6 +67,8 @@ npm run audit:flow # 生成 dist/memory-flow/ 路由模拟
 npm run report   # 生成 dist/reports/index.html
 npm run test     # 验证四类 routing decision 和 HTML 输出
 npm run audit:profile # 输出本地审计性能概况
+npm run cycle:status # 低 token 查看 Cycle 02 状态
+npm run cycle:check  # 检查 proof/failure/review 结构
 ```
 
 审计输出使用四档路由：
@@ -160,6 +171,8 @@ npm run audit:flow   # 模拟 accept/revise/quarantine/discard 流向
 npm run report       # 生成 HTML 审计报告
 npm run test         # 跑审计闭环测试
 npm run audit:profile # 查看本地审计性能
+npm run cycle:status # 查看 Cycle 02 状态
+npm run cycle:check  # 检查 Cycle 02 结构
 npm run validate     # 审计 provenance
 npm run index        # 重建索引
 npm run dashboard    # http://127.0.0.1:4788
@@ -226,7 +239,7 @@ npm run dashboard    # http://127.0.0.1:4788
 | 看"为什么不能定义成功指标" | `docs/AUDIT-METRICS-DECLINED.md` |
 | 看 Evidence-First Audit Packet 闭环 | `docs/EVIDENCE-FIRST-AUDIT-LAYER.md` |
 | 看 HTML 审计报告样例 | `dist/reports/index.html`（运行 `npm run report` 后生成） |
-| 看 v1.0 冻结指南 | `docs/ITERATION-GUIDE-1.2.0.md` |
+| 看 v1.0 冻结指南 | `docs/ITERATION-GUIDE-1.2.1.md` |
 | 继续迭代/讨论项目 | 激活 `mercury-v8-iter` Skill |
 | 看版本历史 | `CHANGELOG.md` |
 | 看完整样本链 | `examples/` |

@@ -57,6 +57,8 @@ Write-Host "Package: $($package.name)@$($package.version)"
 $cheapOrder = @(
   "guide:latest",
   "sync:check",
+  "cycle:status",
+  "cycle:check",
   "validate:incr",
   "index:incr",
   "audit",

@@ -2,7 +2,7 @@
 
 **It keeps smart thoughts from becoming clean but useless waste.**
 
-Version: `1.2.0`
+Version: `1.2.1`
 
 ```yaml
 provenance:
@@ -46,6 +46,15 @@ The short-term reactivation does not expand features. It accumulates real interc
 
 `docs/PROOF-PACK-001.md` records the first proof-pack seed: each case explains why the source narrative sounds plausible, what evidence is missing, how it could pollute long-term memory, and how Mercury should route it.
 
+Cycle 02 is locked in `docs/CYCLE-02-COMMITMENT.md`: no `v1.3.0`, no new major framework names, and no fake human review or charter users.
+
+Low-token reactivation:
+
+```powershell
+npm run cycle:status
+npm run cycle:check
+```
+
 ---
 
 ## Evidence-First Audit Packets
@@ -58,6 +67,8 @@ npm run audit:flow # writes dist/memory-flow/
 npm run report   # writes dist/reports/index.html
 npm run test     # verifies routing decisions and HTML output
 npm run audit:profile # prints local audit timing
+npm run cycle:status # prints Cycle 02 status without long doc reads
+npm run cycle:check  # checks proof/failure/review structure
 ```
 
 Audit output uses four routing decisions:
@@ -222,7 +233,7 @@ Not everything needs to be acted on. Sometimes writing it down is enough.
 | Pre-audit contract | `docs/AUDIT-CONTRACT.md` |
 | AI collaboration paradox fix | `docs/METHODOLOGY-INTEGRITY.md` |
 | Why success metrics are dangerous | `docs/AUDIT-METRICS-DECLINED.md` |
-| v1.0 freeze guide | `docs/ITERATION-GUIDE-1.2.0.md` |
+| v1.0 freeze guide | `docs/ITERATION-GUIDE-1.2.1.md` |
 | Version history | `CHANGELOG.md` |
 | Governance principles | `docs/GOVERNANCE.md` |
 

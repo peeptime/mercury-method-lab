@@ -4,6 +4,25 @@
 
 Every release entry must carry an explicit provenance declaration. Legacy entries that cannot be reconstructed are marked as unverified instead of being silently treated as human-only.
 
+## 1.2.1 - Cycle 02 Commitment Patch (2026-05-09)
+> Provenance: `[AI_GENERATED]` drafted_by: Codex; humanReviewed: declined; reviewer: project_owner_pending; audit_ref: docs/CYCLE-02-COMMITMENT.md
+
+### Added
+
+- `docs/CYCLE-02-COMMITMENT.md` locks the next work loop to `v1.2.x` patch releases, proof cases, review honesty, and external user records.
+- `docs/PROOF-PACK-001.md` now has 10 complete cases instead of one case plus open slots.
+- `docs/FAILURE-MODES.md` adds 22 named failure modes tied to Proof Pack references and near-miss boundaries.
+- `docs/REVIEW-LEDGER.md` records AI-only outputs as `declined` rather than pretending human review happened.
+- `docs/CHARTER-USER-RECORDS.md` adds a non-fabrication ledger for the three real charter-user records required by Cycle 02.
+- `docs/AGENT-TOKEN-ECONOMY.md` and `08_skills/cycle-02-curator/SKILL.md` give fresh agents a low-context Cycle 02 workflow.
+- `npm run cycle:status` and `npm run cycle:check` provide lightweight status and structural checks before full validation.
+
+### Changed
+
+- Release gate, doctor, and CI now include Cycle 02 status/check commands.
+- README now surfaces the Cycle 02 low-token entrypoint.
+- Latest iteration guidance points agents to Cycle 02 constraints before long document reads.
+
 ## 1.2.0 — Layered Audit Delivery（2026-05-09）
 
 > Provenance: `[AI_GENERATED]` drafted_by: Codex; humanReviewed: pending; reviewer: project_owner; audit_ref: user request 2026-05-09 layered update

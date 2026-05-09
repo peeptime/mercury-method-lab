@@ -66,6 +66,8 @@ for (const scriptName of [
   "audit",
   "audit:flow",
   "audit:profile",
+  "cycle:status",
+  "cycle:check",
   "doctor",
   "guide:latest",
   "index",
