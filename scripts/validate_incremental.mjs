@@ -17,6 +17,10 @@ const secretPatterns = [
   /OPENAI_API_KEY[ \t]*=[ \t]*["']?[A-Za-z0-9_\-]{12,}/i,
   /Bearer[ \t]+[A-Za-z0-9_\-.]{12,}/i
 ];
+const requiredMarkdownHeadings = {
+  "05_decision_logs": ["## 日期", "## 背景", "## 结论", "## 证据", "## 风险"],
+  "07_audit_reports": ["## 被审计结论", "## 关键假设", "## 最可能错误点", "## 审计结论"]
+};
 const errors = [];
 const warnings = [];
 
@@ -54,6 +58,15 @@ for (const file of changedFiles) {
   }
   if (file.endsWith(".md") && !startsWithMarkdownHeading(text)) {
     warnings.push(`${file}: markdown file should start with a heading`);
+  }
+  for (const [dir, headings] of Object.entries(requiredMarkdownHeadings)) {
+    if (file.startsWith(`${dir}/`) && file.endsWith(".md") && !file.endsWith("README.md")) {
+      for (const heading of headings) {
+        if (!text.includes(heading)) {
+          errors.push(`${file}: missing heading "${heading}"`);
+        }
+      }
+    }
   }
   for (const pattern of secretPatterns) {
     if (pattern.test(text)) {

@@ -30,7 +30,8 @@ export function getChangedFiles(root) {
 }
 
 export function runGit(root, args) {
-  const result = spawnSync("git", args, { cwd: root, encoding: "utf8" });
+  const gitArgs = ["-c", "core.quotePath=false", ...args];
+  const result = spawnSync("git", gitArgs, { cwd: root, encoding: "utf8" });
   if (result.status !== 0) {
     throw new Error(`git ${args.join(" ")} failed: ${result.stderr || result.stdout}`);
   }

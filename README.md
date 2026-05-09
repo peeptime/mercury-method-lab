@@ -2,7 +2,7 @@
 
 **不让聪明变成垃圾。**
 
-Version: `1.0.1`
+Version: `1.0.2`
 
 ```yaml
 provenance:
@@ -17,7 +17,7 @@ provenance:
 
 ## One Sentence
 
-A pre-ingestion audit gate that prevents AI-generated speculation from polluting long-term memory systems — built with **provenance transparency**, **failure-mode detection**, and **no gaming targets**.
+一个专门拦截"听起来聪明但不该进入长期记忆"的 AI 记忆审计层，核心手段是 **provenance transparency**、**failure-mode detection** 和 **no gaming targets**。
 
 ---
 
@@ -35,6 +35,14 @@ output: archived proof, no runtime DB write
 ✅ Mercury Lab runs this check before anything enters long-term memory
 ❌ Most memory tools skip the check and promote everything
 ```
+
+---
+
+## Proof Pack 001
+
+短期重启不做功能膨胀，先积累真实拦截判例。
+
+`docs/PROOF-PACK-001.md` 记录第一组坏记忆审计样本：每个案例说明原始叙事为什么可信、缺什么证据、如果进入长期记忆会造成什么污染，以及 Mercury 应该如何路由。
 
 ---
 
@@ -187,7 +195,7 @@ npm run dashboard    # http://127.0.0.1:4788
 | 看前置审计契约 | `docs/AUDIT-CONTRACT.md` |
 | 看 AI 协作悖论修复 | `docs/METHODOLOGY-INTEGRITY.md` |
 | 看"为什么不能定义成功指标" | `docs/AUDIT-METRICS-DECLINED.md` |
-| 看 v1.0 冻结指南 | `docs/ITERATION-GUIDE-1.0.1.md` |
+| 看 v1.0 冻结指南 | `docs/ITERATION-GUIDE-1.0.2.md` |
 | 继续迭代/讨论项目 | 激活 `mercury-v8-iter` Skill |
 | 看版本历史 | `CHANGELOG.md` |
 | 看完整样本链 | `examples/` |

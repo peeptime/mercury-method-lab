@@ -19,7 +19,8 @@ Use this when Mercury Method Lab is reactivated after the 1.0.x freeze period.
 4. Run `npm run validate:incr`.
 5. Run `npm run index:incr`.
 6. Run `npm run doctor`.
-7. Run `npm run release:gate` before committing or releasing.
+7. For proof-pack work, read `docs/PROOF-PACK-001.md`.
+8. Run `npm run release:gate` before committing or releasing.
 
 Do not start by reading the full changelog or old iteration guides.
 
@@ -37,6 +38,7 @@ Do not start by reading the full changelog or old iteration guides.
 | Current state | `MEMORY.md` |
 | Current iteration target | `docs/ITERATION-GUIDE-LATEST.md` |
 | Agent context budget | `docs/AGENT-CONTEXT-BUDGET.md` |
+| Proof Pack cases | `docs/PROOF-PACK-001.md` |
 | Release gate | `scripts/release_gate.ps1` |
 | Minimal workflow | `docs/MINIMAL-WORKFLOW.md` |
 | Audit contract | `docs/AUDIT-CONTRACT.md` |

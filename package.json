@@ -1,10 +1,10 @@
 {
   "name": "mercury-method-lab",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "codename": "1.0.0 Feature Freeze",
   "private": true,
   "type": "module",
-  "description": "AI 判断输出的审计基础设施。给 AI 的判断过程留下不可跳过的架构约束，解决概率模型带来的意图命中偏差和认知曲线盲区。",
+  "description": "专门拦截听起来聪明但不该进入长期记忆的 AI 记忆审计层。",
   "scripts": {
     "check:upstream": "node scripts/check_upstream_mercury_agent.mjs",
     "dashboard": "node scripts/dashboard_server.mjs",

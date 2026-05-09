@@ -1,10 +1,10 @@
 {
   "project_name": "Mercury Method Lab",
   "package_name": "mercury-method-lab",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "codename": "1.0.0 Feature Freeze",
   "status": "feature-freeze",
-  "position": "A companion method, evidence, audit, and migration lab for Mercury Agent-compatible workflows.",
+  "position": "A memory-audit layer for intercepting AI outputs that sound smart but should not enter long-term memory yet.",
   "version_policy": {
     "major": "Breaks artifact, memory, or upstream compatibility contracts.",
     "minor": "Adds a new compatible architecture capability, adapter, migration path, or public workflow.",

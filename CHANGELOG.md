@@ -4,6 +4,26 @@
 
 Every release entry must carry an explicit provenance declaration. Legacy entries that cannot be reconstructed are marked as unverified instead of being silently treated as human-only.
 
+## 1.0.2 — Proof Pack Reactivation Patch（2026-05-09）
+
+> Provenance: `[AI_GENERATED]` drafted_by: Codex; humanReviewed: pending; reviewer: project_owner; audit_ref: docs/NEXT-PHASE-MEMORY.md
+
+### Added
+
+- `docs/PROOF-PACK-001.md` — first proof-pack seed for real AI memory-audit interception cases.
+- Meshy BlackBox artifacts covering raw source summary, V8.1 analysis, audit report, and frozen PSP iteration memo.
+
+### Fixed
+
+- `npm run validate:incr` now reads Git paths with `core.quotePath=false`, so Chinese filenames and untracked artifacts are not silently skipped.
+- `npm run validate:incr` now applies required audit-report and decision-log heading checks to changed files.
+- Meshy audit report now includes the required `被审计结论` and `最可能错误点` sections.
+
+### Changed
+
+- README positioning now emphasizes the narrower memory-audit-layer claim.
+- `docs/ITERATION-GUIDE-LATEST.md` now points future reactivation work toward Proof Pack accumulation instead of feature expansion.
+
 ## 1.0.1 — Incremental Reactivation Fix（2026-05-05）
 
 > Provenance: `[AI_GENERATED]` drafted_by: Codex; humanReviewed: pending; reviewer: project_owner; audit_ref: docs/ITERATION-HANDOFF-1.0.0.md

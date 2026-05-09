@@ -2,7 +2,7 @@
 
 **It keeps smart thoughts from becoming clean but useless waste.**
 
-Version: `1.0.1`
+Version: `1.0.2`
 
 ```yaml
 provenance:
@@ -17,7 +17,7 @@ provenance:
 
 ## One Sentence
 
-A pre-ingestion audit gate that prevents AI-generated speculation from polluting long-term memory systems — built with **provenance transparency**, **failure-mode detection**, and **no gaming targets**.
+A memory-audit layer for intercepting AI outputs that sound smart but should not enter long-term memory yet, built with **provenance transparency**, **failure-mode detection**, and **no gaming targets**.
 
 ---
 
@@ -35,6 +35,14 @@ output: archived proof, no runtime DB write
 ✅ Mercury Lab runs this check before anything enters long-term memory
 ❌ Most memory tools skip the check and promote everything
 ```
+
+---
+
+## Proof Pack 001
+
+The short-term reactivation does not expand features. It accumulates real interception cases first.
+
+`docs/PROOF-PACK-001.md` records the first proof-pack seed: each case explains why the source narrative sounds plausible, what evidence is missing, how it could pollute long-term memory, and how Mercury should route it.
 
 ---
 
@@ -185,7 +193,7 @@ Not everything needs to be acted on. Sometimes writing it down is enough.
 | Pre-audit contract | `docs/AUDIT-CONTRACT.md` |
 | AI collaboration paradox fix | `docs/METHODOLOGY-INTEGRITY.md` |
 | Why success metrics are dangerous | `docs/AUDIT-METRICS-DECLINED.md` |
-| v1.0 freeze guide | `docs/ITERATION-GUIDE-1.0.1.md` |
+| v1.0 freeze guide | `docs/ITERATION-GUIDE-1.0.2.md` |
 | Version history | `CHANGELOG.md` |
 | Governance principles | `docs/GOVERNANCE.md` |
 
