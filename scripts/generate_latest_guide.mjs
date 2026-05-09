@@ -30,7 +30,8 @@ Keep the project stable and cheap to reactivate:
 - start future sessions from \`MEMORY.md\`, this file, and \`docs/CHECKLIST-REACTIVATION.md\`
 - use Audit Packets as the runnable unit for Agent/FDE/long-term-memory claim review
 - keep Markdown/YAML as source of truth and HTML as a generated delivery layer
-- run \`npm run audit\` and \`npm run report\` when validating evidence-first examples
+- run \`npm run audit\`, \`npm run audit:flow\`, and \`npm run report\` when validating evidence-first examples
+- use \`npm run audit:profile\` when audit packet performance changes
 - run \`npm run validate:incr\` before full validation when exploring
 - run \`npm run index:incr\` before full indexing when exploring
 - use \`npm run release:gate\` before any release or patch
@@ -60,8 +61,10 @@ Keep the project stable and cheap to reactivate:
 npm run validate:incr
 npm run index:incr
 npm run audit
+npm run audit:flow
 npm run report
 npm run test
+npm run audit:profile
 npm run release:gate
 \`\`\`
 `;

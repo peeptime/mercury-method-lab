@@ -2,7 +2,7 @@
 
 **It keeps smart thoughts from becoming clean but useless waste.**
 
-Version: `1.1.0`
+Version: `1.2.0`
 
 ```yaml
 provenance:
@@ -54,8 +54,10 @@ The short-term reactivation does not expand features. It accumulates real interc
 
 ```powershell
 npm run audit    # writes dist/audit-results.json
+npm run audit:flow # writes dist/memory-flow/
 npm run report   # writes dist/reports/index.html
 npm run test     # verifies routing decisions and HTML output
+npm run audit:profile # prints local audit timing
 ```
 
 Audit output uses four routing decisions:
@@ -152,8 +154,10 @@ See `docs/AUDIT-METRICS-DECLINED.md`
 npm install
 npm run doctor       # diagnose system state
 npm run audit        # audit packet examples
+npm run audit:flow   # simulate accept/revise/quarantine/discard flow
 npm run report       # generate HTML audit reports
 npm run test         # test the audit loop
+npm run audit:profile # inspect local audit performance
 npm run validate     # audit provenance
 npm run index        # rebuild index
 npm run dashboard    # http://127.0.0.1:4788
@@ -218,7 +222,7 @@ Not everything needs to be acted on. Sometimes writing it down is enough.
 | Pre-audit contract | `docs/AUDIT-CONTRACT.md` |
 | AI collaboration paradox fix | `docs/METHODOLOGY-INTEGRITY.md` |
 | Why success metrics are dangerous | `docs/AUDIT-METRICS-DECLINED.md` |
-| v1.0 freeze guide | `docs/ITERATION-GUIDE-1.1.0.md` |
+| v1.0 freeze guide | `docs/ITERATION-GUIDE-1.2.0.md` |
 | Version history | `CHANGELOG.md` |
 | Governance principles | `docs/GOVERNANCE.md` |
 

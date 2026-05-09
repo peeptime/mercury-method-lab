@@ -5,11 +5,14 @@ import { spawnSync } from "node:child_process";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { auditPackets } from "./audit-core/audit_rules.mjs";
-import { readAuditPackets } from "./audit-core/packet_io.mjs";
+import { readAuditPackets, readKnownPaths } from "./audit-core/packet_io.mjs";
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
-const packets = await readAuditPackets(root);
-const audit = auditPackets(packets);
+const [packets, knownPaths] = await Promise.all([
+  readAuditPackets(root),
+  readKnownPaths(root)
+]);
+const audit = auditPackets(packets, { knownPaths });
 const byId = new Map(audit.results.map((result) => [result.packet_id, result]));
 
 assert.equal(audit.summary.total >= 4, true, "expected at least four audit packets");
@@ -35,6 +38,8 @@ assert.notEqual(byId.get("memory_pollution_001").routing_decision, "accept", "no
 assert.notEqual(byId.get("agent_project_summary_001").routing_decision, "accept", "no audit_refs packet must not accept");
 assert.equal(byId.get("fde_customer_delivery_001").human_review_required, true, "FDE packet must require human review");
 assert.equal(byId.get("valid_project_decision_001").routing_decision, "accept", "valid packet should accept");
+assert.equal(byId.get("agent_overgeneralization_001").revised_claim.includes("some"), true, "revise packet should include a suggested narrower claim");
+assert.equal(byId.get("memory_pollution_001").routing_target.endsWith("quarantine_memory"), true, "quarantine packet should have a quarantine target");
 
 const reportResult = spawnSync(process.execPath, ["scripts/generate_audit_reports.mjs"], {
   cwd: root,

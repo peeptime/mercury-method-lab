@@ -22,6 +22,7 @@ Audit Packet YAML
   -> structural audit rules
   -> routing decision
   -> JSON audit result
+  -> simulated memory flow
   -> HTML report for humans
 ```
 
@@ -70,14 +71,30 @@ These are refusal points, not success metrics.
 
 ```powershell
 npm run audit
+npm run audit:flow
 npm run report
 npm run test
+npm run audit:profile
 ```
 
 Outputs:
 
 - `dist/audit-results.json`
+- `dist/memory-flow/README.md`
 - `dist/reports/index.html`
 - one HTML report per packet
 
 `dist/` is generated output and is intentionally not versioned.
+
+## Layer Responsibilities
+
+| Layer | Files | Responsibility |
+|---|---|---|
+| Input | `examples/audit-packets/*.yaml` | Durable packet source of truth. |
+| Schema | `scripts/audit-core/audit_schema.mjs` | Required fields and type shape. |
+| Rules | `scripts/audit-core/audit_rules.mjs` | Refusal points, routing, fixes, review path. |
+| Flow | `scripts/simulate_memory_flow.mjs` | Generated accept/revise/quarantine/discard folders. |
+| Report | `scripts/generate_audit_reports.mjs` | Human-readable HTML delivery. |
+| Performance | `scripts/profile_audit_packets.mjs` | Local timing profile for parser and rules. |
+
+The performance path uses concurrent packet reads and Git-backed path discovery before falling back to filesystem scanning.

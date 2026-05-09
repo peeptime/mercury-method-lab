@@ -2,11 +2,14 @@ import { mkdir, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { auditPackets } from "./audit-core/audit_rules.mjs";
-import { readAuditPackets } from "./audit-core/packet_io.mjs";
+import { readAuditPackets, readKnownPaths } from "./audit-core/packet_io.mjs";
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
-const packets = await readAuditPackets(root, "examples/audit-packets");
-const audit = auditPackets(packets);
+const [packets, knownPaths] = await Promise.all([
+  readAuditPackets(root, "examples/audit-packets"),
+  readKnownPaths(root)
+]);
+const audit = auditPackets(packets, { knownPaths });
 const reportsDir = join(root, "dist", "reports");
 
 await mkdir(reportsDir, { recursive: true });
@@ -44,6 +47,7 @@ function renderIndex(auditResult) {
         <span>revise <b>${auditResult.summary.revise}</b></span>
         <span>quarantine <b>${auditResult.summary.quarantine}</b></span>
         <span>discard <b>${auditResult.summary.discard}</b></span>
+        <span>duration <b>${auditResult.summary.duration_ms}ms</b></span>
       </div>
     </section>
     <main class="grid">${cards}</main>
@@ -61,7 +65,15 @@ function renderReport(result) {
       ${panel("Claim", `<p>${escapeHtml(result.claim)}</p>`)}
       ${panel("Evidence", listSection("Source refs", result.source_refs) + listSection("Audit refs", result.audit_refs))}
       ${panel("Blockers", blockerList(result.blockers))}
-      ${panel("Required Fixes", listSection("Fixes", result.required_fixes))}
+      ${panel("Required Fixes", listSection("Fixes", result.required_fixes) + listSection("Required evidence", result.required_evidence))}
+      ${result.revised_claim ? panel("Suggested Revision", `<p>${escapeHtml(result.revised_claim)}</p>`) : ""}
+      ${panel("Routing", `
+        <dl>
+          <dt>Decision reason</dt><dd>${escapeHtml(result.decision_reason)}</dd>
+          <dt>Routing target</dt><dd>${escapeHtml(result.routing_target)}</dd>
+          <dt>Review path</dt><dd>${escapeHtml(result.review_path.join(" -> "))}</dd>
+        </dl>
+      `)}
       ${panel("Human Review", `
         <dl>
           <dt>Required</dt><dd>${result.human_review_required ? "yes" : "no"}</dd>

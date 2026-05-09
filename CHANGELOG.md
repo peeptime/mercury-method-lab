@@ -4,6 +4,26 @@
 
 Every release entry must carry an explicit provenance declaration. Legacy entries that cannot be reconstructed are marked as unverified instead of being silently treated as human-only.
 
+## 1.2.0 — Layered Audit Delivery（2026-05-09）
+
+> Provenance: `[AI_GENERATED]` drafted_by: Codex; humanReviewed: pending; reviewer: project_owner; audit_ref: user request 2026-05-09 layered update
+
+### Added
+
+- `scripts/audit-core/audit_schema.mjs` — schema/shape validation layer for Audit Packets.
+- Reference validation for local `source_refs`, backed by fast Git path discovery with filesystem fallback.
+- Rich audit results with severity summaries, required evidence, suggested revisions, decision reasons, review paths, and routing targets.
+- `npm run audit:flow` — generates simulated accept/revise/quarantine/discard memory-flow folders under `dist/memory-flow/`.
+- `npm run audit:profile` — local timing profile for repeated audit runs.
+- `docs/ITERATION-GUIDE-1.2.0.md` and a simulated FDE field-interview source note.
+
+### Changed
+
+- HTML reports now include routing targets, review paths, required evidence, and suggested revisions.
+- Packet parsing now reads packet files concurrently and avoids repeated full-text scans during YAML parsing.
+- Known-path lookup now prefers `git ls-files --cached --others --exclude-standard -z`, avoiding broad filesystem scans during normal audit runs.
+- Release gate and doctor now know about the expanded audit-flow/profile commands.
+
 ## 1.1.0 — Evidence-First Audit Layer（2026-05-09）
 
 > Provenance: `[AI_GENERATED]` drafted_by: Codex; humanReviewed: pending; reviewer: project_owner; audit_ref: user iteration brief 2026-05-09

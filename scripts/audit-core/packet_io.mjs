@@ -1,30 +1,49 @@
-import { readdir, readFile } from "node:fs/promises";
+import { createHash } from "node:crypto";
+import { spawnSync } from "node:child_process";
+import { readdir, readFile, stat } from "node:fs/promises";
 import { join, relative } from "node:path";
+
+const excludedDirs = new Set([".git", "node_modules", "dist", "coverage", ".cache", ".npm-cache"]);
 
 export async function readAuditPackets(root, inputPath = "examples/audit-packets") {
   const absInput = join(root, ...inputPath.split("/"));
   const entries = await readdir(absInput, { withFileTypes: true });
-  const packets = [];
+  const files = entries
+    .filter((entry) => entry.isFile() && /\.ya?ml$/i.test(entry.name))
+    .map((entry) => join(absInput, entry.name));
 
-  for (const entry of entries) {
-    if (!entry.isFile() || !/\.ya?ml$/i.test(entry.name)) {
-      continue;
-    }
-    const absPath = join(absInput, entry.name);
-    const text = await readFile(absPath, "utf8");
+  const packets = await Promise.all(files.map(async (absPath) => {
+    const [text, fileStat] = await Promise.all([
+      readFile(absPath, "utf8"),
+      stat(absPath)
+    ]);
     const packet = parseSimpleYaml(text);
     packet.__path = relative(root, absPath).replaceAll("\\", "/");
-    packets.push(packet);
-  }
+    packet.__size_bytes = fileStat.size;
+    packet.__mtime = fileStat.mtime.toISOString();
+    packet.__hash = createHash("sha256").update(text).digest("hex");
+    return packet;
+  }));
 
   return packets.sort((left, right) => String(left.id).localeCompare(String(right.id)));
+}
+
+export async function readKnownPaths(root) {
+  const gitPaths = readKnownPathsFromGit(root);
+  if (gitPaths) {
+    return gitPaths;
+  }
+  const files = await listFiles(root);
+  return new Set(files.map((file) => relative(root, file).replaceAll("\\", "/")));
 }
 
 export function parseSimpleYaml(text) {
   const root = {};
   const stack = [{ indent: -1, value: root }];
+  const lines = text.split(/\r?\n/);
 
-  for (const rawLine of text.split(/\r?\n/)) {
+  for (let index = 0; index < lines.length; index += 1) {
+    const rawLine = lines[index];
     const line = rawLine.replace(/\s+#.*$/, "");
     if (!line.trim() || line.trimStart().startsWith("#")) {
       continue;
@@ -53,7 +72,7 @@ export function parseSimpleYaml(text) {
 
     const [, key, rawValue] = match;
     if (rawValue === "") {
-      const nextLine = peekNextMeaningfulLine(text, rawLine);
+      const nextLine = peekNextMeaningfulLine(lines, index);
       const value = nextLine?.trimStart().startsWith("- ") ? [] : {};
       current[key] = value;
       stack.push({ indent, value });
@@ -65,10 +84,8 @@ export function parseSimpleYaml(text) {
   return root;
 }
 
-function peekNextMeaningfulLine(text, currentLine) {
-  const lines = text.split(/\r?\n/);
-  const index = lines.indexOf(currentLine);
-  for (const line of lines.slice(index + 1)) {
+function peekNextMeaningfulLine(lines, currentIndex) {
+  for (const line of lines.slice(currentIndex + 1)) {
     if (line.trim() && !line.trimStart().startsWith("#")) {
       return line;
     }
@@ -95,4 +112,40 @@ function parseScalar(value) {
 
 function unquote(value) {
   return value.replace(/^["']|["']$/g, "");
+}
+
+function readKnownPathsFromGit(root) {
+  const result = spawnSync(
+    "git",
+    ["-c", "core.quotePath=false", "ls-files", "--cached", "--others", "--exclude-standard", "-z"],
+    { cwd: root, encoding: "utf8" }
+  );
+  if (result.status !== 0) {
+    return null;
+  }
+  return new Set(result.stdout.split("\0").filter(Boolean));
+}
+
+async function listFiles(dir) {
+  const output = [];
+  let entries = [];
+  try {
+    entries = await readdir(dir, { withFileTypes: true });
+  } catch {
+    return output;
+  }
+
+  await Promise.all(entries.map(async (entry) => {
+    if (excludedDirs.has(entry.name)) {
+      return;
+    }
+    const absPath = join(dir, entry.name);
+    if (entry.isDirectory()) {
+      output.push(...await listFiles(absPath));
+    } else if (entry.isFile()) {
+      output.push(absPath);
+    }
+  }));
+
+  return output;
 }

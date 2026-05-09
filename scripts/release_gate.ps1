@@ -61,6 +61,7 @@ $cheapOrder = @(
   "index:incr",
   "audit",
   "report",
+  "audit:flow",
   "test",
   "validate",
   "doctor",

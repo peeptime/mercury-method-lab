@@ -1,9 +1,9 @@
 {
   "project_name": "Mercury Method Lab",
   "package_name": "mercury-method-lab",
-  "version": "1.1.0",
-  "codename": "Evidence-First Audit Layer",
-  "status": "evidence-first-audit-layer",
+  "version": "1.2.0",
+  "codename": "Layered Audit Delivery",
+  "status": "layered-audit-delivery",
   "position": "A memory-audit layer for intercepting AI outputs that sound smart but should not enter long-term memory yet.",
   "version_policy": {
     "major": "Breaks artifact, memory, or upstream compatibility contracts.",

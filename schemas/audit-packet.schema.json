@@ -23,6 +23,9 @@
     "type": {
       "type": "string"
     },
+    "sample_type": {
+      "type": "string"
+    },
     "claim": {
       "type": "string"
     },
@@ -46,6 +49,25 @@
         "low",
         "medium",
         "high"
+      ]
+    },
+    "evidence_strength": {
+      "enum": [
+        "weak",
+        "normal",
+        "strong"
+      ]
+    },
+    "boundary": {
+      "type": "string"
+    },
+    "scope": {
+      "type": "string"
+    },
+    "conflicting_evidence": {
+      "type": [
+        "boolean",
+        "string"
       ]
     },
     "expected_decision": {

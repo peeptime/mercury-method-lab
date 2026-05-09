@@ -13,11 +13,11 @@ This file is the short cross-session handoff. Keep it under 120 lines. Do not pa
 
 ## Current Snapshot
 
-- Current public version: `1.1.0`
-- Current posture: evidence-first audit layer
+- Current public version: `1.2.0`
+- Current posture: layered audit delivery
 - Core proof: `docs/v0.9-proof-of-audit.md`
 - Current proof pack: `docs/PROOF-PACK-001.md`
-- Current runnable audit loop: `npm run audit`, `npm run report`, `npm run test`
+- Current runnable audit loop: `npm run audit`, `npm run audit:flow`, `npm run report`, `npm run test`, `npm run audit:profile`
 - Fast checks: `npm run validate:incr`, `npm run index:incr`, `npm run guide:latest`
 - Release gate: `npm run release:gate`
 - Bad-memory proof must continue to export `routing_decision: discard`
@@ -44,4 +44,5 @@ This file is the short cross-session handoff. Keep it under 120 lines. Do not pa
 - Add real Proof Pack cases when they reinforce named failure modes.
 - Continue metadata cleanup where sources are real and already present.
 - Keep Audit Packets small and evidence-first; do not turn this into a general Agent framework.
+- Keep generated `dist/` reports out of commits; regenerate them for local review.
 - Defer backend adapters, AI scoring, RAG, or fine-tuning audit features.

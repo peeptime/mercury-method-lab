@@ -64,6 +64,8 @@ const packageJson = JSON.parse(await readFile(join(root, "package.json"), "utf8"
 for (const scriptName of [
   "dashboard",
   "audit",
+  "audit:flow",
+  "audit:profile",
   "doctor",
   "guide:latest",
   "index",
