@@ -32,6 +32,10 @@ const proofGovernanceUnfreeze = packageJson.version.startsWith("1.9.")
 const v2PreflightUnfreeze = packageJson.version.startsWith("2.0.0-alpha.1")
   && await exists("docs/V2-PREFLIGHT-REQUIREMENTS.md")
   && await exists("docs/V2-WORK-TRAIN.md");
+const v2CaseFoundationUnfreeze = packageJson.version.startsWith("2.0.0-alpha.2")
+  && await exists("docs/REAL-CASES-SUMMARY.md")
+  && await exists("examples/integration-demo/openclaw-hook.mjs")
+  && await exists("examples/starter-kit/hello-audit.mjs");
 const proofPack = await readText("docs/PROOF-PACK-001.md");
 const proofPack002 = await readText("docs/PROOF-PACK-002.md");
 const failureModes = await readText("docs/FAILURE-MODES.md");
@@ -41,7 +45,7 @@ const auditRules = await readText("scripts/audit-core/audit_rules.mjs");
 const htmlReport = await readText("scripts/generate_audit_reports.mjs");
 const liteMode = await readText("dashboard/lite.html");
 
-check("version stays on an explicitly documented unfreeze line", packageJson.version.startsWith("1.2.") || productSurfaceUnfreeze || methodDepthUnfreeze || reviewUxUnfreeze || sdkIntegrationUnfreeze || auditKernelUnfreeze || scenarioPackUnfreeze || proofGovernanceUnfreeze || v2PreflightUnfreeze);
+check("version stays on an explicitly documented unfreeze line", packageJson.version.startsWith("1.2.") || productSurfaceUnfreeze || methodDepthUnfreeze || reviewUxUnfreeze || sdkIntegrationUnfreeze || auditKernelUnfreeze || scenarioPackUnfreeze || proofGovernanceUnfreeze || v2PreflightUnfreeze || v2CaseFoundationUnfreeze);
 if (productSurfaceUnfreeze) {
   warnings.push("product surface / Lite intake patch line detected: method-layer Cycle 02 checks still apply, but v1.3.x is allowed for product UI and entry-friction fixes");
 }
@@ -167,6 +171,23 @@ if (v2PreflightUnfreeze) {
   const workTrain = await readText("docs/V2-WORK-TRAIN.md");
   check("2.0 preflight records Strategy V2 as lower-weight", preflight.includes("lower-weight historical strategy input"));
   check("2.0 work train maps alpha releases", workTrain.includes("v2.0.0-alpha.2") && workTrain.includes("v2.0.0"));
+}
+if (v2CaseFoundationUnfreeze) {
+  warnings.push("2.0 real case foundation line detected: alpha.2 is allowed for structured cases, OpenClaw hook, and Starter Kit");
+  for (const path of [
+    "docs/REAL-CASES-SUMMARY.md",
+    "scripts/build_real_cases.mjs",
+    "scripts/check_real_cases.mjs",
+    "examples/integration-demo/openclaw-hook.mjs",
+    "examples/starter-kit/README.md",
+    "examples/starter-kit/hello-audit.mjs",
+    "cases/2026-05"
+  ]) {
+    check(`2.0 case foundation artifact exists: ${path}`, await exists(path));
+  }
+  const summary = await readText("docs/REAL-CASES-SUMMARY.md");
+  check("real case summary records at least 10 cases", /total_cases:\s*10/.test(summary));
+  check("package exposes case and integration scripts", Boolean(packageJson.scripts?.["cases:build"]) && Boolean(packageJson.scripts?.["demo:openclaw"]) && Boolean(packageJson.scripts?.["demo:starter"]));
 }
 
 const cases = splitSections(proofPack, /^## Case \d{3}:[^\n]*$/gm);

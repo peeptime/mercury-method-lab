@@ -36,7 +36,9 @@ Keep the project stable, narrow, and cheap to reactivate:
 - use \`v1.8.x\` for scenario packs, adapter contract, and scenario-aware review UX
 - use \`v1.9.x\` for Proof Pack 002, rule version governance, lifecycle governance, human-review disagreement, and anti-gaming tests
 - use \`v2.0.0-alpha.1\` for evidence-chain preflight, strategy weighting, and work-train release mapping
+- use \`v2.0.0-alpha.2\` for structured case generation, OpenClaw-compatible hook demo, and Starter Kit
 - use \`docs/V2-PREFLIGHT-REQUIREMENTS.md\` and \`docs/V2-WORK-TRAIN.md\` before starting any 2.0 tranche
+- use \`npm run cases:build\`, \`npm run cases:check\`, \`npm run demo:openclaw\`, and \`npm run demo:starter\` before claiming case/integration readiness
 - deepen proof cases, failure modes, review ledger, and real charter-user records before adding product surface
 - use \`docs/START-HERE.md\` as the role-based entry point for humans and agents
 - use \`docs/SCOPE.md\` before adding storage, database, or ecosystem recommendations

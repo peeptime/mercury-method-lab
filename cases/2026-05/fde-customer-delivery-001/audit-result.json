@@ -1,0 +1,163 @@
+{
+  "case_origin": "repository_audit_packet",
+  "source_path": "examples/audit-packets/fde_customer_delivery_case.yaml",
+  "packet_id": "fde_customer_delivery_001",
+  "packet_title": "Customer knowledge-base agent delivery summary",
+  "packet_path": "examples/audit-packets/fde_customer_delivery_case.yaml",
+  "type": "fde_customer_delivery",
+  "claim": "The client is ready to let an internal AI agent rewrite the knowledge base.",
+  "routing_decision": "quarantine",
+  "blockers": [
+    {
+      "id": "missing_audit_refs",
+      "severity": "medium",
+      "message": "No audit reference supports durable use of the claim."
+    }
+  ],
+  "severity_summary": {
+    "critical": 0,
+    "high": 0,
+    "medium": 1,
+    "low": 0
+  },
+  "warnings": [
+    "Customer/FDE delivery packets require human review even when structurally complete."
+  ],
+  "content_summary": {
+    "core_claim": "The client is ready to let an internal AI agent rewrite the knowledge base.",
+    "attribution": "Claim is attributed to source_refs: examples/audit-packets/field-interview-notes-2026-05-09.md.",
+    "confidence": "medium",
+    "confidence_basis": "Medium: source_refs exist, but audit_refs are missing.",
+    "ownership_note": "Customer/FDE material: preserve speaker, context, and dissent before delivery use.",
+    "visible_to_user": true
+  },
+  "human_review_checklist": [
+    {
+      "id": "source-statement",
+      "target_section": "Claim / Source refs",
+      "prompt": "请确认核心主张是否真的被原始来源支持。",
+      "claim_excerpt": "The client is ready to let an internal AI agent rewrite the knowledge base.",
+      "source_hint": "examples/audit-packets/field-interview-notes-2026-05-09.md",
+      "recommended_option": "A",
+      "options": [
+        {
+          "id": "A",
+          "label": "原文或可追溯来源支持",
+          "effect": "Source can remain attached to the claim."
+        },
+        {
+          "id": "B",
+          "label": "只是 AI 转述或推测",
+          "effect": "Keep or move to quarantine; add source_refs before durable use."
+        },
+        {
+          "id": "C",
+          "label": "不确定 / 需要人工补充说明",
+          "effect": "Record reviewer note and keep review open."
+        }
+      ]
+    },
+    {
+      "id": "confidence-statement",
+      "target_section": "Confidence / Evidence gap",
+      "prompt": "请确认当前置信度是否匹配证据强度。",
+      "claim_excerpt": "Medium: source_refs exist, but audit_refs are missing.",
+      "source_hint": "missing_audit_refs",
+      "recommended_option": "B",
+      "options": [
+        {
+          "id": "A",
+          "label": "证据足够，维持当前置信度",
+          "effect": "Reviewer accepts the confidence statement."
+        },
+        {
+          "id": "B",
+          "label": "需要补充证据或降低置信度",
+          "effect": "Keep decision at revise/quarantine until evidence is added."
+        },
+        {
+          "id": "C",
+          "label": "不确定 / 需要第二人复核",
+          "effect": "Escalate to human review ledger."
+        }
+      ]
+    },
+    {
+      "id": "attribution-statement",
+      "target_section": "Attribution / Audit refs",
+      "prompt": "请确认这条结论的归属是否正确：用户原话、现场观察、顾问框架，还是 AI 推断。",
+      "claim_excerpt": "Customer/FDE material: preserve speaker, context, and dissent before delivery use.",
+      "source_hint": "missing_audit_refs",
+      "recommended_option": "B",
+      "options": [
+        {
+          "id": "A",
+          "label": "归属正确，可以保留",
+          "effect": "Attribution can be used in the report."
+        },
+        {
+          "id": "B",
+          "label": "归属需要改写",
+          "effect": "Revise attribution before report or memory use."
+        },
+        {
+          "id": "C",
+          "label": "不确定 / 自定义归属",
+          "effect": "Reviewer supplies a custom attribution note."
+        }
+      ]
+    },
+    {
+      "id": "route-confirmation",
+      "target_section": "Routing decision",
+      "prompt": "请确认处理方式是否应保持为 quarantine。",
+      "claim_excerpt": "Current decision: quarantine",
+      "source_hint": "1 blocker(s), type=fde_customer_delivery",
+      "recommended_option": "B",
+      "options": [
+        {
+          "id": "A",
+          "label": "同意当前处理方式",
+          "effect": "Record reviewer agreement with the route."
+        },
+        {
+          "id": "B",
+          "label": "需要修改后再决定",
+          "effect": "Keep item open and add required fixes."
+        },
+        {
+          "id": "C",
+          "label": "不同意 / 另写处理方式",
+          "effect": "Record custom route note for review ledger."
+        }
+      ]
+    }
+  ],
+  "required_fixes": [
+    "Add audit_refs or run a human/structural audit before durable use."
+  ],
+  "required_evidence": [
+    "At least one audit reference that checks the claim before durable use."
+  ],
+  "revised_claim": "",
+  "decision_reason": "fde_customer_delivery routed to quarantine because: missing_audit_refs.",
+  "review_path": [
+    "packet",
+    "structural_audit",
+    "quarantine",
+    "human_review"
+  ],
+  "routing_target": "dist/memory-flow/quarantine_memory",
+  "confidence": "medium",
+  "human_review_required": true,
+  "source_refs": [
+    "examples/audit-packets/field-interview-notes-2026-05-09.md"
+  ],
+  "audit_refs": [],
+  "expected_decision": "quarantine",
+  "expected_blockers": [
+    "missing_audit_refs"
+  ],
+  "packet_hash": "c9b882a95914f3b4e3e43b2ed9f414aedb8b2c628ccc7a7703d45fc423d074bf",
+  "size_bytes": 751
+}

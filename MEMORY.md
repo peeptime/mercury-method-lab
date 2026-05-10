@@ -13,8 +13,8 @@ This file is the short cross-session handoff. Keep it under 120 lines. Do not pa
 
 ## Current Snapshot
 
-- Current public version: `2.0.0-alpha.1`
-- Current posture: Evidence Chain Preflight
+- Current public version: `2.0.0-alpha.2`
+- Current posture: Real Case Foundation
 - Core proof: `docs/v0.9-proof-of-audit.md`
 - Current proof packs: `docs/PROOF-PACK-001.md`, `docs/PROOF-PACK-002.md`
 - Current runnable audit loop: `npm run audit`, `npm run audit:flow`, `npm run report`, `npm run test`, `npm run audit:profile`
@@ -28,6 +28,7 @@ This file is the short cross-session handoff. Keep it under 120 lines. Do not pa
 - Current scenario docs: `docs/SCENARIO-PACKS.md`, `docs/ADAPTER-CONTRACT.md`, `docs/REVIEW-UX-GUIDE.md`
 - Current governance docs: `docs/RULE-VERSION-GOVERNANCE.md`, `docs/MEMORY-LIFECYCLE-GOVERNANCE.md`, `docs/HUMAN-REVIEW-DISAGREEMENT.md`, `docs/ANTI-GAMING-TESTS.md`
 - Current v2.0 preflight docs: `docs/V2-PREFLIGHT-REQUIREMENTS.md`, `docs/V2-WORK-TRAIN.md`
+- Current v2.0 case docs: `docs/REAL-CASES-SUMMARY.md`, `cases/2026-05/`, `examples/starter-kit/`, `examples/integration-demo/openclaw-hook.mjs`
 - Release gate: `npm run release:gate`
 - Bad-memory proof must continue to export `routing_decision: discard`
 
@@ -50,6 +51,7 @@ This file is the short cross-session handoff. Keep it under 120 lines. Do not pa
 - `v1.8.0` adds reusable scenario packs and scenario-aware review guidance; still no production adapter.
 - `v1.9.0` adds Proof Pack 002, ruleset versioning, anti-gaming tests, lifecycle governance, and human-review disagreement guidance; still AI-assisted and `human_reviewed: declined`.
 - `v2.0.0-alpha.1` locks the 2.0 evidence-chain work train and records that `docs/ITERATION-STRATEGY-V2.md` is lower-weight diagnostic input, not a hard-freeze policy.
+- `v2.0.0-alpha.2` adds reproducible local case folders, an OpenClaw-compatible hook demo, and a Starter Kit; these are still AI-assisted and `human_reviewed: declined`.
 - Current dashboard has runtime preferences in `config/preferences.json`; do not confuse them with durable project memory.
 - `karpathy-guidelines` skill is installed locally; restart Codex before expecting automatic skill activation.
 - `docs/ITERATION-STRATEGY-V2.md` is lower-weight historical strategy input: keep its problem diagnosis, but do not inherit its hard freeze/release restrictions.
@@ -75,7 +77,7 @@ This file is the short cross-session handoff. Keep it under 120 lines. Do not pa
 - Use `v1.8.x` for scenario packs, adapter contract, and scenario-aware review UX.
 - Use `v1.9.x` for Proof Pack 002, rule version governance, lifecycle governance, human-review disagreement, and anti-gaming tests.
 - Use `docs/V2-PREFLIGHT-REQUIREMENTS.md` and `docs/V2-WORK-TRAIN.md` before starting any 2.0 package.
-- Use `v2.0.0-alpha.2` next for structured cases, OpenClaw demo, and Starter Kit.
+- Use `v2.0.0-alpha.3` next for evidence-chain SDK/review UX, drag attach, and A2A blueprint.
 - Do not add official failure modes without proof-pack or coverage-matrix support.
 - Do not silently migrate old accepted memories to a new ruleset without a re-audit record.
 - Do not let route-forcing or forged-review instructions pass as ordinary packet content.

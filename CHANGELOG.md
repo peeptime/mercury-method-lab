@@ -4,6 +4,22 @@
 
 Every release entry must carry an explicit provenance declaration. Legacy entries that cannot be reconstructed are marked as unverified instead of being silently treated as human-only.
 
+## 2.0.0-alpha.2 - Real Case Foundation (2026-05-10)
+> Provenance: `[AI_GENERATED]` drafted_by: Codex; humanReviewed: declined; reviewer: project_owner_pending; audit_ref: docs/REAL-CASES-SUMMARY.md
+
+### Added
+
+- `scripts/build_real_cases.mjs` builds reproducible structured cases under `cases/2026-05/`.
+- `scripts/check_real_cases.mjs` validates that each case has input, audit result, review status, and at least one case for each routing decision.
+- `docs/REAL-CASES-SUMMARY.md` summarizes 10 local repository cases without pretending they are external human records.
+- `examples/integration-demo/openclaw-hook.mjs` simulates an OpenClaw-compatible memory write hook that blocks one unsafe candidate and accepts one scoped candidate.
+- `examples/starter-kit/` demonstrates the smallest SDK path for new users.
+
+### Changed
+
+- Release gate now runs case build/check plus the OpenClaw and Starter Kit demos.
+- Doctor and cycle checks now recognize the case foundation and integration-demo artifacts.
+
 ## 2.0.0-alpha.1 - Evidence Chain Preflight (2026-05-10)
 > Provenance: `[AI_GENERATED]` drafted_by: Codex; humanReviewed: declined; reviewer: project_owner_pending; audit_ref: docs/V2-PREFLIGHT-REQUIREMENTS.md
 

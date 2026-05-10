@@ -1,0 +1,127 @@
+{
+  "case_origin": "repository_audit_packet",
+  "source_path": "examples/audit-packets/valid_project_decision_case.yaml",
+  "packet_id": "valid_project_decision_001",
+  "packet_title": "Evidence-backed project decision",
+  "packet_path": "examples/audit-packets/valid_project_decision_case.yaml",
+  "type": "project_decision",
+  "claim": "Mercury Method Lab should keep Markdown/YAML as source of truth and use HTML as a delivery/reporting layer.",
+  "routing_decision": "accept",
+  "blockers": [],
+  "severity_summary": {
+    "critical": 0,
+    "high": 0,
+    "medium": 0,
+    "low": 0
+  },
+  "warnings": [],
+  "content_summary": {
+    "core_claim": "Mercury Method Lab should keep Markdown/YAML as source of truth and use HTML as a delivery/reporting layer.",
+    "attribution": "Claim is attributed to source_refs: docs/AGENT-CONTEXT-BUDGET.md, docs/PROOF-PACK-001.md.",
+    "confidence": "high",
+    "confidence_basis": "High: source_refs and audit_refs are present and no blocker fired.",
+    "ownership_note": "General audit packet: distinguish user statement, AI inference, and project-owner judgment.",
+    "visible_to_user": true
+  },
+  "human_review_checklist": [
+    {
+      "id": "source-statement",
+      "target_section": "Claim / Source refs",
+      "prompt": "请确认核心主张是否真的被原始来源支持。",
+      "claim_excerpt": "Mercury Method Lab should keep Markdown/YAML as source of truth and use HTML as a delivery/reporting layer.",
+      "source_hint": "docs/AGENT-CONTEXT-BUDGET.md",
+      "recommended_option": "A",
+      "options": [
+        {
+          "id": "A",
+          "label": "原文或可追溯来源支持",
+          "effect": "Source can remain attached to the claim."
+        },
+        {
+          "id": "B",
+          "label": "只是 AI 转述或推测",
+          "effect": "Keep or move to quarantine; add source_refs before durable use."
+        },
+        {
+          "id": "C",
+          "label": "不确定 / 需要人工补充说明",
+          "effect": "Record reviewer note and keep review open."
+        }
+      ]
+    },
+    {
+      "id": "confidence-statement",
+      "target_section": "Confidence / Evidence gap",
+      "prompt": "请确认当前置信度是否匹配证据强度。",
+      "claim_excerpt": "High: source_refs and audit_refs are present and no blocker fired.",
+      "source_hint": "no structural blockers",
+      "recommended_option": "A",
+      "options": [
+        {
+          "id": "A",
+          "label": "证据足够，维持当前置信度",
+          "effect": "Reviewer accepts the confidence statement."
+        },
+        {
+          "id": "B",
+          "label": "需要补充证据或降低置信度",
+          "effect": "Keep decision at revise/quarantine until evidence is added."
+        },
+        {
+          "id": "C",
+          "label": "不确定 / 需要第二人复核",
+          "effect": "Escalate to human review ledger."
+        }
+      ]
+    },
+    {
+      "id": "attribution-statement",
+      "target_section": "Attribution / Audit refs",
+      "prompt": "请确认这条结论的归属是否正确：用户原话、现场观察、顾问框架，还是 AI 推断。",
+      "claim_excerpt": "General audit packet: distinguish user statement, AI inference, and project-owner judgment.",
+      "source_hint": "docs/AUDIT-METRICS-DECLINED.md",
+      "recommended_option": "A",
+      "options": [
+        {
+          "id": "A",
+          "label": "归属正确，可以保留",
+          "effect": "Attribution can be used in the report."
+        },
+        {
+          "id": "B",
+          "label": "归属需要改写",
+          "effect": "Revise attribution before report or memory use."
+        },
+        {
+          "id": "C",
+          "label": "不确定 / 自定义归属",
+          "effect": "Reviewer supplies a custom attribution note."
+        }
+      ]
+    }
+  ],
+  "required_fixes": [],
+  "required_evidence": [],
+  "revised_claim": "",
+  "decision_reason": "No refusal point triggered; source and audit references are present.",
+  "review_path": [
+    "packet",
+    "structural_audit",
+    "accept"
+  ],
+  "routing_target": "dist/memory-flow/accepted_memory",
+  "confidence": "high",
+  "human_review_required": false,
+  "source_refs": [
+    "docs/AGENT-CONTEXT-BUDGET.md",
+    "docs/PROOF-PACK-001.md"
+  ],
+  "audit_refs": [
+    "docs/AUDIT-METRICS-DECLINED.md",
+    "docs/CHECKLIST-REACTIVATION.md"
+  ],
+  "expected_decision": "accept",
+  "expected_blockers": [],
+  "packet_hash": "dbbd0a92f6177603400c66f5887f53336372682c637d9c4001717187daad9594",
+  "size_bytes": 718
+}

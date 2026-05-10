@@ -59,6 +59,10 @@ if (packageJson.version.startsWith("2.0.0-alpha.1")) {
   console.log("v2_preflight_docs: v2-preflight-requirements/v2-work-train");
   console.log("v2_preflight_outputs: evidence-chain work train/strategy-weighting/release mapping");
 }
+if (packageJson.version.startsWith("2.0.0-alpha.2")) {
+  console.log("v2_case_docs: real-cases-summary/starter-kit");
+  console.log("v2_case_outputs: structured cases/openclaw-hook/starter-demo");
+}
 console.log("");
 console.log("next_low_token_commands:");
 console.log("  npm run cycle:check");
@@ -94,5 +98,6 @@ function cycleLine(version) {
   if (version.startsWith("1.8.")) return "v1.8.x open scenario packs";
   if (version.startsWith("1.9.")) return "v1.9.x proof governance expansion";
   if (version.startsWith("2.0.0-alpha.1")) return "v2.0.0-alpha.1 evidence-chain preflight";
+  if (version.startsWith("2.0.0-alpha.2")) return "v2.0.0-alpha.2 real case foundation";
   return "outside documented Cycle 02/04 line";
 }

@@ -1,0 +1,175 @@
+{
+  "case_origin": "repository_audit_packet",
+  "source_path": "examples/audit-packets/memory_pollution_case.yaml",
+  "packet_id": "memory_pollution_001",
+  "packet_title": "Unsupported long-term memory candidate",
+  "packet_path": "examples/audit-packets/memory_pollution_case.yaml",
+  "type": "memory_candidate",
+  "claim": "The user always prefers HTML over Markdown for all future project outputs.",
+  "routing_decision": "quarantine",
+  "blockers": [
+    {
+      "id": "missing_source_refs",
+      "severity": "high",
+      "message": "No source reference supports the claim."
+    },
+    {
+      "id": "overgeneralization",
+      "severity": "medium",
+      "message": "The claim uses absolute language without strong evidence."
+    },
+    {
+      "id": "unsafe_memory_write",
+      "severity": "critical",
+      "message": "The claim is high-risk and targets durable memory or project positioning."
+    }
+  ],
+  "severity_summary": {
+    "critical": 1,
+    "high": 1,
+    "medium": 1,
+    "low": 0
+  },
+  "warnings": [],
+  "content_summary": {
+    "core_claim": "The user always prefers HTML over Markdown for all future project outputs.",
+    "attribution": "No source_refs are present; treat attribution as unverified until review.",
+    "confidence": "low",
+    "confidence_basis": "Low: no source_refs are present.",
+    "ownership_note": "Long-term memory candidate: do not attribute to the user unless the source explicitly supports it.",
+    "visible_to_user": true
+  },
+  "human_review_checklist": [
+    {
+      "id": "source-statement",
+      "target_section": "Claim / Source refs",
+      "prompt": "请确认核心主张是否真的被原始来源支持。",
+      "claim_excerpt": "The user always prefers HTML over Markdown for all future project outputs.",
+      "source_hint": "missing_source_refs",
+      "recommended_option": "B",
+      "options": [
+        {
+          "id": "A",
+          "label": "原文或可追溯来源支持",
+          "effect": "Source can remain attached to the claim."
+        },
+        {
+          "id": "B",
+          "label": "只是 AI 转述或推测",
+          "effect": "Keep or move to quarantine; add source_refs before durable use."
+        },
+        {
+          "id": "C",
+          "label": "不确定 / 需要人工补充说明",
+          "effect": "Record reviewer note and keep review open."
+        }
+      ]
+    },
+    {
+      "id": "confidence-statement",
+      "target_section": "Confidence / Evidence gap",
+      "prompt": "请确认当前置信度是否匹配证据强度。",
+      "claim_excerpt": "Low: no source_refs are present.",
+      "source_hint": "missing_source_refs, overgeneralization, unsafe_memory_write",
+      "recommended_option": "B",
+      "options": [
+        {
+          "id": "A",
+          "label": "证据足够，维持当前置信度",
+          "effect": "Reviewer accepts the confidence statement."
+        },
+        {
+          "id": "B",
+          "label": "需要补充证据或降低置信度",
+          "effect": "Keep decision at revise/quarantine until evidence is added."
+        },
+        {
+          "id": "C",
+          "label": "不确定 / 需要第二人复核",
+          "effect": "Escalate to human review ledger."
+        }
+      ]
+    },
+    {
+      "id": "attribution-statement",
+      "target_section": "Attribution / Audit refs",
+      "prompt": "请确认这条结论的归属是否正确：用户原话、现场观察、顾问框架，还是 AI 推断。",
+      "claim_excerpt": "Long-term memory candidate: do not attribute to the user unless the source explicitly supports it.",
+      "source_hint": "docs/AGENT-CONTEXT-BUDGET.md",
+      "recommended_option": "A",
+      "options": [
+        {
+          "id": "A",
+          "label": "归属正确，可以保留",
+          "effect": "Attribution can be used in the report."
+        },
+        {
+          "id": "B",
+          "label": "归属需要改写",
+          "effect": "Revise attribution before report or memory use."
+        },
+        {
+          "id": "C",
+          "label": "不确定 / 自定义归属",
+          "effect": "Reviewer supplies a custom attribution note."
+        }
+      ]
+    },
+    {
+      "id": "route-confirmation",
+      "target_section": "Routing decision",
+      "prompt": "请确认处理方式是否应保持为 quarantine。",
+      "claim_excerpt": "Current decision: quarantine",
+      "source_hint": "3 blocker(s), type=memory_candidate",
+      "recommended_option": "B",
+      "options": [
+        {
+          "id": "A",
+          "label": "同意当前处理方式",
+          "effect": "Record reviewer agreement with the route."
+        },
+        {
+          "id": "B",
+          "label": "需要修改后再决定",
+          "effect": "Keep item open and add required fixes."
+        },
+        {
+          "id": "C",
+          "label": "不同意 / 另写处理方式",
+          "effect": "Record custom route note for review ledger."
+        }
+      ]
+    }
+  ],
+  "required_fixes": [
+    "Add concrete source_refs before this claim can enter any durable system.",
+    "Narrow absolute wording or add stronger evidence for the universal claim.",
+    "Require human review before any long-term memory write."
+  ],
+  "required_evidence": [
+    "At least one source reference tied to the original claim."
+  ],
+  "revised_claim": "The user often prefers HTML over Markdown for some future project outputs.",
+  "decision_reason": "memory_candidate routed to quarantine because: missing_source_refs, overgeneralization, unsafe_memory_write.",
+  "review_path": [
+    "packet",
+    "structural_audit",
+    "quarantine",
+    "human_review"
+  ],
+  "routing_target": "dist/memory-flow/quarantine_memory",
+  "confidence": "low",
+  "human_review_required": true,
+  "source_refs": [],
+  "audit_refs": [
+    "docs/AGENT-CONTEXT-BUDGET.md"
+  ],
+  "expected_decision": "quarantine",
+  "expected_blockers": [
+    "missing_source_refs",
+    "overgeneralization",
+    "unsafe_memory_write"
+  ],
+  "packet_hash": "89829deb7f6abf99ccca9b177f5a39abcd233d8f3b7df091f72bd954d1862d64",
+  "size_bytes": 629
+}

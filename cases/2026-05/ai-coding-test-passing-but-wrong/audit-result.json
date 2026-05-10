@@ -1,0 +1,40 @@
+{
+  "case_origin": "sdk_structural_case",
+  "source_path": "generated_by:scripts/build_real_cases.mjs",
+  "packet_id": "sdk_88effb265ab2",
+  "title": "AI coding claim passes tests but overstates correctness",
+  "routing_decision": "revise",
+  "failure_modes": [],
+  "blockers": [],
+  "warnings": [
+    "source_floor_not_met:traceable"
+  ],
+  "required_fixes": [
+    "Add a source at or above credibility floor: traceable."
+  ],
+  "required_evidence": [],
+  "human_review_required": false,
+  "confidence": "high",
+  "content_summary": {
+    "core_claim": "The bug is fully fixed because the unit tests pass, so no human review is needed.",
+    "attribution": "Claim is attributed to source_refs: test:unit-output.",
+    "confidence": "high",
+    "confidence_basis": "High: source_refs and audit_refs are present and no blocker fired.",
+    "ownership_note": "General audit packet: distinguish user statement, AI inference, and project-owner judgment.",
+    "visible_to_user": true
+  },
+  "provenance": {
+    "ai_assisted": true,
+    "human_reviewed": "declined",
+    "reviewer": "host_system_pending",
+    "source_refs": [
+      "test:unit-output"
+    ],
+    "audit_refs": [
+      "docs/PROOF-PACK-002.md"
+    ],
+    "generated_by": "mercury-audit-sdk",
+    "generated_at": "2026-05-10T15:17:45.337Z"
+  },
+  "ruleset_version": "2026.05.10.1"
+}

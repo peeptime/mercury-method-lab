@@ -1,0 +1,40 @@
+{
+  "case_origin": "sdk_structural_case",
+  "source_path": "generated_by:scripts/build_real_cases.mjs",
+  "packet_id": "sdk_71aadf68434f",
+  "title": "A once-true scheduling memory needs lifecycle review",
+  "routing_decision": "revise",
+  "failure_modes": [],
+  "blockers": [],
+  "warnings": [
+    "source_floor_not_met:traceable"
+  ],
+  "required_fixes": [
+    "Add a source at or above credibility floor: traceable."
+  ],
+  "required_evidence": [],
+  "human_review_required": false,
+  "confidence": "high",
+  "content_summary": {
+    "core_claim": "The sprint deadline is May 10, 2026 and should be reused in future planning.",
+    "attribution": "Claim is attributed to source_refs: calendar:2026-05-10-sprint-note.",
+    "confidence": "high",
+    "confidence_basis": "High: source_refs and audit_refs are present and no blocker fired.",
+    "ownership_note": "Long-term memory candidate: do not attribute to the user unless the source explicitly supports it.",
+    "visible_to_user": true
+  },
+  "provenance": {
+    "ai_assisted": true,
+    "human_reviewed": "declined",
+    "reviewer": "host_system_pending",
+    "source_refs": [
+      "calendar:2026-05-10-sprint-note"
+    ],
+    "audit_refs": [
+      "docs/MEMORY-LIFECYCLE-GOVERNANCE.md"
+    ],
+    "generated_by": "mercury-audit-sdk",
+    "generated_at": "2026-05-10T15:17:45.338Z"
+  },
+  "ruleset_version": "2026.05.10.1"
+}

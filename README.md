@@ -2,9 +2,9 @@
 
 **不让聪明变成垃圾。**
 
-Version: `2.0.0-alpha.1`
+Version: `2.0.0-alpha.2`
 
-Latest release: [v2.0.0-alpha.1 Evidence Chain Preflight](https://github.com/peeptime/mercury-method-lab/releases/tag/v2.0.0-alpha.1)
+Latest release: [v2.0.0-alpha.2 Real Case Foundation](https://github.com/peeptime/mercury-method-lab/releases/tag/v2.0.0-alpha.2)
 
 ```yaml
 provenance:
@@ -17,6 +17,23 @@ provenance:
     Until referenced docs are human-reviewed, the project README cannot claim true.
   audit_ref: docs/REVIEW-LEDGER.md
 ```
+
+---
+
+## Real Case Foundation v2.0.0-alpha.2
+
+Mercury now has a reproducible local case foundation and two small integration entry points:
+
+```powershell
+npm run cases:build
+npm run cases:check
+npm run demo:openclaw
+npm run demo:starter
+```
+
+The case folders live under `cases/2026-05/` and keep `input.md`, `audit-result.json`, and `review-status.yaml` together. These are reproducible repository cases, not fake external charter users and not human-approved benchmark claims.
+
+See `docs/REAL-CASES-SUMMARY.md`, `examples/integration-demo/openclaw-hook.mjs`, and `examples/starter-kit/README.md`.
 
 ---
 

@@ -1,0 +1,36 @@
+{
+  "case_origin": "integration_simulation",
+  "source_path": "generated_by:scripts/build_real_cases.mjs",
+  "packet_id": "sdk_bae5f39f0127",
+  "title": "OpenClaw hook accepts scoped source-of-truth boundary",
+  "routing_decision": "accept",
+  "failure_modes": [],
+  "blockers": [],
+  "warnings": [],
+  "required_fixes": [],
+  "required_evidence": [],
+  "human_review_required": false,
+  "confidence": "high",
+  "content_summary": {
+    "core_claim": "The user wants Markdown/YAML to remain the source of truth and HTML to remain the delivery layer.",
+    "attribution": "Claim is attributed to source_refs: conversation:2026-05-10-format-boundary.",
+    "confidence": "high",
+    "confidence_basis": "High: source_refs and audit_refs are present and no blocker fired.",
+    "ownership_note": "Long-term memory candidate: do not attribute to the user unless the source explicitly supports it.",
+    "visible_to_user": true
+  },
+  "provenance": {
+    "ai_assisted": true,
+    "human_reviewed": "declined",
+    "reviewer": "host_system_pending",
+    "source_refs": [
+      "conversation:2026-05-10-format-boundary"
+    ],
+    "audit_refs": [
+      "docs/SCOPE.md"
+    ],
+    "generated_by": "mercury-audit-sdk",
+    "generated_at": "2026-05-10T15:17:45.337Z"
+  },
+  "ruleset_version": "2026.05.10.1"
+}
