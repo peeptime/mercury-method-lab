@@ -4,6 +4,8 @@
 
 Version: `1.3.0`
 
+Latest release: [v1.3.0 Product Surface Pressure Test](https://github.com/peeptime/mercury-method-lab/releases/tag/v1.3.0)
+
 ```yaml
 provenance:
   authors: project_owner + QClaw
@@ -46,7 +48,9 @@ The short-term reactivation does not expand features. It accumulates real interc
 
 `docs/PROOF-PACK-001.md` records the first proof-pack seed: each case explains why the source narrative sounds plausible, what evidence is missing, how it could pollute long-term memory, and how Mercury should route it.
 
-Cycle 02 is locked in `docs/CYCLE-02-COMMITMENT.md`: no `v1.3.0`, no new major framework names, and no fake human review or charter users.
+Cycle 02 method work is locked in `docs/CYCLE-02-COMMITMENT.md`: no new major framework names, no fake human review, and no fake charter users.
+
+`v1.3.0` is a separately documented product-surface unfreeze limited to dashboard, Lite Mode, settings, and entry-point usability. See `docs/PRODUCT-SURFACE-PRESSURE-TEST.md`.
 
 Low-token reactivation:
 
@@ -90,6 +94,13 @@ npm run dashboard       # Full Dashboard: settings / onboarding / notifications 
 npm run dashboard:check # Static product-layer and Lite Mode check
 ```
 
+After local startup:
+
+```text
+Full Dashboard: http://127.0.0.1:4788
+Lite Mode:      http://127.0.0.1:4788/lite.html
+```
+
 - `dashboard/lite.html` is a single-file Lite Mode for paste, audit, result review, and copy-as-Markdown.
 - Full Dashboard adds 7 settings categories, first-run onboarding, command palette, icons, toast/system notifications, and recoverable error UI.
 - Lite output keeps `human_reviewed: declined` by default and does not bypass the audit contract.
@@ -112,6 +123,7 @@ npm run dashboard:check # Static product-layer and Lite Mode check
 npm run validate   # audit all artifacts for provenance declarations
 npm run index     # rebuild JSON index
 npm run doctor    # diagnose system state
+npm run release:gate # current release gate
 ```
 
 All three must pass before the project is considered reproducible.
@@ -248,7 +260,8 @@ Not everything needs to be acted on. Sometimes writing it down is enough.
 | Pre-audit contract | `docs/AUDIT-CONTRACT.md` |
 | AI collaboration paradox fix | `docs/METHODOLOGY-INTEGRITY.md` |
 | Why success metrics are dangerous | `docs/AUDIT-METRICS-DECLINED.md` |
-| v1.0 freeze guide | `docs/ITERATION-GUIDE-1.3.0.md` |
+| v1.3.0 product iteration guide | `docs/ITERATION-GUIDE-1.3.0.md` |
+| Product surface pressure test | `docs/PRODUCT-SURFACE-PRESSURE-TEST.md` |
 | Version history | `CHANGELOG.md` |
 | Governance principles | `docs/GOVERNANCE.md` |
 
