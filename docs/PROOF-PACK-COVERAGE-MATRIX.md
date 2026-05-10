@@ -26,25 +26,31 @@ Proof Pack 001 is a pilot set, not a complete benchmark. Its job is to expose wh
 | 008 AI collaboration review | provenance / review | revise | Governance and Measurement | FM-16, FM-17, FM-18 |
 | 009 Category strategy | positioning / strategy | revise | Validation Leap | FM-19, FM-22 |
 | 010 Release velocity | repo maturity signal | revise | Validation Leap | FM-20, FM-21, FM-22 |
+| 011 Multi-agent contamination | multi-agent memory chain | quarantine | Evidence Lineage | FM-23, FM-01, FM-06 |
+| 012 Stale memory reuse | time-sensitive memory | revise | Memory Lifecycle | FM-24, stale_context |
+| 013 Test-passing code claim | code generation | revise | Validation Leap | FM-25, FM-10 |
+| 014 Chart overclaim | data analysis / chart | revise | Validation Leap | FM-26, FM-11 |
+| 015 Human review disagreement | review governance | quarantine | Governance and Measurement | FM-27, FM-17 |
+| 016 Audit gaming attempt | governance attack | discard | Governance and Measurement | FM-28, FM-17, FM-15 |
 
 ## Route Coverage
 
 | Route | Cases | Current Support | Gap |
 |---|---|---|---|
 | accept | 006 | Thin but present | Needs more narrow, positive examples so Mercury is not refusal-only. |
-| revise | 001, 005, 008, 009, 010 | Strongest | Needs more non-text output examples. |
-| quarantine | 002, 004 | Adequate pilot support | Needs multi-agent and stale-memory cases. |
-| discard | 003, 007 | Adequate pilot support | Needs code/data cases where removal is justified. |
+| revise | 001, 005, 008, 009, 010, 012, 013, 014 | Strongest | Needs more accept near-misses for code and data. |
+| quarantine | 002, 004, 011, 015 | Stronger after Proof Pack 002 | Needs real external user cases. |
+| discard | 003, 007, 016 | Adequate pilot support | Needs more explicit manipulation and unsafe-write cases. |
 
 ## Failure Mode Coverage
 
 | Family | Covered FMs | Coverage Quality | Missing Pressure |
 |---|---|---|---|
-| Evidence Lineage | FM-01, FM-02, FM-03, FM-12, FM-18 | Good pilot coverage | Multi-agent source contamination and generated-source reuse. |
-| Memory Boundary | FM-04, FM-05, FM-08, FM-09, FM-10, FM-22 | Good pilot coverage | Stale-but-reused durable memory. |
+| Evidence Lineage | FM-01, FM-02, FM-03, FM-12, FM-18, FM-23 | Good pilot coverage | Generated-source reuse with external adapter traces. |
+| Memory Boundary / Lifecycle | FM-04, FM-05, FM-08, FM-09, FM-10, FM-22, FM-24 | Stronger after Proof Pack 002 | Positive lifecycle near-miss examples. |
 | Delivery and Stakeholder | FM-06, FM-07 | Thin | More FDE/customer examples across conflicting stakeholders. |
-| Validation Leap | FM-11, FM-13, FM-19, FM-20, FM-21, FM-22 | Good for strategy/repo cases | Code, data, chart, and product analytics outputs. |
-| Governance and Measurement | FM-14, FM-15, FM-16, FM-17, FM-18 | Good pilot coverage | Inter-rater review and audit disagreement records. |
+| Validation Leap | FM-11, FM-13, FM-19, FM-20, FM-21, FM-22, FM-25, FM-26 | Good for strategy/repo/code/data cases | More accept near-misses. |
+| Governance and Measurement | FM-14, FM-15, FM-16, FM-17, FM-18, FM-27, FM-28 | Good pilot coverage | Real review-ledger disagreement records. |
 
 ## Output Type Coverage
 
@@ -57,10 +63,12 @@ Proof Pack 001 is a pilot set, not a complete benchmark. Its job is to expose wh
 | Governance metric | yes | 007 | Non-gameable diagnostic counter example. |
 | Provenance/review artifact | yes | 008 | Human review disagreement example. |
 | Strategy / category memo | yes | 001, 009, 010 | External comparison case. |
-| Code generation | no | none | Test-passing-but-wrong case. |
-| Data analysis / chart | no | none | Chart-overclaim or base-rate case. |
-| Multi-agent memory chain | no | none | Agent A output stored by Agent B case. |
-| Time-sensitive memory | no | none | Stale-but-reused claim case. |
+| Code generation | yes | 013 | Acceptable narrow code note. |
+| Data analysis / chart | yes | 014 | Base-rate and chart near-miss examples. |
+| Multi-agent memory chain | yes | 011 | Generated-source reuse with adapter trace. |
+| Time-sensitive memory | yes | 012 | Positive lifecycle review example. |
+| Human review disagreement | yes | 015 | Real reviewer disagreement record. |
+| Anti-gaming / route manipulation | yes | 016 | More adversarial phrasing variants. |
 
 ## Next Case Selection Rule
 
@@ -75,16 +83,16 @@ Do not add a case merely because it is interesting. Add it when it fills at leas
 
 | Target | Purpose | Expected Route |
 |---|---|---|
-| Case 011: Multi-agent contamination | Tests whether source lineage survives agent-to-agent transfer. | quarantine |
-| Case 012: Stale-but-reused memory | Tests time boundary and expiry handling. | revise or quarantine |
-| Case 013: Test-passing-but-wrong code | Tests code output where tests are insufficient evidence. | revise |
-| Case 014: Chart-overclaim | Tests data visualization and summary-statistic overreach. | revise |
-| Case 015: Acceptable narrow code note | Prevents code cases from becoming refusal-only. | accept |
-| Case 016: Human review disagreement | Tests review ledger and inter-rater disagreement. | quarantine |
-| Case 017: Non-gameable diagnostic counter | Distinguishes diagnostics from success metrics. | accept or revise |
-| Case 018: Customer dissent preserved | Near miss for consensus laundering. | accept |
-| Case 019: Category hypothesis with falsifier | Near miss for premature positioning memory. | accept |
-| Case 020: Agent capture not promoted | Tests Lite/dropzone capture boundary. | quarantine |
+| Case 011: Multi-agent contamination | Shipped in Proof Pack 002. | quarantine |
+| Case 012: Stale-but-reused memory | Shipped in Proof Pack 002. | revise |
+| Case 013: Test-passing-but-wrong code | Shipped in Proof Pack 002. | revise |
+| Case 014: Chart-overclaim | Shipped in Proof Pack 002. | revise |
+| Case 015: Human review disagreement | Shipped in Proof Pack 002. | quarantine |
+| Case 016: Audit gaming attempt | Shipped in Proof Pack 002. | discard |
+| Case 017: Acceptable narrow code note | Prevents code cases from becoming refusal-only. | accept |
+| Case 018: Non-gameable diagnostic counter | Distinguishes diagnostics from success metrics. | accept or revise |
+| Case 019: Customer dissent preserved | Near miss for consensus laundering. | accept |
+| Case 020: Category hypothesis with falsifier | Near miss for premature positioning memory. | accept |
 
 ## Interpretation
 

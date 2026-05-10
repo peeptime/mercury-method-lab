@@ -1,9 +1,9 @@
 {
   "project_name": "Mercury Method Lab",
   "package_name": "mercury-method-lab",
-  "version": "1.8.0",
-  "codename": "Open Scenario Packs",
-  "status": "scenario-pack-framework",
+  "version": "1.9.0",
+  "codename": "Proof Governance Expansion",
+  "status": "proof-governance-expansion",
   "position": "An evidence-first audit method for deciding which AI-generated claims deserve durable memory.",
   "version_policy": {
     "major": "Breaks artifact, memory, or upstream compatibility contracts.",

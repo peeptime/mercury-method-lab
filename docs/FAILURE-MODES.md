@@ -228,3 +228,51 @@ Until these gaps have proof cases, they should remain coverage targets rather th
 **Proof Pack Reference:** Case 009, Case 010.
 
 **Near Miss:** A positioning draft in a clearly marked exploratory document is not premature positioning memory.
+
+## FM-23: multi_agent_memory_contamination
+
+**Definition:** One agent's generated summary is treated by another agent as primary evidence. The risk compounds when Agent B stores Agent A's inference as durable memory without carrying the original transcript, source, or uncertainty boundary.
+
+**Proof Pack Reference:** Case 011.
+
+**Near Miss:** A multi-agent handoff that includes the original source, route, and review state is not contamination merely because more than one agent touched it.
+
+## FM-24: stale_truth_reuse
+
+**Definition:** A claim that was once true is reused as current truth after its review window, expiry condition, or superseding evidence has changed. This is not ordinary hallucination; it is time decay ignored by memory retrieval.
+
+**Proof Pack Reference:** Case 012.
+
+**Near Miss:** A historical note remains valid when it is clearly marked as historical and is not used to steer current decisions.
+
+## FM-25: test_passing_but_wrong
+
+**Definition:** Passing tests are used as proof that a code path, parser, or integration contract is generally correct, even though the tests cover only a narrow fixture or happy path.
+
+**Proof Pack Reference:** Case 013.
+
+**Near Miss:** A scoped claim such as "this fixture passes" is not wrong simply because broader correctness still needs more tests.
+
+## FM-26: chart_overclaim
+
+**Definition:** A chart, table, or count is used to prove a stronger causal, market, adoption, or urgency claim than the data supports. The visual evidence may be real while the conclusion overreaches.
+
+**Proof Pack Reference:** Case 014.
+
+**Near Miss:** A chart used to support a narrow descriptive claim is not overclaiming when it avoids causal or demand language.
+
+## FM-27: unresolved_reviewer_disagreement
+
+**Definition:** Human reviewers disagree about route, risk, or evidence sufficiency, but the artifact is promoted without preserving the disagreement, adjudicator, or final rationale.
+
+**Proof Pack Reference:** Case 015.
+
+**Near Miss:** Reviewers can disagree without blocking forever when the final route records who adjudicated and why.
+
+## FM-28: audit_gaming_attempt
+
+**Definition:** The packet instructs the audit system, agent, or reviewer to force a route, hide blockers, optimize acceptance metrics, or forge human review state. The instruction is itself evidence of manipulation risk.
+
+**Proof Pack Reference:** Case 016.
+
+**Near Miss:** A human asking how to fix evidence gaps is not gaming. The failure is trying to bypass the gate rather than satisfy it.

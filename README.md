@@ -2,9 +2,9 @@
 
 **不让聪明变成垃圾。**
 
-Version: `1.8.0`
+Version: `1.9.0`
 
-Latest release: [v1.8.0 Open Scenario Packs](https://github.com/peeptime/mercury-method-lab/releases/tag/v1.8.0)
+Latest release: [v1.9.0 Proof Governance Expansion](https://github.com/peeptime/mercury-method-lab/releases/tag/v1.9.0)
 
 ```yaml
 provenance:
@@ -17,6 +17,23 @@ provenance:
     Until referenced docs are human-reviewed, the project README cannot claim true.
   audit_ref: docs/REVIEW-LEDGER.md
 ```
+
+---
+
+## Proof Governance v1.9.0
+
+Mercury now has a second proof pack and governance controls for the cases most likely to break a portable audit framework:
+
+- multi-agent memory contamination
+- stale truth reused as current memory
+- test-passing-but-wrong code claims
+- chart and data overclaim
+- human-review disagreement
+- audit gaming attempts
+
+The SDK also exposes anti-gaming detection and ruleset-version helpers so host systems can re-audit old accepted memories when the audit standard changes.
+
+See `docs/PROOF-PACK-002.md`, `docs/RULE-VERSION-GOVERNANCE.md`, `docs/MEMORY-LIFECYCLE-GOVERNANCE.md`, `docs/HUMAN-REVIEW-DISAGREEMENT.md`, and `docs/ANTI-GAMING-TESTS.md`.
 
 ---
 
@@ -468,11 +485,11 @@ npm run dashboard    # http://127.0.0.1:4788
 | 看 Evidence-First Audit Packet 闭环 | `docs/EVIDENCE-FIRST-AUDIT-LAYER.md` |
 | 看 HTML 审计报告样例 | `dist/reports/index.html`（运行 `npm run report` 后生成） |
 | 3 分钟 AI 对话 intake | `docs/THREE-MINUTE-START.md` |
-| 看 v1.8.0 scenario iteration guide | `docs/ITERATION-GUIDE-1.8.0.md` |
-| 看 v1.7.0 kernel iteration guide | `docs/ITERATION-GUIDE-1.8.0.md` |
-| 看 v1.6.0 SDK iteration guide | `docs/ITERATION-GUIDE-1.8.0.md` |
-| 看 v1.5.0 review UX iteration guide | `docs/ITERATION-GUIDE-1.8.0.md` |
-| 看 v1.4.0 method iteration guide | `docs/ITERATION-GUIDE-1.8.0.md` |
+| 看 v1.8.0 scenario iteration guide | `docs/ITERATION-GUIDE-1.9.0.md` |
+| 看 v1.7.0 kernel iteration guide | `docs/ITERATION-GUIDE-1.9.0.md` |
+| 看 v1.6.0 SDK iteration guide | `docs/ITERATION-GUIDE-1.9.0.md` |
+| 看 v1.5.0 review UX iteration guide | `docs/ITERATION-GUIDE-1.9.0.md` |
+| 看 v1.4.0 method iteration guide | `docs/ITERATION-GUIDE-1.9.0.md` |
 | 看产品层压力测试记录 | `docs/PRODUCT-SURFACE-PRESSURE-TEST.md` |
 | 继续迭代/讨论项目 | 激活 `mercury-v8-iter` Skill |
 | 看版本历史 | `CHANGELOG.md` |

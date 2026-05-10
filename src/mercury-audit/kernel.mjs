@@ -5,6 +5,7 @@ import { assessSourceCredibility } from "./source-credibility.mjs";
 import { assessLifecycle, lifecycleRequiresReview } from "./lifecycle.mjs";
 import { assessDisagreement, mergeReviewerDecision } from "./disagreement.mjs";
 import { applyPolicy } from "./policy.mjs";
+import { detectGamingAttempt } from "./anti-gaming.mjs";
 
 const routeRank = {
   accept: 0,
@@ -19,6 +20,7 @@ export function auditKernel(packet, options = {}) {
   const sourceCredibility = assessSourceCredibility(packet.source_refs, profile.source_floor || standard.source_floor);
   const lifecycle = assessLifecycle(packet, standard);
   const disagreement = assessDisagreement(options.reviews || packet.reviews);
+  const antiGaming = detectGamingAttempt(packet);
 
   const structuralResult = auditPacket(packet, options);
   let result = enforceOpenFrameworkControls(structuralResult, {
@@ -27,7 +29,8 @@ export function auditKernel(packet, options = {}) {
     standard,
     sourceCredibility,
     lifecycle,
-    disagreement
+    disagreement,
+    antiGaming
   });
 
   result = mergeReviewerDecision(result, disagreement);
@@ -42,17 +45,19 @@ export function auditKernel(packet, options = {}) {
       source_credibility: sourceCredibility,
       lifecycle,
       disagreement,
+      anti_gaming: antiGaming,
       controls: result.kernel_controls || []
     },
     source_credibility: sourceCredibility,
     lifecycle,
-    review_disagreement: disagreement
+    review_disagreement: disagreement,
+    anti_gaming: antiGaming
   };
 }
 
-function enforceOpenFrameworkControls(result, { packet, profile, standard, sourceCredibility, lifecycle, disagreement }) {
+function enforceOpenFrameworkControls(result, { packet, profile, standard, sourceCredibility, lifecycle, disagreement, antiGaming }) {
   const controls = [];
-  let next = { ...result, warnings: [...result.warnings], required_fixes: [...result.required_fixes] };
+  let next = { ...result, blockers: [...result.blockers], warnings: [...result.warnings], required_fixes: [...result.required_fixes] };
 
   if (!sourceCredibility.passes_floor) {
     controls.push("source_credibility_floor");
@@ -74,6 +79,17 @@ function enforceOpenFrameworkControls(result, { packet, profile, standard, sourc
     next = escalate(next, "quarantine");
     next.human_review_required = true;
     next.required_fixes.push("Resolve reviewer disagreement before promotion.");
+  }
+
+  if (antiGaming.detected) {
+    controls.push("anti_gaming_gate");
+    next = escalate(next, antiGaming.recommended_route);
+    next.human_review_required = true;
+    if (antiGaming.blocker && !next.blockers.some((blocker) => blocker.id === antiGaming.blocker.id)) {
+      next.blockers.push(antiGaming.blocker);
+    }
+    next.warnings.push(...antiGaming.warnings);
+    next.required_fixes.push(...antiGaming.required_fixes);
   }
 
   if (profile.require_human_for_high_risk && String(packet.risk_level || "").toLowerCase() === "high") {

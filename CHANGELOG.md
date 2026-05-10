@@ -4,6 +4,23 @@
 
 Every release entry must carry an explicit provenance declaration. Legacy entries that cannot be reconstructed are marked as unverified instead of being silently treated as human-only.
 
+## 1.9.0 - Proof Governance Expansion (2026-05-10)
+> Provenance: `[AI_GENERATED]` drafted_by: Codex; humanReviewed: declined; reviewer: project_owner_pending; audit_ref: docs/ITERATION-GUIDE-1.9.0.md
+
+### Added
+
+- `docs/PROOF-PACK-002.md` adds six harder governance cases covering multi-agent contamination, stale memory, code, charts, reviewer disagreement, and audit gaming.
+- `docs/RULE-VERSION-GOVERNANCE.md`, `docs/MEMORY-LIFECYCLE-GOVERNANCE.md`, `docs/HUMAN-REVIEW-DISAGREEMENT.md`, and `docs/ANTI-GAMING-TESTS.md` make rule drift, memory expiry, reviewer conflict, and route manipulation explicit.
+- `src/mercury-audit/anti-gaming.mjs` detects route-forcing, forged human review, hidden evidence gaps, and metric-over-truth phrasing.
+- `src/mercury-audit/rule-versioning.mjs` exposes `MERCURY_RULESET_VERSION`, rule-version records, and re-audit checks.
+- `scripts/test_governance.mjs` fixes the governance contract in automated tests.
+
+### Changed
+
+- SDK API version moves to `0.3.0`; audit results now include `anti_gaming` and `ruleset_version`.
+- Failure Mode Dictionary expands from 22 to 28 modes with Proof Pack 002 support.
+- Coverage matrix now records code, chart, time-sensitive memory, multi-agent chain, disagreement, and anti-gaming cases.
+
 ## 1.8.0 - Open Scenario Packs (2026-05-10)
 > Provenance: `[AI_GENERATED]` drafted_by: Codex; humanReviewed: declined; reviewer: project_owner_pending; audit_ref: docs/ITERATION-GUIDE-1.8.0.md
 

@@ -13,10 +13,10 @@ This file is the short cross-session handoff. Keep it under 120 lines. Do not pa
 
 ## Current Snapshot
 
-- Current public version: `1.8.0`
-- Current posture: Open Scenario Packs
+- Current public version: `1.9.0`
+- Current posture: Proof Governance Expansion
 - Core proof: `docs/v0.9-proof-of-audit.md`
-- Current proof pack: `docs/PROOF-PACK-001.md`
+- Current proof packs: `docs/PROOF-PACK-001.md`, `docs/PROOF-PACK-002.md`
 - Current runnable audit loop: `npm run audit`, `npm run audit:flow`, `npm run report`, `npm run test`, `npm run audit:profile`
 - Current intake loop: `npm run capture -- --file <path>`, `npm run capture:dropzone`, `npm run capture:check`
 - Current SDK loop: `npm run test:sdk`, `npm run demo:memory-hook`, `npm run benchmark:audit`
@@ -26,6 +26,7 @@ This file is the short cross-session handoff. Keep it under 120 lines. Do not pa
 - Current integration docs: `docs/SDK-API.md`, `docs/INTEGRATION-DEMO.md`, `docs/BENCHMARKS.md`, `docs/OWASP-AISVS-C8-MAPPING.md`
 - Current kernel docs: `docs/AUDIT-KERNEL.md`, `docs/ECOSYSTEM-POSITION.md`, `docs/MERCURY-AGENT-RELATIONSHIP.md`
 - Current scenario docs: `docs/SCENARIO-PACKS.md`, `docs/ADAPTER-CONTRACT.md`, `docs/REVIEW-UX-GUIDE.md`
+- Current governance docs: `docs/RULE-VERSION-GOVERNANCE.md`, `docs/MEMORY-LIFECYCLE-GOVERNANCE.md`, `docs/HUMAN-REVIEW-DISAGREEMENT.md`, `docs/ANTI-GAMING-TESTS.md`
 - Release gate: `npm run release:gate`
 - Bad-memory proof must continue to export `routing_decision: discard`
 
@@ -46,6 +47,7 @@ This file is the short cross-session handoff. Keep it under 120 lines. Do not pa
 - `v1.6.0` adds a local SDK/API and memory-write hook demo, but it is not an npm-published package and not a production adapter.
 - `v1.7.0` moves the SDK through a portable audit kernel with configurable profiles, standards, source credibility, lifecycle, and disagreement handling.
 - `v1.8.0` adds reusable scenario packs and scenario-aware review guidance; still no production adapter.
+- `v1.9.0` adds Proof Pack 002, ruleset versioning, anti-gaming tests, lifecycle governance, and human-review disagreement guidance; still AI-assisted and `human_reviewed: declined`.
 - Current dashboard has runtime preferences in `config/preferences.json`; do not confuse them with durable project memory.
 
 ## Token Economy Rules
@@ -67,7 +69,10 @@ This file is the short cross-session handoff. Keep it under 120 lines. Do not pa
 - Use `v1.6.x` for the pre-storage SDK/API, policy layer, memory-write hook demo, benchmark, and OWASP C8 mapping.
 - Use `v1.7.x` for audit kernel independence, profile/standard/source/lifecycle/disagreement contracts, and Mercury Agent relationship clarity.
 - Use `v1.8.x` for scenario packs, adapter contract, and scenario-aware review UX.
+- Use `v1.9.x` for Proof Pack 002, rule version governance, lifecycle governance, human-review disagreement, and anti-gaming tests.
 - Do not add official failure modes without proof-pack or coverage-matrix support.
+- Do not silently migrate old accepted memories to a new ruleset without a re-audit record.
+- Do not let route-forcing or forged-review instructions pass as ordinary packet content.
 - Do not present Mercury as a certification authority; keep it as a reference method others can adapt.
 - Do not expose raw technical fields as the first user-visible layer when content summary and checklist can lead.
 - Keep `00_inbox/ai-conversations/` as source evidence intake, not approved memory.

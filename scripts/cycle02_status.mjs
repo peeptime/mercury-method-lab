@@ -51,6 +51,10 @@ if (packageJson.version.startsWith("1.8.")) {
   console.log("scenario_pack_docs: scenario-packs/adapter-contract/review-ux-guide");
   console.log("scenario_pack_outputs: ai-coding/personal-knowledge/investment/enterprise/legal-medical");
 }
+if (packageJson.version.startsWith("1.9.")) {
+  console.log("proof_governance_docs: proof-pack-002/rule-version/lifecycle/disagreement/anti-gaming");
+  console.log("proof_governance_outputs: FM-23..FM-28/governance tests/ruleset version");
+}
 console.log("");
 console.log("next_low_token_commands:");
 console.log("  npm run cycle:check");
@@ -84,5 +88,6 @@ function cycleLine(version) {
   if (version.startsWith("1.6.")) return "v1.6.x pre-storage audit SDK";
   if (version.startsWith("1.7.")) return "v1.7.x audit kernel independence";
   if (version.startsWith("1.8.")) return "v1.8.x open scenario packs";
+  if (version.startsWith("1.9.")) return "v1.9.x proof governance expansion";
   return "outside documented Cycle 02/04 line";
 }

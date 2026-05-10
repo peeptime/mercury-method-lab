@@ -8,8 +8,10 @@ import { assessLifecycle } from "./lifecycle.mjs";
 import { assessDisagreement } from "./disagreement.mjs";
 import { getAuditScenario, listAuditScenarios, scenarioDefaults } from "./scenarios.mjs";
 import { buildScenarioReviewGuidance } from "./review-ux.mjs";
+import { detectGamingAttempt, listGamingPatterns } from "./anti-gaming.mjs";
+import { MERCURY_RULESET_VERSION, compareRuleVersions, createRuleVersionRecord, needsReaudit } from "./rule-versioning.mjs";
 
-export const MERCURY_AUDIT_API_VERSION = "0.2.0";
+export const MERCURY_AUDIT_API_VERSION = "0.3.0";
 
 export { applyPolicy, listPolicies, resolvePolicy };
 export {
@@ -19,13 +21,19 @@ export {
   auditKernel,
   buildScenarioReviewGuidance,
   classifySourceRef,
+  compareRuleVersions,
+  createRuleVersionRecord,
+  detectGamingAttempt,
   getAuditScenario,
   getAuditProfile,
   getAuditStandard,
+  listGamingPatterns,
   listAuditProfiles,
   listAuditScenarios,
   listAuditStandards,
   listSourceLevels,
+  MERCURY_RULESET_VERSION,
+  needsReaudit,
   scenarioDefaults
 };
 
@@ -89,6 +97,8 @@ export function audit(contentOrPacket, context = {}) {
     source_credibility: policyResult.source_credibility,
     lifecycle: policyResult.lifecycle,
     review_disagreement: policyResult.review_disagreement,
+    anti_gaming: policyResult.anti_gaming,
+    ruleset_version: MERCURY_RULESET_VERSION,
     scenario,
     review_guidance: reviewGuidance,
     policy: policyResult.policy,

@@ -26,7 +26,11 @@ const auditKernelUnfreeze = packageJson.version.startsWith("1.7.")
 const scenarioPackUnfreeze = packageJson.version.startsWith("1.8.")
   && await exists("docs/SCENARIO-PACKS.md")
   && await exists("docs/ADAPTER-CONTRACT.md");
+const proofGovernanceUnfreeze = packageJson.version.startsWith("1.9.")
+  && await exists("docs/PROOF-PACK-002.md")
+  && await exists("docs/RULE-VERSION-GOVERNANCE.md");
 const proofPack = await readText("docs/PROOF-PACK-001.md");
+const proofPack002 = await readText("docs/PROOF-PACK-002.md");
 const failureModes = await readText("docs/FAILURE-MODES.md");
 const charterUsers = await readText("docs/CHARTER-USER-RECORDS.md");
 const reviewLedger = await readText("docs/REVIEW-LEDGER.md");
@@ -34,7 +38,7 @@ const auditRules = await readText("scripts/audit-core/audit_rules.mjs");
 const htmlReport = await readText("scripts/generate_audit_reports.mjs");
 const liteMode = await readText("dashboard/lite.html");
 
-check("version stays on an explicitly documented unfreeze line", packageJson.version.startsWith("1.2.") || productSurfaceUnfreeze || methodDepthUnfreeze || reviewUxUnfreeze || sdkIntegrationUnfreeze || auditKernelUnfreeze || scenarioPackUnfreeze);
+check("version stays on an explicitly documented unfreeze line", packageJson.version.startsWith("1.2.") || productSurfaceUnfreeze || methodDepthUnfreeze || reviewUxUnfreeze || sdkIntegrationUnfreeze || auditKernelUnfreeze || scenarioPackUnfreeze || proofGovernanceUnfreeze);
 if (productSurfaceUnfreeze) {
   warnings.push("product surface / Lite intake patch line detected: method-layer Cycle 02 checks still apply, but v1.3.x is allowed for product UI and entry-friction fixes");
 }
@@ -129,6 +133,24 @@ if (scenarioPackUnfreeze) {
   check("SDK exports scenario surfaces", sdkApi.includes("listAuditScenarios") && sdkApi.includes("review_guidance"));
   check("README surfaces scenario packs", (await readText("README.en.md")).includes("Scenario Packs v1.8.0"));
 }
+if (proofGovernanceUnfreeze) {
+  warnings.push("Proof governance line detected: v1.9.x is allowed for Proof Pack 002, rule versioning, lifecycle governance, disagreement, and anti-gaming controls");
+  for (const path of [
+    "src/mercury-audit/anti-gaming.mjs",
+    "src/mercury-audit/rule-versioning.mjs",
+    "scripts/test_governance.mjs",
+    "docs/PROOF-PACK-002.md",
+    "docs/RULE-VERSION-GOVERNANCE.md",
+    "docs/MEMORY-LIFECYCLE-GOVERNANCE.md",
+    "docs/ANTI-GAMING-TESTS.md",
+    "docs/HUMAN-REVIEW-DISAGREEMENT.md"
+  ]) {
+    check(`proof governance artifact exists: ${path}`, await exists(path));
+  }
+  const sdkApi = await readText("src/mercury-audit/index.mjs");
+  check("SDK exports governance surfaces", sdkApi.includes("MERCURY_RULESET_VERSION") && sdkApi.includes("anti_gaming") && sdkApi.includes("needsReaudit"));
+  check("Failure Mode Dictionary includes anti-gaming mode", failureModes.includes("FM-28: audit_gaming_attempt"));
+}
 
 const cases = splitSections(proofPack, /^## Case \d{3}:[^\n]*$/gm);
 check("Proof Pack 001 has at least 10 cases", cases.length >= 10);
@@ -149,6 +171,19 @@ for (const section of cases) {
   }
   check(`${title} declares routing_decision`, /routing_decision:\s*\w+/.test(section.body));
   check(`${title} declares failure_modes`, /failure_modes:\s*\n\s*-/.test(section.body));
+}
+
+if (proofGovernanceUnfreeze) {
+  const governanceCases = splitSections(proofPack002, /^## Case \d{3}:[^\n]*$/gm);
+  check("Proof Pack 002 has at least 6 governance cases", governanceCases.length >= 6);
+  for (const section of governanceCases) {
+    const title = section.title.replace(/^##\s*/, "");
+    for (const heading of requiredCaseHeadings) {
+      check(`${title} includes ${heading.replace("### ", "")}`, section.body.includes(heading));
+    }
+    check(`${title} declares routing_decision`, /routing_decision:\s*\w+/.test(section.body));
+    check(`${title} declares failure_modes`, /failure_modes:\s*\n\s*-/.test(section.body));
+  }
 }
 
 const modes = splitSections(failureModes, /^## FM-\d+:[^\n]*$/gm);
