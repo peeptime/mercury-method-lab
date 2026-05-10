@@ -39,6 +39,10 @@ if (packageJson.version.startsWith("1.5.")) {
   console.log("review_ux_docs: start-here/scope/export/i18n");
   console.log("review_ux_outputs: content_summary/human_review_checklist/progressive_disclosure");
 }
+if (packageJson.version.startsWith("1.6.")) {
+  console.log("sdk_integration_docs: sdk-api/owasp-c8/integration-demo/benchmarks");
+  console.log("sdk_integration_outputs: audit_api/memory_write_hook/policy_layer/local_benchmark");
+}
 console.log("");
 console.log("next_low_token_commands:");
 console.log("  npm run cycle:check");
@@ -69,5 +73,6 @@ function cycleLine(version) {
   if (version.startsWith("1.3.")) return "v1.3.x product-surface / Lite intake patch";
   if (version.startsWith("1.4.")) return "v1.4.x method taxonomy / routing blueprint";
   if (version.startsWith("1.5.")) return "v1.5.x human review checklist UX";
+  if (version.startsWith("1.6.")) return "v1.6.x pre-storage audit SDK";
   return "outside documented Cycle 02/04 line";
 }

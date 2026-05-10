@@ -17,6 +17,9 @@ const methodDepthUnfreeze = packageJson.version.startsWith("1.4.")
 const reviewUxUnfreeze = packageJson.version.startsWith("1.5.")
   && await exists("docs/START-HERE.md")
   && await exists("docs/SCOPE.md");
+const sdkIntegrationUnfreeze = packageJson.version.startsWith("1.6.")
+  && await exists("docs/SDK-API.md")
+  && await exists("docs/OWASP-AISVS-C8-MAPPING.md");
 const proofPack = await readText("docs/PROOF-PACK-001.md");
 const failureModes = await readText("docs/FAILURE-MODES.md");
 const charterUsers = await readText("docs/CHARTER-USER-RECORDS.md");
@@ -25,7 +28,7 @@ const auditRules = await readText("scripts/audit-core/audit_rules.mjs");
 const htmlReport = await readText("scripts/generate_audit_reports.mjs");
 const liteMode = await readText("dashboard/lite.html");
 
-check("version stays on an explicitly documented unfreeze line", packageJson.version.startsWith("1.2.") || productSurfaceUnfreeze || methodDepthUnfreeze || reviewUxUnfreeze);
+check("version stays on an explicitly documented unfreeze line", packageJson.version.startsWith("1.2.") || productSurfaceUnfreeze || methodDepthUnfreeze || reviewUxUnfreeze || sdkIntegrationUnfreeze);
 if (productSurfaceUnfreeze) {
   warnings.push("product surface / Lite intake patch line detected: method-layer Cycle 02 checks still apply, but v1.3.x is allowed for product UI and entry-friction fixes");
 }
@@ -56,6 +59,26 @@ if (reviewUxUnfreeze) {
   check("audit core emits human review checklist", auditRules.includes("human_review_checklist"));
   check("HTML report renders checklist choices", htmlReport.includes("Human Review Checklist") && htmlReport.includes("复制复核记录"));
   check("Lite Mode defaults to Chinese review checklist layer", liteMode.includes("Human Review Checklist") && liteMode.includes("处理方式") && liteMode.includes("查看技术详情"));
+}
+if (sdkIntegrationUnfreeze) {
+  warnings.push("Pre-storage SDK integration line detected: v1.6.x is allowed for local SDK/API, demo hook, benchmark, and OWASP C8 mapping work");
+  for (const path of [
+    "src/mercury-audit/index.mjs",
+    "src/mercury-audit/policy.mjs",
+    "scripts/test_sdk_api.mjs",
+    "scripts/benchmark_audit_sdk.mjs",
+    "examples/integration-demo/memory-write-hook.mjs",
+    "docs/SDK-API.md",
+    "docs/OWASP-AISVS-C8-MAPPING.md",
+    "docs/INTEGRATION-DEMO.md",
+    "docs/BENCHMARKS.md"
+  ]) {
+    check(`SDK integration artifact exists: ${path}`, await exists(path));
+  }
+  const sdkApi = await readText("src/mercury-audit/index.mjs");
+  check("SDK exports audit API", sdkApi.includes("export function audit(") && sdkApi.includes("auditMemoryWrite"));
+  check("package exports local SDK entry", Boolean(packageJson.exports?.["."]));
+  check("package exposes SDK scripts", Boolean(packageJson.scripts?.["test:sdk"]) && Boolean(packageJson.scripts?.["demo:memory-hook"]) && Boolean(packageJson.scripts?.["benchmark:audit"]));
 }
 
 const cases = splitSections(proofPack, /^## Case \d{3}:[^\n]*$/gm);

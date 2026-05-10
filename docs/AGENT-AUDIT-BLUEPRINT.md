@@ -100,6 +100,20 @@ before_write(memory_entry):
   only write when routing_decision == accept
 ```
 
+Repository-local SDK equivalent:
+
+```js
+import { auditMemoryWrite, shouldWriteMemory } from "mercury-method-lab";
+
+const result = auditMemoryWrite(memoryCandidate);
+
+if (shouldWriteMemory(result)) {
+  await memoryStore.write(result.packet.claim, result.provenance);
+} else {
+  await quarantineStore.write(result.packet.claim, result.failure_modes);
+}
+```
+
 ## Adoption Levels
 
 | Level | Description | Suitable For |

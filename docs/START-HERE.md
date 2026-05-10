@@ -59,6 +59,24 @@ Outputs:
 - `dist/audit-results.json`
 - `dist/reports/index.html`
 
+## I Build Agent Memory Systems
+
+Use the local SDK path before reading the whole repository:
+
+```powershell
+npm run test:sdk
+npm run demo:memory-hook
+```
+
+Then read:
+
+- `docs/SDK-API.md`
+- `docs/INTEGRATION-DEMO.md`
+- `docs/OWASP-AISVS-C8-MAPPING.md`
+- `docs/BENCHMARKS.md`
+
+The integration question is simple: can your host system call Mercury before a memory write and route the candidate to accept, revise, quarantine, or discard?
+
 ## 我要保存一段 AI 对话作为来源
 
 ```powershell

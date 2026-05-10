@@ -4,6 +4,25 @@
 
 Every release entry must carry an explicit provenance declaration. Legacy entries that cannot be reconstructed are marked as unverified instead of being silently treated as human-only.
 
+## 1.6.0 - Pre-Storage Audit SDK (2026-05-10)
+> Provenance: `[AI_GENERATED]` drafted_by: Codex; humanReviewed: declined; reviewer: project_owner_pending; audit_ref: docs/ITERATION-GUIDE-1.6.0.md
+
+### Added
+
+- `src/mercury-audit/index.mjs` exposes a local SDK API: `audit`, `auditMemoryWrite`, `createAuditPacket`, and `shouldWriteMemory`.
+- `src/mercury-audit/policy.mjs` adds `standard`, `strict`, and `advisory` policy layers for host systems.
+- `examples/integration-demo/memory-write-hook.mjs` demonstrates pre-storage admission: one candidate is accepted and one is blocked before memory write.
+- `scripts/test_sdk_api.mjs` fixes the SDK contract in automated tests.
+- `scripts/benchmark_audit_sdk.mjs` reports local structural audit overhead without external LLM calls.
+- `docs/SDK-API.md`, `docs/INTEGRATION-DEMO.md`, `docs/BENCHMARKS.md`, and `docs/OWASP-AISVS-C8-MAPPING.md` document the integration and standard-mapping layer.
+
+### Changed
+
+- `package.json` now exports the local SDK entry and adds `test:sdk`, `demo:memory-hook`, and `benchmark:audit`.
+- Release gate now runs the SDK test, memory-hook demo, and local SDK benchmark.
+- README / README.en now lead with the v1.6.0 pre-storage SDK path before the older dashboard and Lite flows.
+- Cycle status/check, doctor, and latest guide generation now recognize the documented v1.6.x SDK integration line.
+
 ## 1.5.0 - Human Review Checklist UX (2026-05-10)
 > Provenance: `[AI_GENERATED]` drafted_by: Codex; humanReviewed: declined; reviewer: project_owner_pending; audit_ref: docs/ITERATION-REQUEST-UI-AUDIT-2026-05-10.md
 

@@ -2,9 +2,9 @@
 
 **It keeps smart thoughts from becoming clean but useless waste.**
 
-Version: `1.5.0`
+Version: `1.6.0`
 
-Latest release: [v1.5.0 Human Review Checklist UX](https://github.com/peeptime/mercury-method-lab/releases/tag/v1.5.0)
+Latest release: [v1.6.0 Pre-Storage Audit SDK](https://github.com/peeptime/mercury-method-lab/releases/tag/v1.6.0)
 
 ```yaml
 provenance:
@@ -25,6 +25,36 @@ provenance:
 Mercury Method Lab is an evidence-first audit layer for AI-generated memory, agent outputs, and FDE delivery artifacts.
 
 It does not make agents do more work. It decides whether the work agents already produced deserves to be retained.
+
+---
+
+## Pre-Storage SDK v1.6.0
+
+Mercury now has a local SDK entry point for host agents and memory systems:
+
+```js
+import { auditMemoryWrite, shouldWriteMemory } from "mercury-method-lab";
+
+const result = auditMemoryWrite({
+  content: "AI-generated memory candidate...",
+  source_refs: ["conversation:source"],
+  audit_refs: ["review:gate"],
+  risk_level: "low"
+});
+
+if (shouldWriteMemory(result)) {
+  await memoryStore.write(result.packet.claim, result.provenance);
+}
+```
+
+Run the local demo:
+
+```powershell
+npm run demo:memory-hook
+npm run benchmark:audit
+```
+
+See `docs/SDK-API.md`, `docs/INTEGRATION-DEMO.md`, `docs/BENCHMARKS.md`, and `docs/OWASP-AISVS-C8-MAPPING.md`.
 
 ---
 
@@ -378,6 +408,10 @@ Not everything needs to be acted on. Sometimes writing it down is enough.
 | What you want | Where to go |
 |---|---|
 | Start here | `docs/START-HERE.md` |
+| Local SDK API | `docs/SDK-API.md` |
+| Integration demo | `docs/INTEGRATION-DEMO.md` |
+| Benchmark notes | `docs/BENCHMARKS.md` |
+| OWASP AISVS C8 mapping | `docs/OWASP-AISVS-C8-MAPPING.md` |
 | Scope boundary | `docs/SCOPE.md` |
 | Export guide | `docs/EXPORT-GUIDE.md` |
 | i18n UX policy | `docs/I18N-UX-POLICY.md` |
@@ -391,8 +425,9 @@ Not everything needs to be acted on. Sometimes writing it down is enough.
 | Proof pack coverage matrix | `docs/PROOF-PACK-COVERAGE-MATRIX.md` |
 | Related work | `docs/RELATED-WORK.md` |
 | 3-minute AI conversation intake | `docs/THREE-MINUTE-START.md` |
-| v1.5.0 review UX iteration guide | `docs/ITERATION-GUIDE-1.5.0.md` |
-| v1.4.0 method iteration guide | `docs/ITERATION-GUIDE-1.5.0.md` |
+| v1.6.0 SDK iteration guide | `docs/ITERATION-GUIDE-1.6.0.md` |
+| v1.5.0 review UX iteration guide | `docs/ITERATION-GUIDE-1.6.0.md` |
+| v1.4.0 method iteration guide | `docs/ITERATION-GUIDE-1.6.0.md` |
 | Product surface pressure test | `docs/PRODUCT-SURFACE-PRESSURE-TEST.md` |
 | Version history | `CHANGELOG.md` |
 | Governance principles | `docs/GOVERNANCE.md` |

@@ -2,9 +2,9 @@
 
 **不让聪明变成垃圾。**
 
-Version: `1.5.0`
+Version: `1.6.0`
 
-Latest release: [v1.5.0 Human Review Checklist UX](https://github.com/peeptime/mercury-method-lab/releases/tag/v1.5.0)
+Latest release: [v1.6.0 Pre-Storage Audit SDK](https://github.com/peeptime/mercury-method-lab/releases/tag/v1.6.0)
 
 ```yaml
 provenance:
@@ -17,6 +17,36 @@ provenance:
     Until referenced docs are human-reviewed, the project README cannot claim true.
   audit_ref: docs/REVIEW-LEDGER.md
 ```
+
+---
+
+## Pre-Storage SDK v1.6.0
+
+Mercury 现在有一个本地 SDK 入口，给 Agent / memory system 在写入长期记忆前调用：
+
+```js
+import { auditMemoryWrite, shouldWriteMemory } from "mercury-method-lab";
+
+const result = auditMemoryWrite({
+  content: "AI-generated memory candidate...",
+  source_refs: ["conversation:source"],
+  audit_refs: ["review:gate"],
+  risk_level: "low"
+});
+
+if (shouldWriteMemory(result)) {
+  await memoryStore.write(result.packet.claim, result.provenance);
+}
+```
+
+本地验证：
+
+```powershell
+npm run demo:memory-hook
+npm run benchmark:audit
+```
+
+看 `docs/SDK-API.md`、`docs/INTEGRATION-DEMO.md`、`docs/BENCHMARKS.md`、`docs/OWASP-AISVS-C8-MAPPING.md`。
 
 ---
 
@@ -379,6 +409,10 @@ npm run dashboard    # http://127.0.0.1:4788
 | 你要做什么 | 去哪里 |
 |-----------|--------|
 | 先从这里开始 | `docs/START-HERE.md` |
+| 看本地 SDK API | `docs/SDK-API.md` |
+| 看 memory-write hook demo | `docs/INTEGRATION-DEMO.md` |
+| 看本地 benchmark 说明 | `docs/BENCHMARKS.md` |
+| 看 OWASP AISVS C8 映射 | `docs/OWASP-AISVS-C8-MAPPING.md` |
 | 看项目边界 | `docs/SCOPE.md` |
 | 看导出方式 | `docs/EXPORT-GUIDE.md` |
 | 看中文/i18n 可见层规则 | `docs/I18N-UX-POLICY.md` |
@@ -394,8 +428,9 @@ npm run dashboard    # http://127.0.0.1:4788
 | 看 Evidence-First Audit Packet 闭环 | `docs/EVIDENCE-FIRST-AUDIT-LAYER.md` |
 | 看 HTML 审计报告样例 | `dist/reports/index.html`（运行 `npm run report` 后生成） |
 | 3 分钟 AI 对话 intake | `docs/THREE-MINUTE-START.md` |
-| 看 v1.5.0 review UX iteration guide | `docs/ITERATION-GUIDE-1.5.0.md` |
-| 看 v1.4.0 method iteration guide | `docs/ITERATION-GUIDE-1.5.0.md` |
+| 看 v1.6.0 SDK iteration guide | `docs/ITERATION-GUIDE-1.6.0.md` |
+| 看 v1.5.0 review UX iteration guide | `docs/ITERATION-GUIDE-1.6.0.md` |
+| 看 v1.4.0 method iteration guide | `docs/ITERATION-GUIDE-1.6.0.md` |
 | 看产品层压力测试记录 | `docs/PRODUCT-SURFACE-PRESSURE-TEST.md` |
 | 继续迭代/讨论项目 | 激活 `mercury-v8-iter` Skill |
 | 看版本历史 | `CHANGELOG.md` |

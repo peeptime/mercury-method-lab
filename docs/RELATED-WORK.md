@@ -26,6 +26,17 @@ This document maps Mercury against adjacent work so future agents do not rebuild
 | Data quality / data governance | Manage data completeness, accuracy, lineage, and fitness. | Uses quality dimensions and lineage thinking. | Applies them to AI-generated claims and project memory. |
 | Provenance / lineage | Record how information was produced and transformed. | Requires source, author, and review metadata. | Adds routing decisions and refusal points before durable use. |
 
+## Direct Memory-Admission Work
+
+Recent work now points at the same control point Mercury targets: write-time memory admission.
+
+| Work | What It Contributes | Mercury Relationship |
+|---|---|---|
+| [A-MAC: Adaptive Memory Admission Control for LLM Agents](https://arxiv.org/abs/2603.04549) | Treats memory admission as an explicit decision problem with interpretable factors such as utility, confidence, novelty, recency, and type prior. | Strongest academic neighbor; Mercury should treat A-MAC-style dimensions as possible policy inputs, while keeping routing decisions inspectable. |
+| [Selective Memory for Artificial Intelligence](https://arxiv.org/abs/2603.15994) | Argues for write-time gating and hierarchical archiving instead of indiscriminate storage. | Directly supports Mercury's "audit before memory" placement. |
+| [MemSAD](https://arxiv.org/abs/2605.03482) | Frames memory poisoning as an adversarial problem for retrieval-augmented agents. | Supports Mercury's quarantine/discard routes for hostile or polluted memory candidates. |
+| [OWASP AISVS C8](https://github.com/OWASP/AISVS/blob/main/1.0/en/0x10-C08-Memory-Embeddings-and-Vector-Database.md) | Defines security controls for memory, embeddings, and vector databases. | Mercury can map to parts of C8 as a pre-storage validation method, not as a complete compliance layer. |
+
 ## Hallucination Detection
 
 Hallucination detection work usually asks whether a generated statement is factual or internally consistent. For example, SelfCheckGPT uses sampled model responses to look for consistency in a black-box setting, while TruthfulQA measures whether models reproduce common falsehoods.

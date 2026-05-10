@@ -19,6 +19,7 @@ The goal is to keep Mercury sharp: an evidence-first audit method for AI-generat
 - Run structural audit before durable use.
 - Route claims as `accept`, `revise`, `quarantine`, or `discard`.
 - Generate Human Review Checklists with A/B/C choices.
+- Expose a local SDK/API so host systems can call the audit gate before memory write.
 - Produce Markdown, JSON, and HTML reports.
 - Preserve provenance, review state, source refs, audit refs, blockers, and routing decisions.
 - Provide an implementer blueprint for agent systems.
@@ -29,7 +30,9 @@ The goal is to keep Mercury sharp: an evidence-first audit method for AI-generat
 - It does not run a second brain.
 - It does not replace Obsidian, Notion, Logseq, mem0, Zep, Letta, or LangChain.
 - It does not write directly into external memory stores.
+- It does not publish or operate a hosted SDK service.
 - It does not auto-promote captures into durable memory.
+- It does not certify OWASP AISVS compliance.
 - It does not claim certification authority.
 - It does not convert AI confidence into a success metric.
 - It does not mark `human_reviewed: true` without named human review.
@@ -39,13 +42,13 @@ The goal is to keep Mercury sharp: an evidence-first audit method for AI-generat
 Mercury owns this path:
 
 ```text
-capture -> audit packet -> structural audit -> routing decision -> report/checklist
+capture -> audit packet -> structural audit -> routing decision -> report/checklist/sdk result
 ```
 
 External systems own this path:
 
 ```text
-accepted report -> storage backend -> retrieval -> application behavior
+sdk result -> host policy -> storage backend -> retrieval -> application behavior
 ```
 
 Mercury can export to those systems, but it should not become those systems.
