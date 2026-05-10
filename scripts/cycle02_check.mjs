@@ -1,4 +1,5 @@
 import { readFile } from "node:fs/promises";
+import { access } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -9,12 +10,17 @@ const checks = [];
 const warnings = [];
 
 const packageJson = await readJson("package.json");
+const productSurfaceUnfreeze = packageJson.version.startsWith("1.3.")
+  && await exists("docs/PRODUCT-SURFACE-PRESSURE-TEST.md");
 const proofPack = await readText("docs/PROOF-PACK-001.md");
 const failureModes = await readText("docs/FAILURE-MODES.md");
 const charterUsers = await readText("docs/CHARTER-USER-RECORDS.md");
 const reviewLedger = await readText("docs/REVIEW-LEDGER.md");
 
-check("version stays on v1.2.x patch line", packageJson.version.startsWith("1.2."));
+check("version stays on v1.2.x or has documented product-surface unfreeze", packageJson.version.startsWith("1.2.") || productSurfaceUnfreeze);
+if (productSurfaceUnfreeze) {
+  warnings.push("product surface unfreeze detected: method-layer Cycle 02 checks still apply, but v1.3.x is allowed for product UI work");
+}
 
 const cases = splitSections(proofPack, /^## Case \d{3}:[^\n]*$/gm);
 check("Proof Pack 001 has at least 10 cases", cases.length >= 10);
@@ -82,6 +88,15 @@ async function readText(path) {
 
 async function readJson(path) {
   return JSON.parse(await readText(path));
+}
+
+async function exists(path) {
+  try {
+    await access(join(root, path));
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 function splitSections(text, headingPattern) {

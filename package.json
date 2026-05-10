@@ -1,7 +1,7 @@
 {
   "name": "mercury-method-lab",
-  "version": "1.2.1",
-  "codename": "Cycle 02 Commitment Patch",
+  "version": "1.3.0",
+  "codename": "Product Surface Pressure Test",
   "private": true,
   "type": "module",
   "description": "专门拦截听起来聪明但不该进入长期记忆的 AI 记忆审计层。",
@@ -26,6 +26,7 @@
     "test": "node scripts/test_audit_packets.mjs",
     "cycle:status": "node scripts/cycle02_status.mjs",
     "cycle:check": "node scripts/cycle02_check.mjs",
+    "dashboard:check": "node scripts/check_dashboard_product.mjs",
     "release:gate": "powershell -ExecutionPolicy Bypass -File scripts/release_gate.ps1 -CleanKnownGenerated",
     "index:incr": "node scripts/rebuild_index_incremental.mjs",
     "guide:latest": "node scripts/generate_latest_guide.mjs",

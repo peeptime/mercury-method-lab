@@ -2,7 +2,7 @@
 
 **It keeps smart thoughts from becoming clean but useless waste.**
 
-Version: `1.2.1`
+Version: `1.3.0`
 
 ```yaml
 provenance:
@@ -78,6 +78,21 @@ accept / revise / quarantine / discard
 ```
 
 Markdown/YAML are the trusted record. HTML is the human delivery layer.
+
+---
+
+## Product Surface v1.3.0
+
+`v1.3.0` moves Mercury toward a real product surface:
+
+```powershell
+npm run dashboard       # Full Dashboard: settings / onboarding / notifications / artifacts
+npm run dashboard:check # Static product-layer and Lite Mode check
+```
+
+- `dashboard/lite.html` is a single-file Lite Mode for paste, audit, result review, and copy-as-Markdown.
+- Full Dashboard adds 7 settings categories, first-run onboarding, command palette, icons, toast/system notifications, and recoverable error UI.
+- Lite output keeps `human_reviewed: declined` by default and does not bypass the audit contract.
 
 ---
 
@@ -233,7 +248,7 @@ Not everything needs to be acted on. Sometimes writing it down is enough.
 | Pre-audit contract | `docs/AUDIT-CONTRACT.md` |
 | AI collaboration paradox fix | `docs/METHODOLOGY-INTEGRITY.md` |
 | Why success metrics are dangerous | `docs/AUDIT-METRICS-DECLINED.md` |
-| v1.0 freeze guide | `docs/ITERATION-GUIDE-1.2.1.md` |
+| v1.0 freeze guide | `docs/ITERATION-GUIDE-1.3.0.md` |
 | Version history | `CHANGELOG.md` |
 | Governance principles | `docs/GOVERNANCE.md` |
 

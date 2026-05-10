@@ -4,6 +4,26 @@
 
 Every release entry must carry an explicit provenance declaration. Legacy entries that cannot be reconstructed are marked as unverified instead of being silently treated as human-only.
 
+## 1.3.0 - Product Surface Pressure Test (2026-05-10)
+> Provenance: `[AI_GENERATED]` drafted_by: Codex; humanReviewed: declined; reviewer: project_owner_pending; audit_ref: docs/PRODUCT-SURFACE-PRESSURE-TEST.md
+
+### Added
+
+- `dashboard/product-layer.js` adds a no-framework product layer: 7-category Settings, command palette, first-run onboarding, icon system, toast notifications, system-notification permission flow, and recoverable error banner.
+- `dashboard/lite.html` adds a single-file Lite Mode that can run offline from `file://` for paste -> audit -> result -> copy-as-Markdown.
+- `config/preferences.json` plus `/api/preferences` persist theme, UI, storage, output, control, update, onboarding, and notification preferences.
+- Dashboard API now includes `/api/lite-audit`, `/api/update-check`, `/api/diagnostics`, and `/api/maintenance/clean-dist`.
+- GUI command allowlist now exposes `audit`, `report`, `audit:flow`, `cycle:status`, and `cycle:check`.
+- `npm run dashboard:check` verifies the product layer, Lite Mode file size, icon registry, preferences, and dashboard endpoints.
+- `LICENSE` adds MIT licensing.
+- `docs/PRODUCT-SURFACE-PRESSURE-TEST.md` records the engineering-axis unfreeze separately from Cycle 02 method commitments.
+
+### Changed
+
+- Dashboard assets are cache-busted to `20260510a`.
+- Release gate, doctor, and CI now include `dashboard:check`.
+- Latest iteration guidance allows `v1.3.x` only for product-surface work while keeping the method layer case-first.
+
 ## 1.2.1 - Cycle 02 Commitment Patch (2026-05-09)
 > Provenance: `[AI_GENERATED]` drafted_by: Codex; humanReviewed: declined; reviewer: project_owner_pending; audit_ref: docs/CYCLE-02-COMMITMENT.md
 

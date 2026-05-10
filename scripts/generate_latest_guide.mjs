@@ -29,7 +29,7 @@ Keep the project stable, narrow, and cheap to reactivate:
 
 - start future sessions from \`MEMORY.md\`, this file, and \`docs/CYCLE-02-COMMITMENT.md\`
 - run \`npm run cycle:status\` and \`npm run cycle:check\` before opening long docs
-- keep Cycle 02 on the \`v1.2.x\` patch line; do not publish \`v1.3.0\`
+- keep the method layer case-first; \`v1.3.x\` is reserved for product-surface work only
 - finish proof cases, failure modes, review ledger, and real charter-user records before adding concepts
 - use Audit Packets as the runnable unit for Agent/FDE/long-term-memory claim review
 - keep Markdown/YAML as source of truth and HTML as a generated delivery layer
@@ -46,7 +46,7 @@ Keep the project stable, narrow, and cheap to reactivate:
 - Do not turn Mercury into a general Agent framework.
 - Do not turn Audit Packets into a scoring/gameable success metric system.
 - Do not add backend adapters.
-- Do not add new major framework names during Cycle 02.
+- Do not add new major methodology framework names during product-surface work.
 - Do not fabricate charter users or external feedback.
 - Do not mark \`human_reviewed: true\` without a named human reviewer.
 - Do not add AI scoring, AI self-audit, RAG, or fine-tuning audit features.

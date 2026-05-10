@@ -2,7 +2,7 @@
 
 **不让聪明变成垃圾。**
 
-Version: `1.2.1`
+Version: `1.3.0`
 
 ```yaml
 provenance:
@@ -78,6 +78,21 @@ accept / revise / quarantine / discard
 ```
 
 Markdown/YAML 是可信记录，HTML 是给人看的交付层。
+
+---
+
+## Product Surface v1.3.0
+
+`v1.3.0` 把 Mercury 的工程入口向真实产品推进一步：
+
+```powershell
+npm run dashboard       # Full Dashboard: settings / onboarding / notifications / artifacts
+npm run dashboard:check # 静态检查产品层和 Lite Mode
+```
+
+- `dashboard/lite.html` 是单文件 Lite Mode，可直接打开，支持粘贴、审计、查看结果、复制 Markdown。
+- Full Dashboard 新增 7 类 Settings、首次引导、命令面板、图标系统、toast/系统通知和可恢复错误 UI。
+- 所有 Lite 输出默认保留 `human_reviewed: declined`，不绕过审计契约。
 
 ---
 
@@ -239,7 +254,7 @@ npm run dashboard    # http://127.0.0.1:4788
 | 看"为什么不能定义成功指标" | `docs/AUDIT-METRICS-DECLINED.md` |
 | 看 Evidence-First Audit Packet 闭环 | `docs/EVIDENCE-FIRST-AUDIT-LAYER.md` |
 | 看 HTML 审计报告样例 | `dist/reports/index.html`（运行 `npm run report` 后生成） |
-| 看 v1.0 冻结指南 | `docs/ITERATION-GUIDE-1.2.1.md` |
+| 看 v1.0 冻结指南 | `docs/ITERATION-GUIDE-1.3.0.md` |
 | 继续迭代/讨论项目 | 激活 `mercury-v8-iter` Skill |
 | 看版本历史 | `CHANGELOG.md` |
 | 看完整样本链 | `examples/` |

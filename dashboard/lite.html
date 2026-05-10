@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mercury Lab Lite</title>
+<style>
+:root{--bg:#f5f5f1;--ink:#171c18;--muted:#657064;--line:#d9ded5;--panel:#fff;--accent:#7a1d1d;--ok:#1f6b3a;--warn:#a86a16;--err:#9a2222}
+*{box-sizing:border-box;letter-spacing:0}body{margin:0;min-height:100vh;background:linear-gradient(135deg,#fafaf7,#edf1ed);color:var(--ink);font:15px/1.5 system-ui,-apple-system,Segoe UI,Microsoft YaHei,sans-serif}
+.app{display:grid;min-height:100vh;grid-template-rows:auto 1fr auto}.top{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:16px 20px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.82);backdrop-filter:blur(14px)}.brand{display:flex;gap:10px;align-items:center;font-weight:850}.mark{display:grid;width:34px;height:34px;place-items:center;border-radius:8px;background:var(--accent);color:#fff}.links{display:flex;gap:8px;align-items:center}.links button,.links a{border:1px solid var(--line);border-radius:999px;background:#fff;color:var(--ink);padding:8px 11px;text-decoration:none;cursor:pointer}
+.main{display:grid;grid-template-columns:minmax(280px,1.15fr) minmax(280px,.85fr);gap:18px;padding:20px}.input,.result{display:grid;gap:12px}.input textarea{min-height:60vh;width:100%;resize:vertical;border:1px solid var(--line);border-radius:10px;background:var(--panel);padding:16px;color:var(--ink);font:15px/1.55 inherit;box-shadow:0 18px 50px rgba(20,30,20,.08)}.actions{display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap}.actions button,.copy{border:1px solid var(--line);border-radius:999px;background:#fff;color:var(--ink);padding:11px 16px;cursor:pointer;font-weight:780}.actions button.primary{border-color:var(--accent);background:var(--accent);color:#fff}
+.card{border:1px solid var(--line);border-radius:10px;background:var(--panel);padding:14px;box-shadow:0 12px 36px rgba(20,30,20,.06)}.card h2{margin:0 0 6px;font-size:13px;color:var(--muted);text-transform:uppercase}.decision{font-size:30px;font-weight:900}.accept{color:var(--ok)}.revise{color:var(--warn)}.quarantine{color:var(--accent)}.discard{color:var(--err)}.chips{display:flex;gap:6px;flex-wrap:wrap}.chip{border:1px solid var(--line);border-radius:999px;padding:5px 8px;background:#fafafa;font-size:12px}.footer{padding:12px 20px;border-top:1px solid var(--line);color:var(--muted);font-size:12px}.toast{position:fixed;right:18px;bottom:18px;max-width:340px;border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:10px;background:#fff;padding:12px;box-shadow:0 18px 50px rgba(20,30,20,.18)}.empty{color:var(--muted)}pre{white-space:pre-wrap;word-break:break-word;margin:0}.hidden{display:none}
+@media(max-width:840px){.main{grid-template-columns:1fr}.input textarea{min-height:46vh}.top{align-items:flex-start;flex-direction:column}.links{width:100%;justify-content:space-between}}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="top"><div class="brand"><span class="mark">M</span><div>Mercury Lab Lite<br><small>paste / audit / copy</small></div></div><div class="links"><button id="settingsBtn">Settings</button><a href="./index.html">Full Dashboard</a></div></header>
+<main class="main">
+<section class="input"><textarea id="source" placeholder="粘贴一段你想审计的 AI 输出...&#10;&#10;例如：The user always prefers HTML over Markdown for all future project outputs."></textarea><div class="actions"><button id="sendBtn" title="Only writes when the local dashboard backend is running">Send to Inbox</button><button id="auditBtn" class="primary">Audit</button></div></section>
+<section class="result" id="result">
+<article class="card"><h2>Routing Decision</h2><div id="decision" class="decision empty">waiting</div></article>
+<article class="card"><h2>Failure Modes</h2><div id="modes" class="chips"><span class="empty">No audit yet.</span></div></article>
+<article class="card"><h2>Evidence Gap</h2><p id="gap" class="empty">Paste text and run Audit.</p></article>
+<article class="card"><h2>Memory Pollution Risk</h2><p id="risk" class="empty">No risk statement yet.</p></article>
+<button id="copyBtn" class="copy">Copy as Markdown</button>
+</section>
+</main>
+<footer class="footer">Lite Mode does not store anything unless you explicitly choose Send to Inbox. Default provenance: ai_assisted: true, human_reviewed: declined.</footer>
+</div>
+<div id="toast" class="toast hidden"></div>
+<script>
+const $=s=>document.querySelector(s);let last=null;$("#auditBtn").onclick=runAudit;$("#copyBtn").onclick=copyMarkdown;$("#sendBtn").onclick=sendInbox;$("#settingsBtn").onclick=()=>toast("No setup needed. If the backend is running, Lite will use it; otherwise it runs offline.");
+if(new URLSearchParams(location.search).get("sample")){$("#source").value="The user always prefers HTML over Markdown for all future project outputs.";setTimeout(runAudit,120)}
+async function runAudit(){const text=$("#source").value.trim();if(!text){toast("Paste something first.");return}last=await backendAudit(text).catch(()=>stubAudit(text));render(last);toast(last.backend?"Audited by local backend.":"Audited offline with Lite stub.");}
+async function backendAudit(text){const ctrl=new AbortController();setTimeout(()=>ctrl.abort(),1200);const r=await fetch("http://127.0.0.1:4788/api/lite-audit",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({text}),signal:ctrl.signal});const j=await r.json();if(!j.ok)throw Error(j.error||"backend failed");return {...j.result,backend:true,input:text}}
+function stubAudit(text){const lower=text.toLowerCase(),m=[],fix=[];if(!/(source_ref|source:|来源|证据|引用)/i.test(text)){m.push("missing_source_refs");fix.push("Add source_refs before durable use.")}if(!/(audit_ref|review|审计|复核)/i.test(text)){m.push("missing_audit_refs");fix.push("Add audit_refs or review path.")}if(/always|never|must|only|all future|所有|全部|永远|必须|唯一|必然/i.test(text)){m.push("overgeneralization");fix.push("Narrow absolute wording.")}if(lower.includes("because the ai summary")||text.includes("AI 总结说")){m.push("circular_reasoning");fix.push("Use independent evidence.")}let d=m.includes("circular_reasoning")&&m.includes("missing_source_refs")?"discard":m.includes("missing_source_refs")?"quarantine":m.length?"revise":"accept";return{routing_decision:d,failure_modes:m,evidence_gap:m.length?m.join(", "):"No structural evidence gap detected.",memory_pollution_risk:risk(d,m),required_fixes:fix,backend:false,input:text,provenance:{ai_assisted:true,human_reviewed:"declined",audit_ref:"dashboard/lite.html"}}}
+function risk(d,m){if(d==="accept")return"Low, assuming references are real and inspectable.";if(m.includes("circular_reasoning"))return"A future agent may treat the AI output as proof of itself.";if(m.includes("missing_source_refs"))return"A plausible claim could become durable memory without source evidence.";return"The claim may be useful, but needs revision before long-term storage."}
+function render(r){$("#decision").textContent=r.routing_decision;$("#decision").className="decision "+r.routing_decision;$("#modes").innerHTML=(r.failure_modes.length?r.failure_modes:["none"]).map(x=>`<span class="chip">${esc(x)}</span>`).join("");$("#gap").textContent=r.evidence_gap;$("#gap").className="";$("#risk").textContent=r.memory_pollution_risk;$("#risk").className=""}
+async function copyMarkdown(){if(!last){toast("Run Audit first.");return}const md=`---\nprovenance:\n  ai_assisted: true\n  human_reviewed: declined\n  audit_ref: dashboard/lite.html\n---\n\n# Mercury Lite Audit\n\n## Routing Decision\n\n${last.routing_decision}\n\n## Failure Modes\n\n${last.failure_modes.map(x=>"- "+x).join("\n")||"- none"}\n\n## Evidence Gap\n\n${last.evidence_gap}\n\n## Memory Pollution Risk\n\n${last.memory_pollution_risk}\n\n## Required Fixes\n\n${(last.required_fixes||[]).map(x=>"- "+x).join("\n")||"- none"}\n`;await navigator.clipboard.writeText(md);toast("Markdown copied.");}
+async function sendInbox(){const text=$("#source").value.trim();if(!text){toast("Paste something first.");return}try{const r=await fetch("http://127.0.0.1:4788/api/intake",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({text,files:[]})});const j=await r.json();if(!j.ok)throw Error(j.error||"save failed");toast("Saved to inbox: "+j.raw_path)}catch(e){toast("Backend unavailable. Nothing was stored.")}}
+function toast(t){$("#toast").textContent=t;$("#toast").classList.remove("hidden");setTimeout(()=>$("#toast").classList.add("hidden"),3800)}function esc(s){return String(s).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;")}
+</script>
+</body>
+</html>

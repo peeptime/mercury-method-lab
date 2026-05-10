@@ -1,6 +1,7 @@
 import { createServer } from "node:http";
+import { request as httpsRequest } from "node:https";
 import { execFile, spawnSync } from "node:child_process";
-import { appendFile, mkdir, readdir, readFile, stat, writeFile } from "node:fs/promises";
+import { appendFile, mkdir, readdir, readFile, rm, stat, writeFile } from "node:fs/promises";
 import { createReadStream } from "node:fs";
 import { basename, dirname, extname, join, normalize, relative } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -12,8 +13,14 @@ const root = dirname(dirname(fileURLToPath(import.meta.url)));
 const dashboardRoot = join(root, "dashboard");
 const port = Number(process.env.MERCURY_DASHBOARD_PORT || 4788);
 const lifecycleLogPath = join(root, "data", "lifecycle-log.jsonl");
-const appVersion = "2026.05.02-c";
-const expectedClientAssetVersion = "20260502c";
+const appVersion = "2026.05.10-a";
+const expectedClientAssetVersion = "20260510a";
+const preferencesPath = "config/preferences.json";
+const overviewCache = {
+  updatedAt: 0,
+  data: null,
+  inflight: null
+};
 
 const artifactDirs = [
   "00_inbox",
@@ -29,6 +36,11 @@ const artifactDirs = [
 ];
 
 const commandAllowlist = new Map([
+  ["audit", ["run", "audit"]],
+  ["report", ["run", "report"]],
+  ["audit:flow", ["run", "audit:flow"]],
+  ["cycle:status", ["run", "cycle:status"]],
+  ["cycle:check", ["run", "cycle:check"]],
   ["doctor", ["run", "doctor"]],
   ["index", ["run", "index"]],
   ["validate", ["run", "validate"]],
@@ -87,7 +99,40 @@ const server = createServer(async (req, res) => {
     }
 
     if (url.pathname === "/api/overview" && req.method === "GET") {
-      return sendJson(res, await buildOverview());
+      return sendJson(res, await buildOverviewCached());
+    }
+
+    if (url.pathname === "/api/preferences" && req.method === "GET") {
+      return sendJson(res, { ok: true, preferences: await readPreferences() });
+    }
+
+    if (url.pathname === "/api/preferences" && req.method === "PATCH") {
+      const body = await readJson(req);
+      return sendJson(res, { ok: true, preferences: await updatePreferences(body.preferences || body) });
+    }
+
+    if (url.pathname === "/api/product-context" && req.method === "GET") {
+      return sendJson(res, await buildProductContext());
+    }
+
+    if (url.pathname === "/api/update-check" && req.method === "GET") {
+      const packageJson = await readJsonFile("package.json");
+      return sendJson(res, await checkLatestRelease(packageJson.version, url.searchParams.get("include_prerelease") === "true"));
+    }
+
+    if (url.pathname === "/api/diagnostics" && req.method === "GET") {
+      return sendJson(res, await buildDiagnostics());
+    }
+
+    if (url.pathname === "/api/maintenance/clean-dist" && req.method === "POST") {
+      await rm(join(root, "dist"), { recursive: true, force: true });
+      await appendLifecycleEvent({ action: "clean_dist", path: "dist", actor: "dashboard" });
+      return sendJson(res, { ok: true, cleaned: "dist" });
+    }
+
+    if (url.pathname === "/api/lite-audit" && req.method === "POST") {
+      const body = await readJson(req);
+      return sendJson(res, { ok: true, result: liteAudit(body.text || "") });
     }
 
     if (url.pathname === "/api/submission/viewpoint" && req.method === "POST") {
@@ -183,6 +228,52 @@ server.listen(port, "127.0.0.1", () => {
   console.log(`Mercury dashboard: http://127.0.0.1:${port}`);
 });
 
+async function buildOverviewCached() {
+  const now = Date.now();
+  if (overviewCache.data && now - overviewCache.updatedAt < 1500) {
+    return overviewCache.data;
+  }
+  if (overviewCache.inflight) {
+    return overviewCache.inflight;
+  }
+  overviewCache.inflight = buildOverview()
+    .then((data) => {
+      overviewCache.data = data;
+      overviewCache.updatedAt = Date.now();
+      return data;
+    })
+    .finally(() => {
+      overviewCache.inflight = null;
+    });
+  return overviewCache.inflight;
+}
+
+async function buildProductContext() {
+  const [packageJson, modelProviders, methods, preferences, storageSummary, releaseNotes] = await Promise.all([
+    readJsonFile("package.json"),
+    readJsonFile("config/model-providers.json"),
+    readJsonFile("config/methods.json"),
+    readPreferences(),
+    buildStorageSummary(),
+    readLatestChangelogEntry()
+  ]);
+  return {
+    ok: true,
+    appVersion,
+    expectedClientAssetVersion,
+    packageVersion: packageJson.version,
+    nodeVersion: process.version,
+    root,
+    modelProviders,
+    methods,
+    preferences,
+    commandAllowlist: [...commandAllowlist.keys()],
+    storageSummary,
+    releaseNotes,
+    git: readGitInfo()
+  };
+}
+
 async function buildOverview() {
   const [
     stateMachine,
@@ -192,7 +283,8 @@ async function buildOverview() {
     methods,
     entrypoints,
     integrations,
-    packageJson
+    packageJson,
+    preferences
   ] = await Promise.all([
     readJsonFile("config/state-machine.json"),
     readJsonFile("config/permissions.json"),
@@ -201,7 +293,8 @@ async function buildOverview() {
     readJsonFile("config/methods.json"),
     readJsonFile("config/architecture-entrypoints.json"),
     readJsonFile("config/integrations.json"),
-    readJsonFile("package.json")
+    readJsonFile("package.json"),
+    readPreferences()
   ]);
 
   const artifacts = await collectArtifacts();
@@ -226,6 +319,11 @@ async function buildOverview() {
     modelProviders,
     capabilities,
     methods,
+    preferences,
+    commandAllowlist: [...commandAllowlist.keys()],
+    storageSummary: await buildStorageSummary(),
+    releaseNotes: await readLatestChangelogEntry(),
+    git: readGitInfo(),
     deployment,
     entrypoints,
     integrations,
@@ -337,23 +435,17 @@ function readRuntimeEnv(name) {
 }
 
 async function collectArtifacts() {
-  const files = [];
-  for (const dir of artifactDirs) {
-    files.push(...await listFiles(join(root, dir)));
-  }
+  const files = (await Promise.all(artifactDirs.map((dir) => listFiles(join(root, dir))))).flat();
 
-  const artifacts = [];
-  for (const file of files) {
-    if (!/\.(md|ya?ml|json)$/i.test(file)) {
-      continue;
-    }
-
+  const artifacts = await Promise.all(files
+    .filter((file) => /\.(md|ya?ml|json)$/i.test(file))
+    .map(async (file) => {
     const text = await readFile(file, "utf8");
     const fileStat = await stat(file);
     const relPath = relative(root, file).replaceAll("\\", "/");
     const metadata = parseMetadata(text, relPath);
 
-    artifacts.push({
+    return {
       id: metadata.id || relPath.replace(/\.[^.]+$/, "").replace(/[^A-Za-z0-9_-]+/g, "-").toLowerCase(),
       path: relPath,
       name: relPath.split("/").pop(),
@@ -366,8 +458,8 @@ async function collectArtifacts() {
       source_refs: metadata.source_refs || [],
       decision_refs: metadata.decision_refs || [],
       updated_at: fileStat.mtime.toISOString()
-    });
-  }
+    };
+  }));
 
   return artifacts.sort((a, b) => a.path.localeCompare(b.path));
 }
@@ -539,6 +631,323 @@ function buildAuditSummary(artifacts, statusCounts) {
     reusable: (statusCounts.approved || 0) + (statusCounts.audited || 0),
     needsReview: (statusCounts.draft || 0) + (statusCounts.review_ready || 0) + missingReview
   };
+}
+
+async function readPreferences() {
+  const defaults = defaultPreferences();
+  let current = {};
+  try {
+    current = await readJsonFile(preferencesPath);
+  } catch {
+    current = {};
+  }
+  const merged = deepMerge(defaults, current);
+  await writeJsonFile(preferencesPath, merged);
+  return merged;
+}
+
+async function updatePreferences(patch) {
+  const current = await readPreferences();
+  const merged = deepMerge(current, patch || {});
+  merged.version = 1;
+  await writeJsonFile(preferencesPath, merged);
+  await appendLifecycleEvent({ action: "preferences_update", path: preferencesPath, actor: "dashboard" });
+  return merged;
+}
+
+function defaultPreferences() {
+  return {
+    version: 1,
+    onboarding: { completed: false, step: 0 },
+    general: {
+      startup_behavior: "last_page",
+      auto_reconnect: true,
+      recent_files_count: 10,
+      language: "system",
+      timezone: "local"
+    },
+    interface: {
+      theme: "system",
+      accent: "#7a1d1d",
+      font_scale: "medium",
+      font_family: "system",
+      compact: false,
+      show_line_numbers: true,
+      sidebar_width: 240
+    },
+    storage: {
+      index_path: "11_indexes",
+      auto_archive_enabled: false,
+      auto_archive_days: 90
+    },
+    output: {
+      default_export_format: "md",
+      export_dir: "10_exports",
+      include_provenance: true,
+      html_report_theme: "editorial",
+      append_audit_ref: true,
+      markdown_table_style: "gfm"
+    },
+    control: {
+      danger_confirm: true,
+      default_review_state: "declined"
+    },
+    update: {
+      auto_check_frequency: "daily",
+      include_prerelease: false,
+      show_changelog_after_update: true,
+      last_seen_version: "1.3.0"
+    },
+    notifications: {
+      system_enabled: false,
+      toast_enabled: true
+    }
+  };
+}
+
+function deepMerge(base, patch) {
+  if (!patch || typeof patch !== "object" || Array.isArray(patch)) {
+    return base;
+  }
+  const result = { ...base };
+  for (const [key, value] of Object.entries(patch)) {
+    if (value && typeof value === "object" && !Array.isArray(value) && base[key] && typeof base[key] === "object" && !Array.isArray(base[key])) {
+      result[key] = deepMerge(base[key], value);
+    } else {
+      result[key] = value;
+    }
+  }
+  return result;
+}
+
+async function buildStorageSummary() {
+  const dirs = [...artifactDirs, "09_templates", "11_indexes", "dist", "data"];
+  const entries = [];
+  for (const dir of dirs) {
+    entries.push(await summarizeDirectory(dir));
+  }
+  return {
+    root,
+    index_path: "11_indexes",
+    lifecycle_log: await summarizeFile("data/lifecycle-log.jsonl"),
+    directories: entries
+  };
+}
+
+async function summarizeDirectory(relPath) {
+  const fullPath = join(root, relPath);
+  let files = 0;
+  let bytes = 0;
+  async function walk(path) {
+    let entries = [];
+    try {
+      entries = await readdir(path, { withFileTypes: true });
+    } catch {
+      return;
+    }
+    await Promise.all(entries.map(async (entry) => {
+      const child = join(path, entry.name);
+      if (entry.isDirectory()) {
+        await walk(child);
+      } else if (entry.isFile()) {
+        try {
+          const itemStat = await stat(child);
+          files += 1;
+          bytes += itemStat.size;
+        } catch {
+          // Ignore files that disappear during the summary pass.
+        }
+      }
+    }));
+  }
+  await walk(fullPath);
+  return { path: relPath, files, bytes };
+}
+
+async function summarizeFile(relPath) {
+  try {
+    const fileStat = await stat(join(root, relPath));
+    return { path: relPath, bytes: fileStat.size };
+  } catch {
+    return { path: relPath, bytes: 0 };
+  }
+}
+
+async function readLatestChangelogEntry() {
+  try {
+    const changelog = await readFile(join(root, "CHANGELOG.md"), "utf8");
+    const match = changelog.match(/^##\s+(\d+\.\d+\.\d+[^\n]*)\n([\s\S]*?)(?=\n##\s+|\s*$)/m);
+    if (!match) return { title: "", body: "" };
+    return { title: match[1].trim(), body: match[2].trim().slice(0, 4000) };
+  } catch {
+    return { title: "", body: "" };
+  }
+}
+
+function readGitInfo() {
+  const commit = spawnSync("git", ["rev-parse", "--short", "HEAD"], { cwd: root, encoding: "utf8" });
+  const branch = spawnSync("git", ["branch", "--show-current"], { cwd: root, encoding: "utf8" });
+  return {
+    commit: commit.status === 0 ? commit.stdout.trim() : "",
+    branch: branch.status === 0 ? branch.stdout.trim() : ""
+  };
+}
+
+async function buildDiagnostics() {
+  const packageJson = await readJsonFile("package.json");
+  return {
+    ok: true,
+    generated_at: new Date().toISOString(),
+    appVersion,
+    packageVersion: packageJson.version,
+    nodeVersion: process.version,
+    platform: process.platform,
+    arch: process.arch,
+    root,
+    git: readGitInfo(),
+    storageSummary: await buildStorageSummary(),
+    preferences: await readPreferences()
+  };
+}
+
+function liteAudit(text) {
+  const value = String(text || "").trim();
+  const lower = value.toLowerCase();
+  const blockers = [];
+  const warnings = [];
+  const requiredFixes = [];
+
+  if (!value) {
+    blockers.push("empty_input");
+    requiredFixes.push("Paste an AI output or candidate memory before auditing.");
+  }
+  if (!/(source_ref|source refs|source:|来源|证据|引用)/i.test(value)) {
+    blockers.push("missing_source_refs");
+    requiredFixes.push("Add source_refs or quote the source material before durable use.");
+  }
+  if (!/(audit_ref|audit refs|review|reviewed|审计|复核)/i.test(value)) {
+    blockers.push("missing_audit_refs");
+    requiredFixes.push("Add audit_refs or record a review path before promotion.");
+  }
+  if (/(always|never|must|only|all future|guaranteed|proves|所有|全部|永远|从不|必须|唯一|必然|完全)/i.test(value)) {
+    blockers.push("overgeneralization");
+    requiredFixes.push("Narrow absolute language or add stronger evidence.");
+  }
+  if (lower.includes("because the ai summary") || lower.includes("summary says every blocker") || value.includes("AI 总结说")) {
+    blockers.push("circular_reasoning");
+    requiredFixes.push("Replace self-referential proof with independent evidence.");
+  }
+
+  let routingDecision = "accept";
+  if (blockers.includes("circular_reasoning") && blockers.includes("missing_source_refs")) {
+    routingDecision = "discard";
+  } else if (blockers.includes("missing_source_refs")) {
+    routingDecision = "quarantine";
+  } else if (blockers.length) {
+    routingDecision = "revise";
+  }
+
+  if (value.length > 1600) {
+    warnings.push("Long Lite input: consider converting it into a full Audit Packet for durable review.");
+  }
+
+  return {
+    routing_decision: routingDecision,
+    failure_modes: blockers,
+    evidence_gap: blockers.length ? blockers.join(", ") : "No structural evidence gap detected by Lite Mode.",
+    memory_pollution_risk: riskForLite({ routingDecision, blockers }),
+    required_fixes: requiredFixes,
+    provenance: {
+      ai_assisted: true,
+      human_reviewed: "declined",
+      audit_ref: "dashboard/lite.html"
+    }
+  };
+}
+
+function riskForLite({ routingDecision, blockers }) {
+  if (routingDecision === "accept") {
+    return "Low, assuming the pasted source and audit references are real and inspectable.";
+  }
+  if (blockers.includes("circular_reasoning")) {
+    return "A future agent may treat the AI output as proof of itself and close unresolved work.";
+  }
+  if (blockers.includes("missing_source_refs")) {
+    return "A plausible claim could become durable memory without inspectable source evidence.";
+  }
+  return "The claim may be useful, but it needs revision before long-term storage.";
+}
+
+async function checkLatestRelease(currentVersion, includePrerelease = false) {
+  try {
+    const releases = await githubJson("/repos/peeptime/mercury-method-lab/releases?per_page=10");
+    const latest = releases.find((release) => includePrerelease || !release.prerelease);
+    if (!latest) {
+      return { ok: true, current_version: currentVersion, latest_version: currentVersion, update_available: false };
+    }
+    const latestVersion = String(latest.tag_name || "").replace(/^v/, "");
+    return {
+      ok: true,
+      current_version: currentVersion,
+      latest_version: latestVersion,
+      tag: latest.tag_name,
+      url: latest.html_url,
+      update_available: compareSemver(latestVersion, currentVersion) > 0,
+      prerelease: Boolean(latest.prerelease)
+    };
+  } catch (error) {
+    return {
+      ok: false,
+      current_version: currentVersion,
+      error: error.message,
+      update_available: false
+    };
+  }
+}
+
+function githubJson(path) {
+  return new Promise((resolve, reject) => {
+    const req = httpsRequest({
+      hostname: "api.github.com",
+      path,
+      method: "GET",
+      headers: {
+        "Accept": "application/vnd.github+json",
+        "User-Agent": "Mercury-Method-Lab-Dashboard"
+      },
+      timeout: 5000
+    }, (res) => {
+      const chunks = [];
+      res.on("data", (chunk) => chunks.push(chunk));
+      res.on("end", () => {
+        const text = Buffer.concat(chunks).toString("utf8");
+        if (res.statusCode < 200 || res.statusCode >= 300) {
+          reject(new Error(`GitHub API ${res.statusCode}: ${text.slice(0, 140)}`));
+          return;
+        }
+        try {
+          resolve(JSON.parse(text));
+        } catch (error) {
+          reject(error);
+        }
+      });
+    });
+    req.on("timeout", () => {
+      req.destroy(new Error("GitHub API request timed out"));
+    });
+    req.on("error", reject);
+    req.end();
+  });
+}
+
+function compareSemver(left, right) {
+  const a = String(left || "0.0.0").split(".").map((part) => Number.parseInt(part, 10) || 0);
+  const b = String(right || "0.0.0").split(".").map((part) => Number.parseInt(part, 10) || 0);
+  for (let index = 0; index < 3; index += 1) {
+    const delta = (a[index] || 0) - (b[index] || 0);
+    if (delta !== 0) return delta;
+  }
+  return 0;
 }
 
 async function getArtifactDetail(path) {

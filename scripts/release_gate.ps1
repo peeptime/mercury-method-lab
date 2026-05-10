@@ -59,6 +59,7 @@ $cheapOrder = @(
   "sync:check",
   "cycle:status",
   "cycle:check",
+  "dashboard:check",
   "validate:incr",
   "index:incr",
   "audit",

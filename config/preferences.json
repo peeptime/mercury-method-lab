@@ -1,0 +1,50 @@
+{
+  "version": 1,
+  "onboarding": {
+    "completed": false,
+    "step": 0
+  },
+  "general": {
+    "startup_behavior": "last_page",
+    "auto_reconnect": true,
+    "recent_files_count": 10,
+    "language": "system",
+    "timezone": "local"
+  },
+  "interface": {
+    "theme": "system",
+    "accent": "#7a1d1d",
+    "font_scale": "medium",
+    "font_family": "system",
+    "compact": false,
+    "show_line_numbers": true,
+    "sidebar_width": 240
+  },
+  "storage": {
+    "index_path": "11_indexes",
+    "auto_archive_enabled": false,
+    "auto_archive_days": 90
+  },
+  "output": {
+    "default_export_format": "md",
+    "export_dir": "10_exports",
+    "include_provenance": true,
+    "html_report_theme": "editorial",
+    "append_audit_ref": true,
+    "markdown_table_style": "gfm"
+  },
+  "control": {
+    "danger_confirm": true,
+    "default_review_state": "declined"
+  },
+  "update": {
+    "auto_check_frequency": "daily",
+    "include_prerelease": false,
+    "show_changelog_after_update": true,
+    "last_seen_version": "1.3.0"
+  },
+  "notifications": {
+    "system_enabled": false,
+    "toast_enabled": true
+  }
+}
