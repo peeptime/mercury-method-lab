@@ -7,6 +7,7 @@ import {
   audit,
   auditMemoryWrite,
   createAuditPacket,
+  listAuditScenarios,
   listAuditProfiles,
   listAuditStandards,
   listPolicies,
@@ -67,6 +68,7 @@ assert.equal(memoryHook.routing_decision, "accept");
 assert.equal(listPolicies().some((policy) => policy.name === "strict"), true);
 assert.equal(listAuditProfiles().some((profile) => profile.id === "external-auditor"), true);
 assert.equal(listAuditStandards().some((standard) => standard.id === "high-risk-memory"), true);
+assert.equal(listAuditScenarios().some((scenario) => scenario.id === "ai-coding"), true);
 assert.equal(listSourceLevels().some((level) => level.id === "ai_generated"), true);
 
 const disagreement = assessDisagreement([
@@ -75,6 +77,17 @@ const disagreement = assessDisagreement([
 ]);
 assert.equal(disagreement.escalation_required, true);
 assert.equal(disagreement.recommended_route, "quarantine");
+
+const scenarioResult = audit("The agent fixed the bug and all tests prove it.", {
+  scenario: "ai-coding",
+  type: "agent_summary",
+  source_refs: ["commit:abc123"],
+  audit_refs: ["test:unit-output"]
+});
+assert.equal(scenarioResult.scenario.id, "ai-coding");
+assert.equal(Array.isArray(scenarioResult.review_guidance.options), true);
+assert.equal(scenarioResult.review_guidance.options.length, 3);
+assert.equal(scenarioResult.review_guidance.focus.includes("test relevance"), true);
 
 const demo = spawnSync(process.execPath, ["examples/integration-demo/memory-write-hook.mjs"], {
   cwd: root,

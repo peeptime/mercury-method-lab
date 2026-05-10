@@ -1,0 +1,8 @@
+{
+  "id": "legal-medical-risk",
+  "label": "Legal / Medical Risk",
+  "default_profile": "external-auditor",
+  "default_standard": "high-risk-memory",
+  "required_evidence": ["primary authority", "qualified human reviewer", "jurisdiction or clinical context"],
+  "review_focus": ["scope limitation", "qualified review", "do-not-use-as-advice warning"]
+}

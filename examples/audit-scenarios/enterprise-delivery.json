@@ -1,0 +1,8 @@
+{
+  "id": "enterprise-delivery",
+  "label": "Enterprise Delivery",
+  "default_profile": "external-auditor",
+  "default_standard": "high-risk-memory",
+  "required_evidence": ["field note", "named reviewer", "stakeholder dissent if present"],
+  "review_focus": ["speaker attribution", "customer commitment", "dissent preservation"]
+}

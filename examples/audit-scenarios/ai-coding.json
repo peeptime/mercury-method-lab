@@ -1,0 +1,8 @@
+{
+  "id": "ai-coding",
+  "label": "AI Coding",
+  "default_profile": "v8.1-reality-sync",
+  "default_standard": "mercury-core",
+  "required_evidence": ["diff or commit", "test output", "affected file path"],
+  "review_focus": ["behavioral change", "test relevance", "unverified assumption"]
+}

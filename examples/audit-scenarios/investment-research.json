@@ -1,0 +1,8 @@
+{
+  "id": "investment-research",
+  "label": "Investment Research",
+  "default_profile": "external-auditor",
+  "default_standard": "high-risk-memory",
+  "required_evidence": ["primary filing or source", "date-bound market context", "counter-evidence"],
+  "review_focus": ["source date", "claim boundary", "missing dissent"]
+}

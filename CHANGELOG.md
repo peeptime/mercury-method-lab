@@ -4,6 +4,23 @@
 
 Every release entry must carry an explicit provenance declaration. Legacy entries that cannot be reconstructed are marked as unverified instead of being silently treated as human-only.
 
+## 1.8.0 - Open Scenario Packs (2026-05-10)
+> Provenance: `[AI_GENERATED]` drafted_by: Codex; humanReviewed: declined; reviewer: project_owner_pending; audit_ref: docs/ITERATION-GUIDE-1.8.0.md
+
+### Added
+
+- `src/mercury-audit/scenarios.mjs` adds five reusable scenario packs: AI coding, personal knowledge, investment research, enterprise delivery, and legal/medical risk.
+- `src/mercury-audit/review-ux.mjs` adds scenario-aware review guidance with plain-language consequence and next action.
+- `schemas/audit-scenario.schema.json` documents the scenario-pack contract.
+- `examples/audit-scenarios/` provides reusable scenario configs.
+- `docs/SCENARIO-PACKS.md`, `docs/ADAPTER-CONTRACT.md`, and `docs/REVIEW-UX-GUIDE.md` document how teams should migrate Mercury into their own workflows.
+
+### Changed
+
+- `audit()` accepts `scenario` and automatically applies scenario default profile/standard when explicit overrides are absent.
+- SDK results now include `scenario` and `review_guidance`.
+- README / README.en now surface scenario packs before deeper kernel and SDK docs.
+
 ## 1.7.0 - Audit Kernel Independence (2026-05-10)
 > Provenance: `[AI_GENERATED]` drafted_by: Codex; humanReviewed: declined; reviewer: project_owner_pending; audit_ref: docs/ITERATION-GUIDE-1.7.0.md
 

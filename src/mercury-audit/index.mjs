@@ -6,6 +6,8 @@ import { getAuditStandard, listAuditStandards } from "./standards.mjs";
 import { assessSourceCredibility, classifySourceRef, listSourceLevels } from "./source-credibility.mjs";
 import { assessLifecycle } from "./lifecycle.mjs";
 import { assessDisagreement } from "./disagreement.mjs";
+import { getAuditScenario, listAuditScenarios, scenarioDefaults } from "./scenarios.mjs";
+import { buildScenarioReviewGuidance } from "./review-ux.mjs";
 
 export const MERCURY_AUDIT_API_VERSION = "0.2.0";
 
@@ -15,12 +17,16 @@ export {
   assessLifecycle,
   assessSourceCredibility,
   auditKernel,
+  buildScenarioReviewGuidance,
   classifySourceRef,
+  getAuditScenario,
   getAuditProfile,
   getAuditStandard,
   listAuditProfiles,
+  listAuditScenarios,
   listAuditStandards,
-  listSourceLevels
+  listSourceLevels,
+  scenarioDefaults
 };
 
 export function createAuditPacket(content, context = {}) {
@@ -50,11 +56,18 @@ export function audit(contentOrPacket, context = {}) {
   const packet = isAuditPacket(contentOrPacket)
     ? normalizePacket(contentOrPacket, context)
     : createAuditPacket(contentOrPacket, context);
+  const scenario = getAuditScenario(context.scenario || packet.scenario || context.audit_scenario);
+  const defaults = context.scenario || packet.scenario || context.audit_scenario
+    ? scenarioDefaults(scenario)
+    : {};
   const knownPaths = new Set(context.knownPaths || context.known_paths || []);
   const policyResult = auditKernel(packet, {
     ...context,
+    profile: context.profile || defaults.profile,
+    standard: context.standard || defaults.standard,
     knownPaths
   });
+  const reviewGuidance = buildScenarioReviewGuidance(policyResult, scenario);
 
   return {
     api_version: MERCURY_AUDIT_API_VERSION,
@@ -76,6 +89,8 @@ export function audit(contentOrPacket, context = {}) {
     source_credibility: policyResult.source_credibility,
     lifecycle: policyResult.lifecycle,
     review_disagreement: policyResult.review_disagreement,
+    scenario,
+    review_guidance: reviewGuidance,
     policy: policyResult.policy,
     raw_result: policyResult
   };

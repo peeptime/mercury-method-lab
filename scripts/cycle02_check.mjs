@@ -23,6 +23,9 @@ const sdkIntegrationUnfreeze = packageJson.version.startsWith("1.6.")
 const auditKernelUnfreeze = packageJson.version.startsWith("1.7.")
   && await exists("docs/AUDIT-KERNEL.md")
   && await exists("docs/MERCURY-AGENT-RELATIONSHIP.md");
+const scenarioPackUnfreeze = packageJson.version.startsWith("1.8.")
+  && await exists("docs/SCENARIO-PACKS.md")
+  && await exists("docs/ADAPTER-CONTRACT.md");
 const proofPack = await readText("docs/PROOF-PACK-001.md");
 const failureModes = await readText("docs/FAILURE-MODES.md");
 const charterUsers = await readText("docs/CHARTER-USER-RECORDS.md");
@@ -31,7 +34,7 @@ const auditRules = await readText("scripts/audit-core/audit_rules.mjs");
 const htmlReport = await readText("scripts/generate_audit_reports.mjs");
 const liteMode = await readText("dashboard/lite.html");
 
-check("version stays on an explicitly documented unfreeze line", packageJson.version.startsWith("1.2.") || productSurfaceUnfreeze || methodDepthUnfreeze || reviewUxUnfreeze || sdkIntegrationUnfreeze || auditKernelUnfreeze);
+check("version stays on an explicitly documented unfreeze line", packageJson.version.startsWith("1.2.") || productSurfaceUnfreeze || methodDepthUnfreeze || reviewUxUnfreeze || sdkIntegrationUnfreeze || auditKernelUnfreeze || scenarioPackUnfreeze);
 if (productSurfaceUnfreeze) {
   warnings.push("product surface / Lite intake patch line detected: method-layer Cycle 02 checks still apply, but v1.3.x is allowed for product UI and entry-friction fixes");
 }
@@ -104,6 +107,27 @@ if (auditKernelUnfreeze) {
   const sdkApi = await readText("src/mercury-audit/index.mjs");
   check("SDK exports kernel surfaces", sdkApi.includes("auditKernel") && sdkApi.includes("listAuditProfiles") && sdkApi.includes("assessSourceCredibility"));
   check("README discloses Mercury Agent relationship", (await readText("README.en.md")).includes("not a fork, plugin, or official extension"));
+}
+if (scenarioPackUnfreeze) {
+  warnings.push("Open scenario pack line detected: v1.8.x is allowed for scenario packs, adapter contract, and scenario-aware review UX");
+  for (const path of [
+    "src/mercury-audit/scenarios.mjs",
+    "src/mercury-audit/review-ux.mjs",
+    "schemas/audit-scenario.schema.json",
+    "examples/audit-scenarios/ai-coding.json",
+    "examples/audit-scenarios/personal-knowledge.json",
+    "examples/audit-scenarios/investment-research.json",
+    "examples/audit-scenarios/enterprise-delivery.json",
+    "examples/audit-scenarios/legal-medical-risk.json",
+    "docs/SCENARIO-PACKS.md",
+    "docs/ADAPTER-CONTRACT.md",
+    "docs/REVIEW-UX-GUIDE.md"
+  ]) {
+    check(`scenario pack artifact exists: ${path}`, await exists(path));
+  }
+  const sdkApi = await readText("src/mercury-audit/index.mjs");
+  check("SDK exports scenario surfaces", sdkApi.includes("listAuditScenarios") && sdkApi.includes("review_guidance"));
+  check("README surfaces scenario packs", (await readText("README.en.md")).includes("Scenario Packs v1.8.0"));
 }
 
 const cases = splitSections(proofPack, /^## Case \d{3}:[^\n]*$/gm);

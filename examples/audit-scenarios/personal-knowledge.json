@@ -1,0 +1,8 @@
+{
+  "id": "personal-knowledge",
+  "label": "Personal Knowledge",
+  "default_profile": "v8.5-correction",
+  "default_standard": "mercury-core",
+  "required_evidence": ["direct user statement", "conversation timestamp"],
+  "review_focus": ["scope", "expiry", "attribution to user vs AI inference"]
+}

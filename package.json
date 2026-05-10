@@ -1,7 +1,7 @@
 {
   "name": "mercury-method-lab",
-  "version": "1.7.0",
-  "codename": "Audit Kernel Independence",
+  "version": "1.8.0",
+  "codename": "Open Scenario Packs",
   "private": true,
   "type": "module",
   "description": "Evidence-first audit method for deciding which AI-generated claims deserve durable memory.",

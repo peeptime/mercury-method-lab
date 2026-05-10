@@ -47,6 +47,10 @@ if (packageJson.version.startsWith("1.7.")) {
   console.log("audit_kernel_docs: audit-kernel/ecosystem-position/mercury-agent-relationship");
   console.log("audit_kernel_outputs: profiles/standards/source_credibility/lifecycle/disagreement");
 }
+if (packageJson.version.startsWith("1.8.")) {
+  console.log("scenario_pack_docs: scenario-packs/adapter-contract/review-ux-guide");
+  console.log("scenario_pack_outputs: ai-coding/personal-knowledge/investment/enterprise/legal-medical");
+}
 console.log("");
 console.log("next_low_token_commands:");
 console.log("  npm run cycle:check");
@@ -79,5 +83,6 @@ function cycleLine(version) {
   if (version.startsWith("1.5.")) return "v1.5.x human review checklist UX";
   if (version.startsWith("1.6.")) return "v1.6.x pre-storage audit SDK";
   if (version.startsWith("1.7.")) return "v1.7.x audit kernel independence";
+  if (version.startsWith("1.8.")) return "v1.8.x open scenario packs";
   return "outside documented Cycle 02/04 line";
 }

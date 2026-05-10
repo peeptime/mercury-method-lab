@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/mercury/audit-scenario.schema.json",
+  "title": "Mercury Audit Scenario",
+  "type": "object",
+  "required": ["id", "label", "default_profile", "default_standard"],
+  "properties": {
+    "id": { "type": "string", "minLength": 1 },
+    "label": { "type": "string", "minLength": 1 },
+    "output_types": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "default_profile": { "type": "string" },
+    "default_standard": { "type": "string" },
+    "risk_notes": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "required_evidence": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "review_focus": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "additionalProperties": true
+}

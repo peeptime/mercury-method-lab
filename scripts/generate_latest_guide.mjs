@@ -33,11 +33,13 @@ Keep the project stable, narrow, and cheap to reactivate:
 - use \`v1.5.x\` for Human Review Checklist, START-HERE, scope, i18n, and progressive-disclosure work
 - use \`v1.6.x\` for the pre-storage SDK/API, policy layer, memory-write hook demo, benchmark, and OWASP C8 mapping
 - use \`v1.7.x\` for audit kernel independence, profile/standard/source/lifecycle/disagreement contracts, and Mercury Agent relationship clarity
+- use \`v1.8.x\` for scenario packs, adapter contract, and scenario-aware review UX
 - deepen proof cases, failure modes, review ledger, and real charter-user records before adding product surface
 - use \`docs/START-HERE.md\` as the role-based entry point for humans and agents
 - use \`docs/SCOPE.md\` before adding storage, database, or ecosystem recommendations
 - use \`docs/SDK-API.md\` before adding any host adapter
 - use \`docs/AUDIT-KERNEL.md\` before changing SDK behavior
+- use \`docs/SCENARIO-PACKS.md\`, \`docs/ADAPTER-CONTRACT.md\`, and \`docs/REVIEW-UX-GUIDE.md\` before adding integration UX
 - use \`docs/ECOSYSTEM-POSITION.md\` and \`docs/MERCURY-AGENT-RELATIONSHIP.md\` before changing project positioning
 - use \`docs/OWASP-AISVS-C8-MAPPING.md\` before making compliance-related claims
 - use \`docs/AGENT-AUDIT-BLUEPRINT.md\` as the implementer-facing guide
@@ -60,6 +62,7 @@ Keep the project stable, narrow, and cheap to reactivate:
 - Do not add backend adapters.
 - Do not publish an npm package until the local SDK contract survives at least one integration review.
 - Do not keep judgment only in prose when it belongs in profile, standard, source, lifecycle, or disagreement contracts.
+- Do not make one scenario's evidence threshold the default for every domain.
 - Do not add new product surface during method-depth work.
 - Do not expose raw technical fields as the first user-visible layer when a checklist or summary can lead.
 - Do not add storage backend configuration UI; document exports instead.
