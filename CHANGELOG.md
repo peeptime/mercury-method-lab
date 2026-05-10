@@ -4,6 +4,20 @@
 
 Every release entry must carry an explicit provenance declaration. Legacy entries that cannot be reconstructed are marked as unverified instead of being silently treated as human-only.
 
+## 2.0.0-alpha.1 - Evidence Chain Preflight (2026-05-10)
+> Provenance: `[AI_GENERATED]` drafted_by: Codex; humanReviewed: declined; reviewer: project_owner_pending; audit_ref: docs/V2-PREFLIGHT-REQUIREMENTS.md
+
+### Added
+
+- `docs/V2-PREFLIGHT-REQUIREMENTS.md` records the controlling 2.0 requirement set: evidence-chain assistance, missing-evidence choices, A2A posture, drag attach, Karpathy-style coding discipline, and lightweight skill packaging.
+- `docs/V2-WORK-TRAIN.md` maps the 2.0 work into tested alpha releases and a final performance/skill pass.
+- `docs/ITERATION-STRATEGY-V2.md` is added as lower-weight historical strategy input so later agents keep its useful diagnosis without adopting unsupported hard-freeze restrictions.
+
+### Changed
+
+- README and public version surfaces now describe the 2.0 alpha direction before the earlier v1.x proof-governance history.
+- Cycle status/check and latest-guide generation now recognize the documented 2.0 alpha line.
+
 ## 1.9.0 - Proof Governance Expansion (2026-05-10)
 > Provenance: `[AI_GENERATED]` drafted_by: Codex; humanReviewed: declined; reviewer: project_owner_pending; audit_ref: docs/ITERATION-GUIDE-1.9.0.md
 

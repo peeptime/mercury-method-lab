@@ -29,6 +29,9 @@ const scenarioPackUnfreeze = packageJson.version.startsWith("1.8.")
 const proofGovernanceUnfreeze = packageJson.version.startsWith("1.9.")
   && await exists("docs/PROOF-PACK-002.md")
   && await exists("docs/RULE-VERSION-GOVERNANCE.md");
+const v2PreflightUnfreeze = packageJson.version.startsWith("2.0.0-alpha.1")
+  && await exists("docs/V2-PREFLIGHT-REQUIREMENTS.md")
+  && await exists("docs/V2-WORK-TRAIN.md");
 const proofPack = await readText("docs/PROOF-PACK-001.md");
 const proofPack002 = await readText("docs/PROOF-PACK-002.md");
 const failureModes = await readText("docs/FAILURE-MODES.md");
@@ -38,7 +41,7 @@ const auditRules = await readText("scripts/audit-core/audit_rules.mjs");
 const htmlReport = await readText("scripts/generate_audit_reports.mjs");
 const liteMode = await readText("dashboard/lite.html");
 
-check("version stays on an explicitly documented unfreeze line", packageJson.version.startsWith("1.2.") || productSurfaceUnfreeze || methodDepthUnfreeze || reviewUxUnfreeze || sdkIntegrationUnfreeze || auditKernelUnfreeze || scenarioPackUnfreeze || proofGovernanceUnfreeze);
+check("version stays on an explicitly documented unfreeze line", packageJson.version.startsWith("1.2.") || productSurfaceUnfreeze || methodDepthUnfreeze || reviewUxUnfreeze || sdkIntegrationUnfreeze || auditKernelUnfreeze || scenarioPackUnfreeze || proofGovernanceUnfreeze || v2PreflightUnfreeze);
 if (productSurfaceUnfreeze) {
   warnings.push("product surface / Lite intake patch line detected: method-layer Cycle 02 checks still apply, but v1.3.x is allowed for product UI and entry-friction fixes");
 }
@@ -150,6 +153,20 @@ if (proofGovernanceUnfreeze) {
   const sdkApi = await readText("src/mercury-audit/index.mjs");
   check("SDK exports governance surfaces", sdkApi.includes("MERCURY_RULESET_VERSION") && sdkApi.includes("anti_gaming") && sdkApi.includes("needsReaudit"));
   check("Failure Mode Dictionary includes anti-gaming mode", failureModes.includes("FM-28: audit_gaming_attempt"));
+}
+if (v2PreflightUnfreeze) {
+  warnings.push("2.0 evidence-chain preflight line detected: alpha.1 is allowed for requirement weighting, work-train mapping, and release-gate alignment");
+  for (const path of [
+    "docs/V2-PREFLIGHT-REQUIREMENTS.md",
+    "docs/V2-WORK-TRAIN.md",
+    "docs/ITERATION-STRATEGY-V2.md"
+  ]) {
+    check(`2.0 preflight artifact exists: ${path}`, await exists(path));
+  }
+  const preflight = await readText("docs/V2-PREFLIGHT-REQUIREMENTS.md");
+  const workTrain = await readText("docs/V2-WORK-TRAIN.md");
+  check("2.0 preflight records Strategy V2 as lower-weight", preflight.includes("lower-weight historical strategy input"));
+  check("2.0 work train maps alpha releases", workTrain.includes("v2.0.0-alpha.2") && workTrain.includes("v2.0.0"));
 }
 
 const cases = splitSections(proofPack, /^## Case \d{3}:[^\n]*$/gm);

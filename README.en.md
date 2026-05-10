@@ -2,9 +2,9 @@
 
 **It keeps smart thoughts from becoming clean but useless waste.**
 
-Version: `1.9.0`
+Version: `2.0.0-alpha.1`
 
-Latest release: [v1.9.0 Proof Governance Expansion](https://github.com/peeptime/mercury-method-lab/releases/tag/v1.9.0)
+Latest release: [v2.0.0-alpha.1 Evidence Chain Preflight](https://github.com/peeptime/mercury-method-lab/releases/tag/v2.0.0-alpha.1)
 
 ```yaml
 provenance:
@@ -17,6 +17,27 @@ provenance:
     Until referenced docs are human-reviewed, the project README cannot claim true.
   audit_ref: docs/REVIEW-LEDGER.md
 ```
+
+---
+
+## 2.0 Alpha Direction
+
+Mercury 2.0 moves from an author-centered method repository toward a portable AI audit framework.
+
+The controlling goal is:
+
+```text
+messy user material
+  -> credible evidence chain
+  -> source attribution and confidence basis
+  -> missing-evidence choices
+  -> durable case/review record
+  -> portable output for humans, agents, and skills
+```
+
+`docs/ITERATION-STRATEGY-V2.md` is treated as lower-weight historical strategy input: Mercury keeps its diagnosis about real integrations, real cases, and review flywheels, but does not inherit unsupported hard-freeze restrictions.
+
+See `docs/V2-PREFLIGHT-REQUIREMENTS.md` and `docs/V2-WORK-TRAIN.md`.
 
 ---
 
@@ -482,11 +503,11 @@ Not everything needs to be acted on. Sometimes writing it down is enough.
 | Proof pack coverage matrix | `docs/PROOF-PACK-COVERAGE-MATRIX.md` |
 | Related work | `docs/RELATED-WORK.md` |
 | 3-minute AI conversation intake | `docs/THREE-MINUTE-START.md` |
-| v1.8.0 scenario iteration guide | `docs/ITERATION-GUIDE-1.9.0.md` |
-| v1.7.0 kernel iteration guide | `docs/ITERATION-GUIDE-1.9.0.md` |
-| v1.6.0 SDK iteration guide | `docs/ITERATION-GUIDE-1.9.0.md` |
-| v1.5.0 review UX iteration guide | `docs/ITERATION-GUIDE-1.9.0.md` |
-| v1.4.0 method iteration guide | `docs/ITERATION-GUIDE-1.9.0.md` |
+| v2.0 alpha preflight guide | `docs/ITERATION-GUIDE-2.0.0-alpha.1.md` |
+| v1.9.0 proof governance guide | `docs/ITERATION-GUIDE-1.9.0.md` |
+| v1.8.0 scenario iteration guide | `docs/ITERATION-GUIDE-1.8.0.md` |
+| v1.7.0 kernel iteration guide | `docs/ITERATION-GUIDE-1.7.0.md` |
+| v1.6.0 SDK iteration guide | `docs/ITERATION-GUIDE-1.6.0.md` |
 | Product surface pressure test | `docs/PRODUCT-SURFACE-PRESSURE-TEST.md` |
 | Version history | `CHANGELOG.md` |
 | Governance principles | `docs/GOVERNANCE.md` |

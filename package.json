@@ -1,7 +1,7 @@
 {
   "name": "mercury-method-lab",
-  "version": "1.9.0",
-  "codename": "Proof Governance Expansion",
+  "version": "2.0.0-alpha.1",
+  "codename": "Evidence Chain Preflight",
   "private": true,
   "type": "module",
   "description": "Evidence-first audit method for deciding which AI-generated claims deserve durable memory.",

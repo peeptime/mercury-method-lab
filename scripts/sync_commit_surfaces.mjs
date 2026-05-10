@@ -154,12 +154,6 @@ async function syncReadme(relPath) {
     `${upstreamConfig.upstream.package} ${upstreamConfig.compatibility_target.preferred_range}`
   );
 
-  next = replaceOptional(
-    next,
-    /docs\/ITERATION-GUIDE-\d+(?:\.\d+)*\.md/g,
-    `docs/ITERATION-GUIDE-${packageJson.version}.md`
-  );
-
   await proposeText(relPath, next);
 }
 

@@ -55,6 +55,10 @@ if (packageJson.version.startsWith("1.9.")) {
   console.log("proof_governance_docs: proof-pack-002/rule-version/lifecycle/disagreement/anti-gaming");
   console.log("proof_governance_outputs: FM-23..FM-28/governance tests/ruleset version");
 }
+if (packageJson.version.startsWith("2.0.0-alpha.1")) {
+  console.log("v2_preflight_docs: v2-preflight-requirements/v2-work-train");
+  console.log("v2_preflight_outputs: evidence-chain work train/strategy-weighting/release mapping");
+}
 console.log("");
 console.log("next_low_token_commands:");
 console.log("  npm run cycle:check");
@@ -89,5 +93,6 @@ function cycleLine(version) {
   if (version.startsWith("1.7.")) return "v1.7.x audit kernel independence";
   if (version.startsWith("1.8.")) return "v1.8.x open scenario packs";
   if (version.startsWith("1.9.")) return "v1.9.x proof governance expansion";
+  if (version.startsWith("2.0.0-alpha.1")) return "v2.0.0-alpha.1 evidence-chain preflight";
   return "outside documented Cycle 02/04 line";
 }
