@@ -38,9 +38,11 @@ Keep the project stable, narrow, and cheap to reactivate:
 - use \`v2.0.0-alpha.1\` for evidence-chain preflight, strategy weighting, and work-train release mapping
 - use \`v2.0.0-alpha.2\` for structured case generation, OpenClaw-compatible hook demo, and Starter Kit
 - use \`v2.0.0-alpha.3\` for evidence-chain SDK helpers, drag attach, and A2A-compatible blueprint artifacts
+- use \`v2.0.0\` for the final performance pass and lightweight Mercury skills
 - use \`docs/V2-PREFLIGHT-REQUIREMENTS.md\` and \`docs/V2-WORK-TRAIN.md\` before starting any 2.0 tranche
 - use \`npm run cases:build\`, \`npm run cases:check\`, \`npm run demo:openclaw\`, and \`npm run demo:starter\` before claiming case/integration readiness
 - use \`npm run test:evidence\`, \`npm run demo:a2a\`, and \`npm run dashboard:check\` before claiming evidence-interface readiness
+- use \`npm run benchmark:v2\`, \`npm run skills:check\`, and \`npm run sync:skills\` before claiming portable-skill readiness
 - deepen proof cases, failure modes, review ledger, and real charter-user records before adding product surface
 - use \`docs/START-HERE.md\` as the role-based entry point for humans and agents
 - use \`docs/SCOPE.md\` before adding storage, database, or ecosystem recommendations
@@ -108,6 +110,8 @@ npm run capture:check
 npm run test:sdk
 npm run demo:memory-hook
 npm run benchmark:audit
+npm run benchmark:v2
+npm run skills:check
 npm run index:incr
 npm run audit
 npm run audit:flow

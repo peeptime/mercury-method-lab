@@ -67,6 +67,10 @@ if (packageJson.version.startsWith("2.0.0-alpha.3")) {
   console.log("v2_interface_docs: a2a-blueprint/evidence-chain-sdk");
   console.log("v2_interface_outputs: buildEvidenceChain/drag-attach/a2a-agent-card");
 }
+if (packageJson.version === "2.0.0") {
+  console.log("v2_final_docs: performance-2.0/iteration-guide-2.0.0");
+  console.log("v2_final_outputs: benchmark:v2/skills:check/portable Mercury skills");
+}
 console.log("");
 console.log("next_low_token_commands:");
 console.log("  npm run cycle:check");
@@ -104,5 +108,6 @@ function cycleLine(version) {
   if (version.startsWith("2.0.0-alpha.1")) return "v2.0.0-alpha.1 evidence-chain preflight";
   if (version.startsWith("2.0.0-alpha.2")) return "v2.0.0-alpha.2 real case foundation";
   if (version.startsWith("2.0.0-alpha.3")) return "v2.0.0-alpha.3 evidence chain interface";
+  if (version === "2.0.0") return "v2.0.0 portable evidence chain";
   return "outside documented Cycle 02/04 line";
 }

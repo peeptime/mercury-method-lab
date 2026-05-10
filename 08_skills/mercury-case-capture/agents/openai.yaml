@@ -1,0 +1,4 @@
+interface:
+  display_name: "Mercury Case Capture"
+  short_description: "Convert AI outputs into portable Mercury case folders."
+  default_prompt: "Capture this AI output as a Mercury case with input, audit result, and review status."

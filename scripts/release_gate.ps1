@@ -76,6 +76,8 @@ $cheapOrder = @(
   "cases:check",
   "demo:a2a",
   "benchmark:audit",
+  "benchmark:v2",
+  "skills:check",
   "validate",
   "doctor",
   "lint",

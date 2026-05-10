@@ -1,0 +1,4 @@
+interface:
+  display_name: "Mercury Evidence Chain"
+  short_description: "Turn messy AI material into a credible evidence chain."
+  default_prompt: "Build an evidence chain from this material and list missing evidence choices."

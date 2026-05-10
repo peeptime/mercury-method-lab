@@ -1,0 +1,4 @@
+interface:
+  display_name: "Mercury Memory Gate"
+  short_description: "Route memory candidates before durable writes."
+  default_prompt: "Audit this memory candidate and decide accept, revise, quarantine, or discard."

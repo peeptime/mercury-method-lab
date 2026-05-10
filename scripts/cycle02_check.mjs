@@ -40,6 +40,13 @@ const v2EvidenceInterfaceUnfreeze = packageJson.version.startsWith("2.0.0-alpha.
   && await exists("src/mercury-audit/evidence-chain.mjs")
   && await exists("docs/A2A-AGENT-CARD-BLUEPRINT.md")
   && await exists("examples/a2a/agent-card.json");
+const v2PortableEvidenceChain = packageJson.version === "2.0.0"
+  && await exists("docs/PERFORMANCE-2.0.md")
+  && await exists("scripts/benchmark_v2_paths.mjs")
+  && await exists("scripts/check_mercury_skills.mjs")
+  && await exists("08_skills/mercury-evidence-chain/SKILL.md")
+  && await exists("08_skills/mercury-memory-gate/SKILL.md")
+  && await exists("08_skills/mercury-case-capture/SKILL.md");
 const proofPack = await readText("docs/PROOF-PACK-001.md");
 const proofPack002 = await readText("docs/PROOF-PACK-002.md");
 const failureModes = await readText("docs/FAILURE-MODES.md");
@@ -49,7 +56,7 @@ const auditRules = await readText("scripts/audit-core/audit_rules.mjs");
 const htmlReport = await readText("scripts/generate_audit_reports.mjs");
 const liteMode = await readText("dashboard/lite.html");
 
-check("version stays on an explicitly documented unfreeze line", packageJson.version.startsWith("1.2.") || productSurfaceUnfreeze || methodDepthUnfreeze || reviewUxUnfreeze || sdkIntegrationUnfreeze || auditKernelUnfreeze || scenarioPackUnfreeze || proofGovernanceUnfreeze || v2PreflightUnfreeze || v2CaseFoundationUnfreeze || v2EvidenceInterfaceUnfreeze);
+check("version stays on an explicitly documented unfreeze line", packageJson.version.startsWith("1.2.") || productSurfaceUnfreeze || methodDepthUnfreeze || reviewUxUnfreeze || sdkIntegrationUnfreeze || auditKernelUnfreeze || scenarioPackUnfreeze || proofGovernanceUnfreeze || v2PreflightUnfreeze || v2CaseFoundationUnfreeze || v2EvidenceInterfaceUnfreeze || v2PortableEvidenceChain);
 if (productSurfaceUnfreeze) {
   warnings.push("product surface / Lite intake patch line detected: method-layer Cycle 02 checks still apply, but v1.3.x is allowed for product UI and entry-friction fixes");
 }
@@ -208,6 +215,23 @@ if (v2EvidenceInterfaceUnfreeze) {
   check("SDK exports evidence chain helpers", sdkApi.includes("buildEvidenceChain") && sdkApi.includes("buildMissingEvidence"));
   check("Lite Mode supports drag attach", liteMode.includes("handleFiles") && liteMode.includes("attachments"));
   check("package exposes evidence and A2A scripts", Boolean(packageJson.scripts?.["test:evidence"]) && Boolean(packageJson.scripts?.["demo:a2a"]));
+}
+if (v2PortableEvidenceChain) {
+  warnings.push("2.0 portable evidence-chain line detected: final 2.0 is allowed for performance gates and lightweight Mercury skills");
+  for (const path of [
+    "docs/ITERATION-GUIDE-2.0.0.md",
+    "docs/PERFORMANCE-2.0.md",
+    "scripts/benchmark_v2_paths.mjs",
+    "scripts/check_mercury_skills.mjs",
+    "08_skills/mercury-evidence-chain/SKILL.md",
+    "08_skills/mercury-memory-gate/SKILL.md",
+    "08_skills/mercury-case-capture/SKILL.md"
+  ]) {
+    check(`2.0 final artifact exists: ${path}`, await exists(path));
+  }
+  check("package exposes 2.0 performance and skill checks", Boolean(packageJson.scripts?.["benchmark:v2"]) && Boolean(packageJson.scripts?.["skills:check"]));
+  const performanceNotes = await readText("docs/PERFORMANCE-2.0.md");
+  check("2.0 performance notes preserve local benchmark boundary", performanceNotes.includes("no external LLM") && performanceNotes.includes("not to claim production throughput"));
 }
 
 const cases = splitSections(proofPack, /^## Case \d{3}:[^\n]*$/gm);

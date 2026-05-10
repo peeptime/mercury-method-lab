@@ -4,6 +4,23 @@
 
 Every release entry must carry an explicit provenance declaration. Legacy entries that cannot be reconstructed are marked as unverified instead of being silently treated as human-only.
 
+## 2.0.0 - Portable Evidence Chain (2026-05-10)
+> Provenance: `[AI_GENERATED]` drafted_by: Codex; humanReviewed: declined; reviewer: project_owner_pending; audit_ref: docs/ITERATION-GUIDE-2.0.0.md
+
+### Added
+
+- `scripts/benchmark_v2_paths.mjs` benchmarks the local audit-plus-evidence-chain path without external LLM, browser, network, or storage adapter calls.
+- `docs/PERFORMANCE-2.0.md` records the performance boundary and token-economy posture for Mercury 2.0.
+- `08_skills/mercury-evidence-chain/`, `08_skills/mercury-memory-gate/`, and `08_skills/mercury-case-capture/` package the core Mercury behavior as lightweight portable skills.
+- `scripts/check_mercury_skills.mjs` validates that the new skills have usable frontmatter and preserve `human_reviewed: declined`.
+- `docs/ITERATION-GUIDE-2.0.0.md` records the final 2.0 performance and skill pass.
+
+### Changed
+
+- README and README.en now present 2.0 as a portable evidence-chain audit framework rather than a local method notebook.
+- Release gate now runs `benchmark:v2` and `skills:check`.
+- Doctor and cycle checks now recognize the final 2.0 artifact set.
+
 ## 2.0.0-alpha.3 - Evidence Chain Interface (2026-05-10)
 > Provenance: `[AI_GENERATED]` drafted_by: Codex; humanReviewed: declined; reviewer: project_owner_pending; audit_ref: docs/A2A-AGENT-CARD-BLUEPRINT.md
 
