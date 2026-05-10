@@ -10,8 +10,9 @@ import { getAuditScenario, listAuditScenarios, scenarioDefaults } from "./scenar
 import { buildScenarioReviewGuidance } from "./review-ux.mjs";
 import { detectGamingAttempt, listGamingPatterns } from "./anti-gaming.mjs";
 import { MERCURY_RULESET_VERSION, compareRuleVersions, createRuleVersionRecord, needsReaudit } from "./rule-versioning.mjs";
+import { buildEvidenceChain, buildMissingEvidence } from "./evidence-chain.mjs";
 
-export const MERCURY_AUDIT_API_VERSION = "0.3.0";
+export const MERCURY_AUDIT_API_VERSION = "0.4.0";
 
 export { applyPolicy, listPolicies, resolvePolicy };
 export {
@@ -19,6 +20,8 @@ export {
   assessLifecycle,
   assessSourceCredibility,
   auditKernel,
+  buildEvidenceChain,
+  buildMissingEvidence,
   buildScenarioReviewGuidance,
   classifySourceRef,
   compareRuleVersions,

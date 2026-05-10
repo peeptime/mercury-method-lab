@@ -194,7 +194,10 @@ function normalizeSdkResult(result, entry) {
     human_review_required: result.human_review_required,
     confidence: result.confidence,
     content_summary: result.content_summary,
-    provenance: result.provenance,
+    provenance: {
+      ...result.provenance,
+      generated_at: "deterministic:case-build"
+    },
     ruleset_version: result.ruleset_version
   };
 }

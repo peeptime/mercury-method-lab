@@ -16,6 +16,7 @@ This is not an npm-published package yet. It is a repository-local API that prov
 Since v1.7, `audit()` runs through the portable audit kernel described in `docs/AUDIT-KERNEL.md`.
 Since v1.8, hosts can pass `scenario` to apply scenario defaults.
 Since v1.9, audit results include anti-gaming state and a `ruleset_version`.
+Since v2.0.0-alpha.3, hosts can call `buildEvidenceChain()` to expose source nodes, missing evidence, and A/B/C next choices.
 
 ## Minimal Use
 
@@ -88,6 +89,25 @@ const review = needsReaudit({ ruleset_version: "2026.05.10.0" }, MERCURY_RULESET
 ```
 
 See `docs/RULE-VERSION-GOVERNANCE.md` and `docs/ANTI-GAMING-TESTS.md`.
+
+## Evidence Chain Helper
+
+```js
+import { audit, buildEvidenceChain } from "./src/mercury-audit/index.mjs";
+
+const result = audit("The user always wants every AI answer stored forever.", {
+  type: "memory_candidate",
+  risk_level: "high",
+  source_refs: [],
+  audit_refs: []
+});
+
+const chain = buildEvidenceChain(result);
+console.log(chain.missing_evidence);
+console.log(chain.suggested_choices);
+```
+
+The helper is designed for Generative UI surfaces: it turns an audit result into a small evidence-chain object that can drive review prompts without exposing every internal field.
 
 ## Policy Layer
 

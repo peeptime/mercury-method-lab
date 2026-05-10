@@ -1,0 +1,38 @@
+{
+  "name": "Mercury Method Lab",
+  "description": "Evidence-first audit agent for AI memory candidates, agent outputs, and review artifacts.",
+  "version": "2.0.0-alpha.3",
+  "url": "https://github.com/peeptime/mercury-method-lab",
+  "capabilities": {
+    "streaming": false,
+    "pushNotifications": false,
+    "stateTransitionHistory": true
+  },
+  "skills": [
+    {
+      "id": "evidence-chain",
+      "name": "Build Evidence Chain",
+      "description": "Turn messy material into a core claim, source attribution, missing evidence, and A/B/C choices.",
+      "tags": ["audit", "evidence", "memory-quality"]
+    },
+    {
+      "id": "memory-write-gate",
+      "name": "Memory Write Gate",
+      "description": "Route a candidate memory to accept, revise, quarantine, or discard before storage.",
+      "tags": ["memory", "admission-control", "provenance"]
+    },
+    {
+      "id": "review-record",
+      "name": "Review Record",
+      "description": "Produce a declined-by-default review record that a named human can later complete.",
+      "tags": ["human-review", "provenance"]
+    }
+  ],
+  "defaultInputModes": ["text/plain", "application/json", "text/markdown"],
+  "defaultOutputModes": ["application/json", "text/markdown"],
+  "provenance": {
+    "ai_assisted": true,
+    "human_reviewed": "declined",
+    "audit_ref": "docs/A2A-AGENT-CARD-BLUEPRINT.md"
+  }
+}

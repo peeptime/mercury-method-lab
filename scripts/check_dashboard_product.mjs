@@ -27,6 +27,7 @@ check("product layer includes settings, command palette, onboarding, toast, noti
 check("Lite Mode is single file and <= 30KB", liteStat.size <= 30 * 1024);
 check("Lite Mode supports paste/audit/copy/offline", ["source", "auditBtn", "copyMarkdown", "stubAudit"].every((token) => lite.includes(token)));
 check("Lite Mode supports URL prefill and capture save", ["params.get(\"text\")", "captureBtn", "saveCapture", "/api/capture"].every((token) => lite.includes(token)));
+check("Lite Mode supports drag attach and evidence chain", ["handleFiles", "attachments", "Evidence Chain", "evidence_chain"].every((token) => lite.includes(token)));
 
 for (const result of checks) {
   console.log(`${result.ok ? "OK" : "FAIL"} ${result.name}`);

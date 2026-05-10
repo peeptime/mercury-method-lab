@@ -4,6 +4,21 @@
 
 Every release entry must carry an explicit provenance declaration. Legacy entries that cannot be reconstructed are marked as unverified instead of being silently treated as human-only.
 
+## 2.0.0-alpha.3 - Evidence Chain Interface (2026-05-10)
+> Provenance: `[AI_GENERATED]` drafted_by: Codex; humanReviewed: declined; reviewer: project_owner_pending; audit_ref: docs/A2A-AGENT-CARD-BLUEPRINT.md
+
+### Added
+
+- `src/mercury-audit/evidence-chain.mjs` adds `buildEvidenceChain()` and `buildMissingEvidence()` for source-linked claims, gaps, and A/B/C next choices.
+- `scripts/test_evidence_chain.mjs` fixes the evidence-chain SDK contract.
+- Lite Mode now supports drag attach for `.md`, `.txt`, and `.json`, and renders a compact evidence-chain panel.
+- `examples/a2a/agent-card.json`, `examples/a2a/message-task-demo.mjs`, and `docs/A2A-AGENT-CARD-BLUEPRINT.md` provide an A2A-compatible discovery and payload fixture without claiming a full A2A server.
+
+### Changed
+
+- SDK API version moves to `0.4.0`.
+- Release gate now runs evidence-chain tests and the A2A demo.
+
 ## 2.0.0-alpha.2 - Real Case Foundation (2026-05-10)
 > Provenance: `[AI_GENERATED]` drafted_by: Codex; humanReviewed: declined; reviewer: project_owner_pending; audit_ref: docs/REAL-CASES-SUMMARY.md
 

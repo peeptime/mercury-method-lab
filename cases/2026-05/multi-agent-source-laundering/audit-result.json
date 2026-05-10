@@ -44,7 +44,7 @@
     ],
     "audit_refs": [],
     "generated_by": "mercury-audit-sdk",
-    "generated_at": "2026-05-10T15:17:45.338Z"
+    "generated_at": "deterministic:case-build"
   },
   "ruleset_version": "2026.05.10.1"
 }

@@ -1,7 +1,7 @@
 {
   "name": "mercury-method-lab",
-  "version": "2.0.0-alpha.2",
-  "codename": "Real Case Foundation",
+  "version": "2.0.0-alpha.3",
+  "codename": "Evidence Chain Interface",
   "private": true,
   "type": "module",
   "description": "Evidence-first audit method for deciding which AI-generated claims deserve durable memory.",
@@ -34,6 +34,8 @@
     "demo:starter": "node examples/starter-kit/hello-audit.mjs",
     "cases:build": "node scripts/build_real_cases.mjs",
     "cases:check": "node scripts/check_real_cases.mjs",
+    "test:evidence": "node scripts/test_evidence_chain.mjs",
+    "demo:a2a": "node examples/a2a/message-task-demo.mjs",
     "benchmark:audit": "node scripts/benchmark_audit_sdk.mjs",
     "cycle:status": "node scripts/cycle02_status.mjs",
     "cycle:check": "node scripts/cycle02_check.mjs",

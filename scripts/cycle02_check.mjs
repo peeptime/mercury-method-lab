@@ -36,6 +36,10 @@ const v2CaseFoundationUnfreeze = packageJson.version.startsWith("2.0.0-alpha.2")
   && await exists("docs/REAL-CASES-SUMMARY.md")
   && await exists("examples/integration-demo/openclaw-hook.mjs")
   && await exists("examples/starter-kit/hello-audit.mjs");
+const v2EvidenceInterfaceUnfreeze = packageJson.version.startsWith("2.0.0-alpha.3")
+  && await exists("src/mercury-audit/evidence-chain.mjs")
+  && await exists("docs/A2A-AGENT-CARD-BLUEPRINT.md")
+  && await exists("examples/a2a/agent-card.json");
 const proofPack = await readText("docs/PROOF-PACK-001.md");
 const proofPack002 = await readText("docs/PROOF-PACK-002.md");
 const failureModes = await readText("docs/FAILURE-MODES.md");
@@ -45,7 +49,7 @@ const auditRules = await readText("scripts/audit-core/audit_rules.mjs");
 const htmlReport = await readText("scripts/generate_audit_reports.mjs");
 const liteMode = await readText("dashboard/lite.html");
 
-check("version stays on an explicitly documented unfreeze line", packageJson.version.startsWith("1.2.") || productSurfaceUnfreeze || methodDepthUnfreeze || reviewUxUnfreeze || sdkIntegrationUnfreeze || auditKernelUnfreeze || scenarioPackUnfreeze || proofGovernanceUnfreeze || v2PreflightUnfreeze || v2CaseFoundationUnfreeze);
+check("version stays on an explicitly documented unfreeze line", packageJson.version.startsWith("1.2.") || productSurfaceUnfreeze || methodDepthUnfreeze || reviewUxUnfreeze || sdkIntegrationUnfreeze || auditKernelUnfreeze || scenarioPackUnfreeze || proofGovernanceUnfreeze || v2PreflightUnfreeze || v2CaseFoundationUnfreeze || v2EvidenceInterfaceUnfreeze);
 if (productSurfaceUnfreeze) {
   warnings.push("product surface / Lite intake patch line detected: method-layer Cycle 02 checks still apply, but v1.3.x is allowed for product UI and entry-friction fixes");
 }
@@ -188,6 +192,22 @@ if (v2CaseFoundationUnfreeze) {
   const summary = await readText("docs/REAL-CASES-SUMMARY.md");
   check("real case summary records at least 10 cases", /total_cases:\s*10/.test(summary));
   check("package exposes case and integration scripts", Boolean(packageJson.scripts?.["cases:build"]) && Boolean(packageJson.scripts?.["demo:openclaw"]) && Boolean(packageJson.scripts?.["demo:starter"]));
+}
+if (v2EvidenceInterfaceUnfreeze) {
+  warnings.push("2.0 evidence interface line detected: alpha.3 is allowed for evidence-chain SDK, drag attach, and A2A blueprint");
+  for (const path of [
+    "src/mercury-audit/evidence-chain.mjs",
+    "scripts/test_evidence_chain.mjs",
+    "docs/A2A-AGENT-CARD-BLUEPRINT.md",
+    "examples/a2a/agent-card.json",
+    "examples/a2a/message-task-demo.mjs"
+  ]) {
+    check(`2.0 evidence interface artifact exists: ${path}`, await exists(path));
+  }
+  const sdkApi = await readText("src/mercury-audit/index.mjs");
+  check("SDK exports evidence chain helpers", sdkApi.includes("buildEvidenceChain") && sdkApi.includes("buildMissingEvidence"));
+  check("Lite Mode supports drag attach", liteMode.includes("handleFiles") && liteMode.includes("attachments"));
+  check("package exposes evidence and A2A scripts", Boolean(packageJson.scripts?.["test:evidence"]) && Boolean(packageJson.scripts?.["demo:a2a"]));
 }
 
 const cases = splitSections(proofPack, /^## Case \d{3}:[^\n]*$/gm);

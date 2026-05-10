@@ -2,9 +2,9 @@
 
 **不让聪明变成垃圾。**
 
-Version: `2.0.0-alpha.2`
+Version: `2.0.0-alpha.3`
 
-Latest release: [v2.0.0-alpha.2 Real Case Foundation](https://github.com/peeptime/mercury-method-lab/releases/tag/v2.0.0-alpha.2)
+Latest release: [v2.0.0-alpha.3 Evidence Chain Interface](https://github.com/peeptime/mercury-method-lab/releases/tag/v2.0.0-alpha.3)
 
 ```yaml
 provenance:
@@ -17,6 +17,24 @@ provenance:
     Until referenced docs are human-reviewed, the project README cannot claim true.
   audit_ref: docs/REVIEW-LEDGER.md
 ```
+
+---
+
+## Evidence Chain Interface v2.0.0-alpha.3
+
+Mercury now exposes the evidence-chain layer directly:
+
+- SDK helper: `buildEvidenceChain()`
+- Lite drag attach for `.md`, `.txt`, and `.json`
+- A2A-compatible AgentCard and message/task/artifact fixture
+
+```powershell
+npm run test:evidence
+npm run demo:a2a
+npm run dashboard:check
+```
+
+See `src/mercury-audit/evidence-chain.mjs`, `docs/A2A-AGENT-CARD-BLUEPRINT.md`, and `examples/a2a/agent-card.json`.
 
 ---
 
