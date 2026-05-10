@@ -62,10 +62,20 @@ function renderReport(result) {
       <span class="badge ${result.routing_decision}">${escapeHtml(result.routing_decision)}</span>
     </section>
     <main>
-      ${panel("Claim", `<p>${escapeHtml(result.claim)}</p>`)}
-      ${panel("Evidence", listSection("Source refs", result.source_refs) + listSection("Audit refs", result.audit_refs))}
-      ${panel("Blockers", blockerList(result.blockers))}
-      ${panel("Required Fixes", listSection("Fixes", result.required_fixes) + listSection("Required evidence", result.required_evidence))}
+      ${panel("内容摘要 / Content Summary", renderContentSummary(result.content_summary))}
+      ${panel("处理方式 / Routing", `
+        <p class="route-line"><strong>${decisionLabel(result.routing_decision)}</strong></p>
+        <p>${escapeHtml(result.decision_reason)}</p>
+      `)}
+      ${panel("Human Review Checklist", renderChecklist(result))}
+      ${panel("关键阻塞 / Key Blockers", blockerList(result.blockers.slice(0, 2)))}
+      <details class="technical">
+        <summary>查看技术详情 / Technical details</summary>
+        ${panel("Claim", `<p>${escapeHtml(result.claim)}</p>`)}
+        ${panel("Evidence", listSection("Source refs", result.source_refs) + listSection("Audit refs", result.audit_refs))}
+        ${panel("All Blockers", blockerList(result.blockers))}
+        ${panel("Required Fixes", listSection("Fixes", result.required_fixes) + listSection("Required evidence", result.required_evidence))}
+      </details>
       ${result.revised_claim ? panel("Suggested Revision", `<p>${escapeHtml(result.revised_claim)}</p>`) : ""}
       ${panel("Routing", `
         <dl>
@@ -83,6 +93,36 @@ function renderReport(result) {
       `)}
     </main>
   `);
+}
+
+function renderContentSummary(summary = {}) {
+  return `<dl>
+    <dt>核心主张</dt><dd>${escapeHtml(summary.core_claim || "No summary generated.")}</dd>
+    <dt>归属说明</dt><dd>${escapeHtml(summary.attribution || "")}</dd>
+    <dt>置信度</dt><dd>${escapeHtml(summary.confidence || "")}</dd>
+    <dt>置信度依据</dt><dd>${escapeHtml(summary.confidence_basis || "")}</dd>
+    <dt>归属边界</dt><dd>${escapeHtml(summary.ownership_note || "")}</dd>
+  </dl>`;
+}
+
+function renderChecklist(result) {
+  const items = result.human_review_checklist || [];
+  if (!items.length) return "<p>No checklist generated.</p>";
+  const rendered = items.map((item, index) => `
+    <fieldset class="check-item" data-check-id="${escapeAttr(item.id)}">
+      <legend>${index + 1}. ${escapeHtml(item.prompt)}</legend>
+      <p><strong>定位:</strong> ${escapeHtml(item.target_section)}<br><strong>线索:</strong> ${escapeHtml(item.source_hint || "")}</p>
+      <div class="options">
+        ${(item.options || []).map((option) => `
+          <label>
+            <input type="radio" name="${escapeAttr(item.id)}" value="${escapeAttr(option.id)}" ${option.id === item.recommended_option ? "checked" : ""}>
+            <span>${escapeHtml(option.id)}. ${escapeHtml(option.label)}</span>
+          </label>
+        `).join("")}
+      </div>
+    </fieldset>
+  `).join("");
+  return `${rendered}<button class="review-copy" data-packet="${escapeAttr(result.packet_id)}">复制复核记录</button>`;
 }
 
 function panel(title, body) {
@@ -171,6 +211,12 @@ function page(title, body) {
       text-decoration: none;
     }
     .panel { padding: 20px; margin-bottom: 12px; }
+    .technical { margin: 0 0 12px; }
+    .technical > summary {
+      cursor: pointer;
+      color: var(--muted);
+      padding: 12px 0;
+    }
     .badge {
       display: inline-flex;
       width: fit-content;
@@ -198,9 +244,44 @@ function page(title, body) {
     dt { color: var(--muted); }
     dd { margin: 0; }
     .severity, .empty, small { color: var(--muted); }
+    .route-line { font-size: 22px; margin: 0 0 8px; }
+    .check-item {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      margin: 0 0 12px;
+      padding: 14px;
+    }
+    .check-item legend { font-weight: 700; }
+    .options { display: grid; gap: 8px; }
+    .options label { display: flex; gap: 8px; align-items: flex-start; }
+    .review-copy {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--ink);
+      color: #fff;
+      padding: 10px 12px;
+      cursor: pointer;
+      font-weight: 700;
+    }
   </style>
 </head>
-<body>${body}</body>
+<body>${body}
+<script>
+document.querySelectorAll(".review-copy").forEach((button) => {
+  button.addEventListener("click", async () => {
+    const packet = button.dataset.packet || "packet";
+    const choices = [...document.querySelectorAll("fieldset.check-item")].map((item) => {
+      const selected = item.querySelector("input:checked");
+      return "- " + item.dataset.checkId + ": " + (selected ? selected.value : "unselected");
+    }).join("\\n");
+    const markdown = "# Human Review Record\\n\\npacket_id: " + packet + "\\nreview_state: pending\\nhuman_reviewed: pending\\n\\n## Checklist Choices\\n\\n" + choices + "\\n";
+    await navigator.clipboard.writeText(markdown);
+    button.textContent = "已复制";
+    setTimeout(() => { button.textContent = "复制复核记录"; }, 1600);
+  });
+});
+</script>
+</body>
 </html>`;
 }
 
@@ -215,4 +296,18 @@ function escapeHtml(value) {
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#39;");
+}
+
+function escapeAttr(value) {
+  return escapeHtml(value).replaceAll("`", "&#96;");
+}
+
+function decisionLabel(decision) {
+  const labels = {
+    accept: "accept / 可进入长期使用",
+    revise: "revise / 修改后再进入",
+    quarantine: "quarantine / 隔离待复核",
+    discard: "discard / 丢弃"
+  };
+  return labels[decision] || decision;
 }

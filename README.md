@@ -2,9 +2,9 @@
 
 **不让聪明变成垃圾。**
 
-Version: `1.4.0`
+Version: `1.5.0`
 
-Latest release: [v1.4.0 Method Taxonomy and Routing Blueprint](https://github.com/peeptime/mercury-method-lab/releases/tag/v1.4.0)
+Latest release: [v1.5.0 Human Review Checklist UX](https://github.com/peeptime/mercury-method-lab/releases/tag/v1.5.0)
 
 ```yaml
 provenance:
@@ -17,6 +17,46 @@ provenance:
     Until referenced docs are human-reviewed, the project README cannot claim true.
   audit_ref: docs/REVIEW-LEDGER.md
 ```
+
+---
+
+## Start Here
+
+新用户先读 `docs/START-HERE.md`。
+
+最短路径：
+
+```powershell
+npm run dashboard
+```
+
+然后打开：
+
+```text
+http://127.0.0.1:4788/lite.html
+```
+
+粘贴一段 AI 输出，点击 `开始检查`。
+
+默认第一层只显示：
+
+- 处理方式
+- 内容摘要
+- Human Review Checklist 的 A/B/C 选项
+- 技术详情折叠展示
+
+---
+
+## Human Review UX v1.5.0
+
+这个版本把 `human_review_required: true` 从“到此为止”改成“下一步怎么复核”。
+
+- Audit result 新增 `content_summary`。
+- Audit result 新增 `human_review_checklist`。
+- HTML report 显示 A/B/C 复核选项，并可复制 review record。
+- Lite Mode 默认使用中文用户可见层，内部字段放进 `查看技术详情`。
+- `docs/SCOPE.md` 明确 Mercury 不做数据库、second brain、存储后端或认证机构。
+- `docs/EXPORT-GUIDE.md` 说明 Markdown/JSON/HTML 如何进入外部工具，但 raw capture 不能直接当记忆。
 
 ---
 
@@ -73,7 +113,7 @@ Paste path:
 npm run dashboard
 ```
 
-Then open `http://127.0.0.1:4788/lite.html`, paste an AI answer, click `Audit`, and click `Save Capture` only if you want Mercury to preserve the source plus a temporary Audit Packet.
+Then open `http://127.0.0.1:4788/lite.html`, paste an AI answer, click `开始检查`, and click `保存来源` only if you want Mercury to preserve the source plus a temporary Audit Packet.
 
 Dropzone path:
 
@@ -338,6 +378,10 @@ npm run dashboard    # http://127.0.0.1:4788
 
 | 你要做什么 | 去哪里 |
 |-----------|--------|
+| 先从这里开始 | `docs/START-HERE.md` |
+| 看项目边界 | `docs/SCOPE.md` |
+| 看导出方式 | `docs/EXPORT-GUIDE.md` |
+| 看中文/i18n 可见层规则 | `docs/I18N-UX-POLICY.md` |
 | 看端到端拦截案例 | `docs/v0.9-proof-of-audit.md` |
 | 看最小工作流 | `docs/MINIMAL-WORKFLOW.md` |
 | 看前置审计契约 | `docs/AUDIT-CONTRACT.md` |
@@ -350,7 +394,8 @@ npm run dashboard    # http://127.0.0.1:4788
 | 看 Evidence-First Audit Packet 闭环 | `docs/EVIDENCE-FIRST-AUDIT-LAYER.md` |
 | 看 HTML 审计报告样例 | `dist/reports/index.html`（运行 `npm run report` 后生成） |
 | 3 分钟 AI 对话 intake | `docs/THREE-MINUTE-START.md` |
-| 看 v1.4.0 method iteration guide | `docs/ITERATION-GUIDE-1.4.0.md` |
+| 看 v1.5.0 review UX iteration guide | `docs/ITERATION-GUIDE-1.5.0.md` |
+| 看 v1.4.0 method iteration guide | `docs/ITERATION-GUIDE-1.5.0.md` |
 | 看产品层压力测试记录 | `docs/PRODUCT-SURFACE-PRESSURE-TEST.md` |
 | 继续迭代/讨论项目 | 激活 `mercury-v8-iter` Skill |
 | 看版本历史 | `CHANGELOG.md` |

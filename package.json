@@ -1,10 +1,10 @@
 {
   "name": "mercury-method-lab",
-  "version": "1.4.0",
-  "codename": "Method Taxonomy and Routing Blueprint",
+  "version": "1.5.0",
+  "codename": "Human Review Checklist UX",
   "private": true,
   "type": "module",
-  "description": "专门拦截听起来聪明但不该进入长期记忆的 AI 记忆审计层。",
+  "description": "Evidence-first audit method for deciding which AI-generated claims deserve durable memory.",
   "scripts": {
     "check:upstream": "node scripts/check_upstream_mercury_agent.mjs",
     "dashboard": "node scripts/dashboard_server.mjs",

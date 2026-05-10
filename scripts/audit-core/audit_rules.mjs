@@ -139,6 +139,17 @@ export function auditPacket(packet, options = {}) {
   const humanReviewRequired = customerDeliveryTypes.has(type)
     || blockers.some((blocker) => blocker.severity === "critical")
     || riskLevel === "high";
+  const contentSummary = buildContentSummary({ claim, type, sourceRefs, auditRefs, blockers, riskLevel });
+  const humanReviewChecklist = buildHumanReviewChecklist({
+    claim,
+    type,
+    sourceRefs,
+    auditRefs,
+    blockers,
+    routingDecision,
+    humanReviewRequired,
+    confidence: structuralConfidence(blockers, sourceRefs, auditRefs)
+  });
 
   return {
     packet_id: packet.id || "",
@@ -150,6 +161,8 @@ export function auditPacket(packet, options = {}) {
     blockers,
     severity_summary: severitySummary,
     warnings,
+    content_summary: contentSummary,
+    human_review_checklist: humanReviewChecklist,
     required_fixes: dedupe(requiredFixes),
     required_evidence: dedupe(requiredEvidence),
     revised_claim: suggestedRevision(claim, blockers),
@@ -165,6 +178,122 @@ export function auditPacket(packet, options = {}) {
     packet_hash: packet.__hash || "",
     size_bytes: packet.__size_bytes || 0
   };
+}
+
+function buildContentSummary({ claim, type, sourceRefs, auditRefs, blockers, riskLevel }) {
+  const blockerIds = blockers.map((blocker) => blocker.id);
+  return {
+    core_claim: summarizeClaim(claim),
+    attribution: sourceRefs.length
+      ? `Claim is attributed to source_refs: ${sourceRefs.slice(0, 3).join(", ")}${sourceRefs.length > 3 ? ", ..." : ""}.`
+      : "No source_refs are present; treat attribution as unverified until review.",
+    confidence: blockerIds.some((id) => id === "missing_source_refs" || id === "circular_reasoning" || id === "unsupported_claim")
+      ? "low"
+      : auditRefs.length && !blockers.length ? "high" : "medium",
+    confidence_basis: confidenceBasis({ blockers, sourceRefs, auditRefs, riskLevel }),
+    ownership_note: ownerNote(type),
+    visible_to_user: true
+  };
+}
+
+function buildHumanReviewChecklist({ claim, type, sourceRefs, auditRefs, blockers, routingDecision, humanReviewRequired, confidence }) {
+  const blockerIds = new Set(blockers.map((blocker) => blocker.id));
+  const checklist = [];
+
+  checklist.push({
+    id: "source-statement",
+    target_section: "Claim / Source refs",
+    prompt: "请确认核心主张是否真的被原始来源支持。",
+    claim_excerpt: summarizeClaim(claim, 140),
+    source_hint: sourceRefs[0] || "missing_source_refs",
+    recommended_option: sourceRefs.length ? "A" : "B",
+    options: [
+      { id: "A", label: "原文或可追溯来源支持", effect: "Source can remain attached to the claim." },
+      { id: "B", label: "只是 AI 转述或推测", effect: "Keep or move to quarantine; add source_refs before durable use." },
+      { id: "C", label: "不确定 / 需要人工补充说明", effect: "Record reviewer note and keep review open." }
+    ]
+  });
+
+  checklist.push({
+    id: "confidence-statement",
+    target_section: "Confidence / Evidence gap",
+    prompt: "请确认当前置信度是否匹配证据强度。",
+    claim_excerpt: confidenceBasis({ blockers, sourceRefs, auditRefs, riskLevel: "medium" }),
+    source_hint: blockerIds.size ? [...blockerIds].join(", ") : "no structural blockers",
+    recommended_option: confidence === "high" ? "A" : "B",
+    options: [
+      { id: "A", label: "证据足够，维持当前置信度", effect: "Reviewer accepts the confidence statement." },
+      { id: "B", label: "需要补充证据或降低置信度", effect: "Keep decision at revise/quarantine until evidence is added." },
+      { id: "C", label: "不确定 / 需要第二人复核", effect: "Escalate to human review ledger." }
+    ]
+  });
+
+  checklist.push({
+    id: "attribution-statement",
+    target_section: "Attribution / Audit refs",
+    prompt: "请确认这条结论的归属是否正确：用户原话、现场观察、顾问框架，还是 AI 推断。",
+    claim_excerpt: ownerNote(type),
+    source_hint: auditRefs[0] || "missing_audit_refs",
+    recommended_option: auditRefs.length ? "A" : "B",
+    options: [
+      { id: "A", label: "归属正确，可以保留", effect: "Attribution can be used in the report." },
+      { id: "B", label: "归属需要改写", effect: "Revise attribution before report or memory use." },
+      { id: "C", label: "不确定 / 自定义归属", effect: "Reviewer supplies a custom attribution note." }
+    ]
+  });
+
+  if (humanReviewRequired || routingDecision !== "accept") {
+    checklist.push({
+      id: "route-confirmation",
+      target_section: "Routing decision",
+      prompt: `请确认处理方式是否应保持为 ${routingDecision}。`,
+      claim_excerpt: `Current decision: ${routingDecision}`,
+      source_hint: `${blockers.length} blocker(s), type=${type || "unknown"}`,
+      recommended_option: routingDecision === "accept" ? "A" : "B",
+      options: [
+        { id: "A", label: "同意当前处理方式", effect: "Record reviewer agreement with the route." },
+        { id: "B", label: "需要修改后再决定", effect: "Keep item open and add required fixes." },
+        { id: "C", label: "不同意 / 另写处理方式", effect: "Record custom route note for review ledger." }
+      ]
+    });
+  }
+
+  return checklist;
+}
+
+function summarizeClaim(claim, limit = 220) {
+  const normalized = String(claim || "").replace(/\s+/g, " ").trim();
+  if (!normalized) return "No claim supplied.";
+  return normalized.length > limit ? `${normalized.slice(0, limit - 1)}...` : normalized;
+}
+
+function confidenceBasis({ blockers, sourceRefs, auditRefs, riskLevel }) {
+  if (!sourceRefs.length) {
+    return "Low: no source_refs are present.";
+  }
+  if (blockers.some((blocker) => blocker.severity === "critical")) {
+    return "Low: at least one critical blocker is present.";
+  }
+  if (!auditRefs.length) {
+    return "Medium: source_refs exist, but audit_refs are missing.";
+  }
+  if (riskLevel === "high") {
+    return "Medium: evidence exists, but the packet is high risk and still needs review.";
+  }
+  if (blockers.length) {
+    return "Medium: evidence exists, but blockers need revision.";
+  }
+  return "High: source_refs and audit_refs are present and no blocker fired.";
+}
+
+function ownerNote(type) {
+  if (customerDeliveryTypes.has(type)) {
+    return "Customer/FDE material: preserve speaker, context, and dissent before delivery use.";
+  }
+  if (longTermTypes.has(type)) {
+    return "Long-term memory candidate: do not attribute to the user unless the source explicitly supports it.";
+  }
+  return "General audit packet: distinguish user statement, AI inference, and project-owner judgment.";
 }
 
 export function auditPackets(packets, options = {}) {

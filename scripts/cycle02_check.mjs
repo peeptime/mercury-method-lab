@@ -14,12 +14,18 @@ const productSurfaceUnfreeze = packageJson.version.startsWith("1.3.")
   && await exists("docs/PRODUCT-SURFACE-PRESSURE-TEST.md");
 const methodDepthUnfreeze = packageJson.version.startsWith("1.4.")
   && await exists("docs/CYCLE-04-BLUEPRINT.md");
+const reviewUxUnfreeze = packageJson.version.startsWith("1.5.")
+  && await exists("docs/START-HERE.md")
+  && await exists("docs/SCOPE.md");
 const proofPack = await readText("docs/PROOF-PACK-001.md");
 const failureModes = await readText("docs/FAILURE-MODES.md");
 const charterUsers = await readText("docs/CHARTER-USER-RECORDS.md");
 const reviewLedger = await readText("docs/REVIEW-LEDGER.md");
+const auditRules = await readText("scripts/audit-core/audit_rules.mjs");
+const htmlReport = await readText("scripts/generate_audit_reports.mjs");
+const liteMode = await readText("dashboard/lite.html");
 
-check("version stays on an explicitly documented unfreeze line", packageJson.version.startsWith("1.2.") || productSurfaceUnfreeze || methodDepthUnfreeze);
+check("version stays on an explicitly documented unfreeze line", packageJson.version.startsWith("1.2.") || productSurfaceUnfreeze || methodDepthUnfreeze || reviewUxUnfreeze);
 if (productSurfaceUnfreeze) {
   warnings.push("product surface / Lite intake patch line detected: method-layer Cycle 02 checks still apply, but v1.3.x is allowed for product UI and entry-friction fixes");
 }
@@ -35,6 +41,21 @@ if (methodDepthUnfreeze) {
     check(`Cycle 04 method doc exists: ${path}`, await exists(path));
   }
   check("Failure Mode Dictionary has taxonomy layer", failureModes.includes("## Taxonomy Layer"));
+}
+if (reviewUxUnfreeze) {
+  warnings.push("Human Review Checklist UX line detected: v1.5.x is allowed for review guidance, START-HERE, scope, i18n, and progressive-disclosure work");
+  for (const path of [
+    "docs/START-HERE.md",
+    "docs/SCOPE.md",
+    "docs/EXPORT-GUIDE.md",
+    "docs/I18N-UX-POLICY.md"
+  ]) {
+    check(`review UX doc exists: ${path}`, await exists(path));
+  }
+  check("audit core emits content summary", auditRules.includes("content_summary"));
+  check("audit core emits human review checklist", auditRules.includes("human_review_checklist"));
+  check("HTML report renders checklist choices", htmlReport.includes("Human Review Checklist") && htmlReport.includes("复制复核记录"));
+  check("Lite Mode defaults to Chinese review checklist layer", liteMode.includes("Human Review Checklist") && liteMode.includes("处理方式") && liteMode.includes("查看技术详情"));
 }
 
 const cases = splitSections(proofPack, /^## Case \d{3}:[^\n]*$/gm);

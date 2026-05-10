@@ -2,9 +2,9 @@
 
 **It keeps smart thoughts from becoming clean but useless waste.**
 
-Version: `1.4.0`
+Version: `1.5.0`
 
-Latest release: [v1.4.0 Method Taxonomy and Routing Blueprint](https://github.com/peeptime/mercury-method-lab/releases/tag/v1.4.0)
+Latest release: [v1.5.0 Human Review Checklist UX](https://github.com/peeptime/mercury-method-lab/releases/tag/v1.5.0)
 
 ```yaml
 provenance:
@@ -25,6 +25,46 @@ provenance:
 Mercury Method Lab is an evidence-first audit layer for AI-generated memory, agent outputs, and FDE delivery artifacts.
 
 It does not make agents do more work. It decides whether the work agents already produced deserves to be retained.
+
+---
+
+## Start Here
+
+If you are new, open `docs/START-HERE.md` first. It routes humans, agents, audit runners, and method readers to the right command or document.
+
+Most users can start here:
+
+```powershell
+npm run dashboard
+```
+
+Then open:
+
+```text
+http://127.0.0.1:4788/lite.html
+```
+
+Paste an AI answer and click `开始检查`.
+
+The first visible layer now shows:
+
+- routing decision
+- content summary
+- Human Review Checklist with A/B/C choices
+- technical details only after expansion
+
+---
+
+## Human Review UX v1.5.0
+
+This release turns `human_review_required: true` from a dead end into an actionable review path.
+
+- Audit results now include `content_summary`.
+- Audit results now include `human_review_checklist`.
+- HTML reports render A/B/C review choices and a copyable review record.
+- Lite Mode defaults to Chinese user-facing guidance and hides internal fields behind `查看技术详情`.
+- `docs/SCOPE.md` defines what Mercury does not own: databases, second brains, storage backends, or certification claims.
+- `docs/EXPORT-GUIDE.md` explains how to carry Markdown/JSON/HTML outputs into external tools without treating raw captures as memory.
 
 ---
 
@@ -56,7 +96,7 @@ Paste path:
 npm run dashboard
 ```
 
-Then open `http://127.0.0.1:4788/lite.html`, paste an AI answer, click `Audit`, and click `Save Capture` only if you want Mercury to preserve the source plus a temporary Audit Packet.
+Then open `http://127.0.0.1:4788/lite.html`, paste an AI answer, click `开始检查`, and click `保存来源` only if you want Mercury to preserve the source plus a temporary Audit Packet.
 
 Dropzone path:
 
@@ -337,6 +377,10 @@ Not everything needs to be acted on. Sometimes writing it down is enough.
 
 | What you want | Where to go |
 |---|---|
+| Start here | `docs/START-HERE.md` |
+| Scope boundary | `docs/SCOPE.md` |
+| Export guide | `docs/EXPORT-GUIDE.md` |
+| i18n UX policy | `docs/I18N-UX-POLICY.md` |
 | End-to-end interception case | `docs/v0.9-proof-of-audit.md` |
 | Minimal workflow | `docs/MINIMAL-WORKFLOW.md` |
 | Pre-audit contract | `docs/AUDIT-CONTRACT.md` |
@@ -347,7 +391,8 @@ Not everything needs to be acted on. Sometimes writing it down is enough.
 | Proof pack coverage matrix | `docs/PROOF-PACK-COVERAGE-MATRIX.md` |
 | Related work | `docs/RELATED-WORK.md` |
 | 3-minute AI conversation intake | `docs/THREE-MINUTE-START.md` |
-| v1.4.0 method iteration guide | `docs/ITERATION-GUIDE-1.4.0.md` |
+| v1.5.0 review UX iteration guide | `docs/ITERATION-GUIDE-1.5.0.md` |
+| v1.4.0 method iteration guide | `docs/ITERATION-GUIDE-1.5.0.md` |
 | Product surface pressure test | `docs/PRODUCT-SURFACE-PRESSURE-TEST.md` |
 | Version history | `CHANGELOG.md` |
 | Governance principles | `docs/GOVERNANCE.md` |

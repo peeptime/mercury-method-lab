@@ -22,6 +22,12 @@ assert.equal(audit.summary.quarantine >= 1, true, "expected at least one quarant
 assert.equal(audit.summary.discard >= 1, true, "expected at least one discard result");
 
 for (const result of audit.results) {
+  assert.equal(Boolean(result.content_summary?.core_claim), true, `${result.packet_id} missing content summary`);
+  assert.equal(Array.isArray(result.human_review_checklist), true, `${result.packet_id} missing human review checklist`);
+  assert.equal(result.human_review_checklist.length >= 3, true, `${result.packet_id} should have at least three checklist items`);
+  for (const item of result.human_review_checklist) {
+    assert.equal((item.options || []).length >= 3, true, `${result.packet_id}/${item.id} should expose A/B/C options`);
+  }
   if (result.expected_decision) {
     assert.equal(result.routing_decision, result.expected_decision, `${result.packet_id} decision mismatch`);
   }
@@ -51,5 +57,9 @@ await access(join(root, "dist", "reports", "index.html"), constants.F_OK);
 const indexHtml = await readFile(join(root, "dist", "reports", "index.html"), "utf8");
 assert.match(indexHtml, /Audit Packet Reports/);
 assert.match(indexHtml, /memory_pollution_001/);
+const packetHtml = await readFile(join(root, "dist", "reports", "memory_pollution_001.html"), "utf8");
+assert.match(packetHtml, /Human Review Checklist/);
+assert.match(packetHtml, /Content Summary|内容摘要/);
+assert.match(packetHtml, /复制复核记录/);
 
 console.log(`OK audit packet tests passed (${audit.summary.total} packets)`);

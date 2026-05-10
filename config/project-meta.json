@@ -1,9 +1,9 @@
 {
   "project_name": "Mercury Method Lab",
   "package_name": "mercury-method-lab",
-  "version": "1.4.0",
-  "codename": "Method Taxonomy and Routing Blueprint",
-  "status": "method-taxonomy-and-routing-blueprint",
+  "version": "1.5.0",
+  "codename": "Human Review Checklist UX",
+  "status": "human-review-checklist-ux",
   "position": "An evidence-first audit method for deciding which AI-generated claims deserve durable memory.",
   "version_policy": {
     "major": "Breaks artifact, memory, or upstream compatibility contracts.",

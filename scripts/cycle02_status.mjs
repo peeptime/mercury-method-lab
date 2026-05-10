@@ -35,6 +35,10 @@ console.log(`cycle_review_pending_entries: ${pendingCycleEntries}`);
 if (packageJson.version.startsWith("1.4.")) {
   console.log("method_depth_docs: taxonomy/routing/coverage/related-work/blueprint");
 }
+if (packageJson.version.startsWith("1.5.")) {
+  console.log("review_ux_docs: start-here/scope/export/i18n");
+  console.log("review_ux_outputs: content_summary/human_review_checklist/progressive_disclosure");
+}
 console.log("");
 console.log("next_low_token_commands:");
 console.log("  npm run cycle:check");
@@ -64,5 +68,6 @@ function cycleLine(version) {
   if (version.startsWith("1.2.")) return "v1.2.x patch";
   if (version.startsWith("1.3.")) return "v1.3.x product-surface / Lite intake patch";
   if (version.startsWith("1.4.")) return "v1.4.x method taxonomy / routing blueprint";
+  if (version.startsWith("1.5.")) return "v1.5.x human review checklist UX";
   return "outside documented Cycle 02/04 line";
 }

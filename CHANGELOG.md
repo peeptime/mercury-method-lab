@@ -4,6 +4,24 @@
 
 Every release entry must carry an explicit provenance declaration. Legacy entries that cannot be reconstructed are marked as unverified instead of being silently treated as human-only.
 
+## 1.5.0 - Human Review Checklist UX (2026-05-10)
+> Provenance: `[AI_GENERATED]` drafted_by: Codex; humanReviewed: declined; reviewer: project_owner_pending; audit_ref: docs/ITERATION-REQUEST-UI-AUDIT-2026-05-10.md
+
+### Added
+
+- Audit results now include `content_summary` so users can see the core claim, attribution, and confidence basis before reading technical blockers.
+- Audit results now include `human_review_checklist` with A/B/C options for source support, confidence, attribution, and route confirmation.
+- HTML reports render the checklist as selectable review choices and include a copyable human-review record.
+- `docs/START-HERE.md` adds a role-based entry point for humans, agents, audit runners, and method readers.
+- `docs/SCOPE.md`, `docs/EXPORT-GUIDE.md`, and `docs/I18N-UX-POLICY.md` define project boundaries, export paths, and user-visible language rules.
+
+### Changed
+
+- Lite Mode now defaults to a Chinese user-facing layer: routing decision, content summary, Human Review Checklist, and folded technical details.
+- README / README.en now foreground the v1.5.0 review workflow and start path.
+- Cycle status/check, doctor, and latest guide generation now recognize the documented v1.5.x Human Review UX line.
+- `package.json` description is normalized to clean UTF-8 English instead of a mojibake-prone Chinese description.
+
 ## 1.4.0 - Method Taxonomy and Routing Blueprint (2026-05-10)
 > Provenance: `[AI_GENERATED]` drafted_by: Codex; humanReviewed: declined; reviewer: project_owner_pending; audit_ref: docs/CYCLE-04-BLUEPRINT.md
 

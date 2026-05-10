@@ -13,14 +13,15 @@ This file is the short cross-session handoff. Keep it under 120 lines. Do not pa
 
 ## Current Snapshot
 
-- Current public version: `1.4.0`
-- Current posture: Method Taxonomy and Routing Blueprint
+- Current public version: `1.5.0`
+- Current posture: Human Review Checklist UX
 - Core proof: `docs/v0.9-proof-of-audit.md`
 - Current proof pack: `docs/PROOF-PACK-001.md`
 - Current runnable audit loop: `npm run audit`, `npm run audit:flow`, `npm run report`, `npm run test`, `npm run audit:profile`
 - Current intake loop: `npm run capture -- --file <path>`, `npm run capture:dropzone`, `npm run capture:check`
 - Fast checks: `npm run cycle:status`, `npm run cycle:check`, `npm run dashboard:check`, `npm run capture:check`, `npm run validate:incr`, `npm run index:incr`, `npm run guide:latest`
 - Current method docs: `docs/FAILURE-MODES.md`, `docs/ROUTING-THEORY.md`, `docs/PROOF-PACK-COVERAGE-MATRIX.md`, `docs/RELATED-WORK.md`, `docs/AGENT-AUDIT-BLUEPRINT.md`
+- Current UX docs: `docs/START-HERE.md`, `docs/SCOPE.md`, `docs/EXPORT-GUIDE.md`, `docs/I18N-UX-POLICY.md`
 - Release gate: `npm run release:gate`
 - Bad-memory proof must continue to export `routing_decision: discard`
 
@@ -37,6 +38,7 @@ This file is the short cross-session handoff. Keep it under 120 lines. Do not pa
 - `v1.3.1` capture lowers entry friction only; captures remain `human_reviewed: declined` with empty `audit_refs`.
 - `v1.4.0` is a method-depth release, not a claim that Mercury is an external standard.
 - The taxonomy is still AI-assisted and `human_reviewed: declined`.
+- `v1.5.0` makes Human Review actionable with content summaries and A/B/C checklists, but review choices still require a named human before `human_reviewed: true`.
 - Current dashboard has runtime preferences in `config/preferences.json`; do not confuse them with durable project memory.
 
 ## Token Economy Rules
@@ -54,8 +56,10 @@ This file is the short cross-session handoff. Keep it under 120 lines. Do not pa
 
 - Keep version surfaces aligned.
 - Keep method-layer case-first; use `v1.4.x` for taxonomy, routing theory, coverage, related-work, and blueprint docs.
+- Use `v1.5.x` for Human Review Checklist, START-HERE, scope, i18n, and progressive-disclosure work.
 - Do not add official failure modes without proof-pack or coverage-matrix support.
 - Do not present Mercury as a certification authority; keep it as a reference method others can adapt.
+- Do not expose raw technical fields as the first user-visible layer when content summary and checklist can lead.
 - Keep `00_inbox/ai-conversations/` as source evidence intake, not approved memory.
 - Validate `dashboard/lite.html` and `dashboard/product-layer.js` with `npm run dashboard:check`.
 - Review `docs/PROOF-PACK-001.md` and `docs/FAILURE-MODES.md` for human acceptance or edits.
