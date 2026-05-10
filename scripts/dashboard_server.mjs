@@ -8,6 +8,7 @@ import { fileURLToPath } from "node:url";
 
 // goal-validator API
 const { validate: goalValidate, createActionPlan: goalCreateActionPlan } = await import("./goal-validator.mjs").catch(() => ({ validate: null, createActionPlan: null }));
+const { captureText: captureAiText } = await import("./capture_ai_conversation.mjs").catch(() => ({ captureText: null }));
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
 const dashboardRoot = join(root, "dashboard");
@@ -133,6 +134,20 @@ const server = createServer(async (req, res) => {
     if (url.pathname === "/api/lite-audit" && req.method === "POST") {
       const body = await readJson(req);
       return sendJson(res, { ok: true, result: liteAudit(body.text || "") });
+    }
+
+    if (url.pathname === "/api/capture" && req.method === "POST") {
+      if (!captureAiText) {
+        return sendJson(res, { ok: false, error: "capture module not available" }, 500);
+      }
+      const body = await readJson(req);
+      if (!String(body.text || "").trim()) {
+        return sendJson(res, { ok: false, error: "capture text is required" }, 400);
+      }
+      return sendJson(res, await captureAiText(body.text || "", {
+        sourceLabel: body.source || "dashboard-lite",
+        title: body.title || "Lite capture"
+      }));
     }
 
     if (url.pathname === "/api/submission/viewpoint" && req.method === "POST") {

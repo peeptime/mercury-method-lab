@@ -2,17 +2,20 @@
 
 **It keeps smart thoughts from becoming clean but useless waste.**
 
-Version: `1.3.0`
+Version: `1.3.1`
 
-Latest release: [v1.3.0 Product Surface Pressure Test](https://github.com/peeptime/mercury-method-lab/releases/tag/v1.3.0)
+Latest release: [v1.3.1 Lite Intake and Trust Ledger Patch](https://github.com/peeptime/mercury-method-lab/releases/tag/v1.3.1)
 
 ```yaml
 provenance:
-  authors: project_owner + QClaw
+  authors: project_owner + Codex
   ai_assisted: true
-  human_reviewed: true
-  reviewer: project_owner
-  audit_ref: docs/METHODOLOGY-INTEGRITY.md
+  human_reviewed: declined
+  reviewer: project_owner_pending
+  review_note: |
+    Project-level provenance reflects the lowest-reviewed referenced component.
+    Until referenced docs are human-reviewed, the project README cannot claim true.
+  audit_ref: docs/REVIEW-LEDGER.md
 ```
 
 ---
@@ -22,6 +25,46 @@ provenance:
 Mercury Method Lab is an evidence-first audit layer for AI-generated memory, agent outputs, and FDE delivery artifacts.
 
 It does not make agents do more work. It decides whether the work agents already produced deserves to be retained.
+
+---
+
+## Have An AI Conversation To Audit?
+
+Fastest path:
+
+```powershell
+npm run capture -- --file examples/ai-conversation-capture.md
+```
+
+Paste path:
+
+```powershell
+npm run dashboard
+```
+
+Then open `http://127.0.0.1:4788/lite.html`, paste an AI answer, click `Audit`, and click `Save Capture` only if you want Mercury to preserve the source plus a temporary Audit Packet.
+
+Dropzone path:
+
+```text
+00_inbox/ai-conversations/
+```
+
+Put a `.md` or `.txt` AI conversation there, then run:
+
+```powershell
+npm run capture:dropzone
+```
+
+Captured material starts as source evidence, not memory:
+
+```yaml
+human_reviewed: declined
+audit_refs: []
+risk_level: high
+```
+
+See `docs/THREE-MINUTE-START.md`.
 
 ---
 
@@ -51,6 +94,8 @@ The short-term reactivation does not expand features. It accumulates real interc
 Cycle 02 method work is locked in `docs/CYCLE-02-COMMITMENT.md`: no new major framework names, no fake human review, and no fake charter users.
 
 `v1.3.0` is a separately documented product-surface unfreeze limited to dashboard, Lite Mode, settings, and entry-point usability. See `docs/PRODUCT-SURFACE-PRESSURE-TEST.md`.
+
+`v1.3.1` keeps that work on a patch line: it adds Lite/dropzone capture and records the Cycle 02/version-line debt in `docs/REVIEW-LEDGER.md` instead of pretending it did not happen.
 
 Low-token reactivation:
 
@@ -85,13 +130,14 @@ Markdown/YAML are the trusted record. HTML is the human delivery layer.
 
 ---
 
-## Product Surface v1.3.0
+## Product Surface v1.3.x
 
-`v1.3.0` moves Mercury toward a real product surface:
+`v1.3.x` moves Mercury toward a real product surface without lowering audit gates:
 
 ```powershell
 npm run dashboard       # Full Dashboard: settings / onboarding / notifications / artifacts
 npm run dashboard:check # Static product-layer and Lite Mode check
+npm run capture:check   # Verify Lite/dropzone capture keeps review declined
 ```
 
 After local startup:
@@ -101,9 +147,10 @@ Full Dashboard: http://127.0.0.1:4788
 Lite Mode:      http://127.0.0.1:4788/lite.html
 ```
 
-- `dashboard/lite.html` is a single-file Lite Mode for paste, audit, result review, and copy-as-Markdown.
+- `dashboard/lite.html` is a single-file Lite Mode for paste, URL prefill, audit, result review, copy-as-Markdown, and optional source capture.
+- `00_inbox/ai-conversations/` is the file dropzone for `.md` / `.txt` AI conversation captures.
 - Full Dashboard adds 7 settings categories, first-run onboarding, command palette, icons, toast/system notifications, and recoverable error UI.
-- Lite output keeps `human_reviewed: declined` by default and does not bypass the audit contract.
+- Lite and capture output keep `human_reviewed: declined` by default and do not bypass the audit contract.
 
 ---
 
@@ -124,9 +171,10 @@ npm run validate   # audit all artifacts for provenance declarations
 npm run index     # rebuild JSON index
 npm run doctor    # diagnose system state
 npm run release:gate # current release gate
+npm run capture:check # capture path must preserve declined review state
 ```
 
-All three must pass before the project is considered reproducible.
+These checks must pass before the project is considered reproducible.
 
 ---
 
@@ -260,7 +308,8 @@ Not everything needs to be acted on. Sometimes writing it down is enough.
 | Pre-audit contract | `docs/AUDIT-CONTRACT.md` |
 | AI collaboration paradox fix | `docs/METHODOLOGY-INTEGRITY.md` |
 | Why success metrics are dangerous | `docs/AUDIT-METRICS-DECLINED.md` |
-| v1.3.0 product iteration guide | `docs/ITERATION-GUIDE-1.3.0.md` |
+| 3-minute AI conversation intake | `docs/THREE-MINUTE-START.md` |
+| v1.3.1 Lite intake guide | `docs/ITERATION-GUIDE-1.3.1.md` |
 | Product surface pressure test | `docs/PRODUCT-SURFACE-PRESSURE-TEST.md` |
 | Version history | `CHANGELOG.md` |
 | Governance principles | `docs/GOVERNANCE.md` |

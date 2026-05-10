@@ -29,8 +29,9 @@ Keep the project stable, narrow, and cheap to reactivate:
 
 - start future sessions from \`MEMORY.md\`, this file, and \`docs/CYCLE-02-COMMITMENT.md\`
 - run \`npm run cycle:status\` and \`npm run cycle:check\` before opening long docs
-- keep the method layer case-first; \`v1.3.x\` is reserved for product-surface work only
+- keep the method layer case-first; \`v1.3.x\` is reserved for product-surface and Lite intake patch work only
 - finish proof cases, failure modes, review ledger, and real charter-user records before adding concepts
+- use \`npm run capture -- --file <path>\` or \`npm run capture:dropzone\` to preserve AI conversation source evidence without promoting it
 - use Audit Packets as the runnable unit for Agent/FDE/long-term-memory claim review
 - keep Markdown/YAML as source of truth and HTML as a generated delivery layer
 - run \`npm run audit\`, \`npm run audit:flow\`, and \`npm run report\` when validating evidence-first examples
@@ -47,6 +48,8 @@ Keep the project stable, narrow, and cheap to reactivate:
 - Do not turn Audit Packets into a scoring/gameable success metric system.
 - Do not add backend adapters.
 - Do not add new major methodology framework names during product-surface work.
+- Do not treat a captured conversation as approved memory.
+- Do not auto-promote Lite/dropzone captures into durable project memory.
 - Do not fabricate charter users or external feedback.
 - Do not mark \`human_reviewed: true\` without a named human reviewer.
 - Do not add AI scoring, AI self-audit, RAG, or fine-tuning audit features.
@@ -69,6 +72,7 @@ Keep the project stable, narrow, and cheap to reactivate:
 npm run validate:incr
 npm run cycle:status
 npm run cycle:check
+npm run capture:check
 npm run index:incr
 npm run audit
 npm run audit:flow

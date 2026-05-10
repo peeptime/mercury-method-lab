@@ -13,12 +13,13 @@ This file is the short cross-session handoff. Keep it under 120 lines. Do not pa
 
 ## Current Snapshot
 
-- Current public version: `1.3.0`
-- Current posture: Product Surface Pressure Test
+- Current public version: `1.3.1`
+- Current posture: Lite Intake and Trust Ledger Patch
 - Core proof: `docs/v0.9-proof-of-audit.md`
 - Current proof pack: `docs/PROOF-PACK-001.md`
 - Current runnable audit loop: `npm run audit`, `npm run audit:flow`, `npm run report`, `npm run test`, `npm run audit:profile`
-- Fast checks: `npm run cycle:status`, `npm run cycle:check`, `npm run dashboard:check`, `npm run validate:incr`, `npm run index:incr`, `npm run guide:latest`
+- Current intake loop: `npm run capture -- --file <path>`, `npm run capture:dropzone`, `npm run capture:check`
+- Fast checks: `npm run cycle:status`, `npm run cycle:check`, `npm run dashboard:check`, `npm run capture:check`, `npm run validate:incr`, `npm run index:incr`, `npm run guide:latest`
 - Release gate: `npm run release:gate`
 - Bad-memory proof must continue to export `routing_decision: discard`
 
@@ -31,6 +32,8 @@ This file is the short cross-session handoff. Keep it under 120 lines. Do not pa
 - Cycle 02 charter users are still `0/3`; do not fabricate external use records.
 - Cycle 02 AI-authored artifacts are `human_reviewed: declined` until the project owner reviews them.
 - `v1.3.0` is a product-surface unfreeze, not a method-layer expansion.
+- `v1.3.0` contradicted the original Cycle 02 forbidden version line; the debt is recorded in `docs/REVIEW-LEDGER.md`.
+- `v1.3.1` capture lowers entry friction only; captures remain `human_reviewed: declined` with empty `audit_refs`.
 - Current dashboard has runtime preferences in `config/preferences.json`; do not confuse them with durable project memory.
 
 ## Token Economy Rules
@@ -38,6 +41,7 @@ This file is the short cross-session handoff. Keep it under 120 lines. Do not pa
 - Start small: read this file, `docs/ITERATION-GUIDE-LATEST.md`, and `docs/CYCLE-02-COMMITMENT.md` before opening long docs.
 - Run `npm run cycle:status` before reading Proof Pack or Failure Modes in full.
 - Run `npm run dashboard:check` before reading full dashboard files.
+- Run `npm run capture:check` before reading full Lite/capture implementation.
 - Run `validate:incr` and `index:incr` before full scans during exploration.
 - Read full `docs/ITERATION-GUIDE-0.9.md` only for disputed v0.9 acceptance criteria.
 - For README/changelog/version updates, inspect only the affected sections and release surfaces.
@@ -46,7 +50,8 @@ This file is the short cross-session handoff. Keep it under 120 lines. Do not pa
 ## Next Good Work
 
 - Keep version surfaces aligned.
-- Keep method-layer Cycle 02 case-first; only use `v1.3.x` for product-surface work.
+- Keep method-layer Cycle 02 case-first; only use `v1.3.x` for product-surface or Lite intake patch work.
+- Keep `00_inbox/ai-conversations/` as source evidence intake, not approved memory.
 - Validate `dashboard/lite.html` and `dashboard/product-layer.js` with `npm run dashboard:check`.
 - Review `docs/PROOF-PACK-001.md` and `docs/FAILURE-MODES.md` for human acceptance or edits.
 - Collect three real charter user records in `docs/CHARTER-USER-RECORDS.md`.

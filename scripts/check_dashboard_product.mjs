@@ -18,6 +18,7 @@ check("preferences file has 7 settings categories", ["general", "interface", "st
 check("dashboard exposes preferences endpoint", server.includes('/api/preferences'));
 check("dashboard exposes lightweight product context endpoint", server.includes('/api/product-context'));
 check("dashboard exposes lite audit endpoint", server.includes('/api/lite-audit'));
+check("dashboard exposes capture endpoint", server.includes('/api/capture'));
 check("dashboard exposes update check endpoint", server.includes('/api/update-check'));
 check("dashboard exposes diagnostics endpoint", server.includes('/api/diagnostics'));
 check("command allowlist includes audit/report/cycle", ["audit", "report", "cycle:status", "cycle:check"].every((script) => server.includes(`["${script}"`)));
@@ -25,6 +26,7 @@ check("product layer defines at least 20 icons", countIconDefinitions(productLay
 check("product layer includes settings, command palette, onboarding, toast, notifications", ["openSettings", "openCommandPalette", "openOnboarding", "showToast", "Notification"].every((token) => productLayer.includes(token)));
 check("Lite Mode is single file and <= 30KB", liteStat.size <= 30 * 1024);
 check("Lite Mode supports paste/audit/copy/offline", ["source", "auditBtn", "copyMarkdown", "stubAudit"].every((token) => lite.includes(token)));
+check("Lite Mode supports URL prefill and capture save", ["params.get(\"text\")", "captureBtn", "saveCapture", "/api/capture"].every((token) => lite.includes(token)));
 
 for (const result of checks) {
   console.log(`${result.ok ? "OK" : "FAIL"} ${result.name}`);

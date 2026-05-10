@@ -75,3 +75,11 @@ Check:
 ## Acceptance Boundary
 
 This document does not claim Cycle 02 is complete. It pins the work so future agents cannot accidentally convert the cycle into another feature-expansion sprint.
+
+## Status Note (2026-05-10)
+
+`v1.3.0` contradicted this document's original `forbidden_version_lines`.
+
+The product-surface unfreeze is now recorded as an acknowledged project debt in `docs/REVIEW-LEDGER.md`. This document is not retroactively rewritten to pretend the commitment was honored.
+
+Until a real Cycle variable advances, future work should stay on `v1.3.x` patch-level product/Lite intake fixes and avoid new major framework names.

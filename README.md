@@ -2,17 +2,20 @@
 
 **不让聪明变成垃圾。**
 
-Version: `1.3.0`
+Version: `1.3.1`
 
-Latest release: [v1.3.0 Product Surface Pressure Test](https://github.com/peeptime/mercury-method-lab/releases/tag/v1.3.0)
+Latest release: [v1.3.1 Lite Intake and Trust Ledger Patch](https://github.com/peeptime/mercury-method-lab/releases/tag/v1.3.1)
 
 ```yaml
 provenance:
-  authors: project_owner + QClaw
+  authors: project_owner + Codex
   ai_assisted: true
-  human_reviewed: true
-  reviewer: project_owner
-  audit_ref: docs/METHODOLOGY-INTEGRITY.md
+  human_reviewed: declined
+  reviewer: project_owner_pending
+  review_note: |
+    Project-level provenance reflects the lowest-reviewed referenced component.
+    Until referenced docs are human-reviewed, the project README cannot claim true.
+  audit_ref: docs/REVIEW-LEDGER.md
 ```
 
 ---
@@ -42,11 +45,52 @@ output: archived proof, no runtime DB write
 
 ---
 
+## Have An AI Conversation To Audit?
+
+Fastest path:
+
+```powershell
+npm run capture -- --file examples/ai-conversation-capture.md
+```
+
+Paste path:
+
+```powershell
+npm run dashboard
+```
+
+Then open `http://127.0.0.1:4788/lite.html`, paste an AI answer, click `Audit`, and click `Save Capture` only if you want Mercury to preserve the source plus a temporary Audit Packet.
+
+Dropzone path:
+
+```text
+00_inbox/ai-conversations/
+```
+
+Put a `.md` or `.txt` AI conversation there, then run:
+
+```powershell
+npm run capture:dropzone
+```
+
+Captured material starts as source evidence, not memory:
+
+```yaml
+human_reviewed: declined
+audit_refs: []
+risk_level: high
+```
+
+See `docs/THREE-MINUTE-START.md`.
+
+---
+
 ## Proof Pack 001
 
 Cycle 02 的方法层规则写在 `docs/CYCLE-02-COMMITMENT.md`：不新增主要框架名，不伪造 human review，不伪造 charter users，先把 Proof Pack 001、Failure Mode Dictionary、review ledger 和 charter user records 做实。
 
 `v1.3.0` 是一次单独记录的产品层解冻，范围限定在 dashboard / Lite Mode / 设置与入口体验，见 `docs/PRODUCT-SURFACE-PRESSURE-TEST.md`。
+`v1.3.1` 继续保持 patch 线，只补 Lite / dropzone capture，并在 `docs/REVIEW-LEDGER.md` 里记录 Cycle 02 版本线债务，不把它粉饰成已经履约。
 
 低 token 复位入口：
 
@@ -85,12 +129,13 @@ Markdown/YAML 是可信记录，HTML 是给人看的交付层。
 
 ---
 
-## Product Surface v1.3.0
+## Product Surface v1.3.x
 
-`v1.3.0` 把 Mercury 的工程入口向真实产品推进一步：
+`v1.3.x` 把 Mercury 的工程入口向真实产品推进一步，但不降低审计门槛：
 
 ```powershell
 npm run dashboard       # Full Dashboard: settings / onboarding / notifications / artifacts
+npm run capture:check   # Verify Lite/dropzone capture keeps review declined
 npm run dashboard:check # 静态检查产品层和 Lite Mode
 ```
 
@@ -101,9 +146,10 @@ Full Dashboard: http://127.0.0.1:4788
 Lite Mode:      http://127.0.0.1:4788/lite.html
 ```
 
-- `dashboard/lite.html` 是单文件 Lite Mode，可直接打开，支持粘贴、审计、查看结果、复制 Markdown。
+- `dashboard/lite.html` 是单文件 Lite Mode，支持粘贴、URL prefill、审计、查看结果、复制 Markdown 和可选 source capture。
+- `00_inbox/ai-conversations/` 是 `.md` / `.txt` AI 对话 dropzone。
 - Full Dashboard 新增 7 类 Settings、首次引导、命令面板、图标系统、toast/系统通知和可恢复错误 UI。
-- 所有 Lite 输出默认保留 `human_reviewed: declined`，不绕过审计契约。
+- 所有 Lite / capture 输出默认保留 `human_reviewed: declined`，不绕过审计契约。
 
 ---
 
@@ -123,10 +169,11 @@ Lite Mode:      http://127.0.0.1:4788/lite.html
 npm run validate   # 审计所有 artifact 的 provenance 声明
 npm run index     # 重建 JSON 索引
 npm run doctor    # 诊断系统状态
+npm run capture:check # capture path must preserve declined review state
 npm run release:gate # 当前版本发布门禁
 ```
 
-三步通过，才说明当前处于可复现状态。
+这些检查通过，才说明当前处于可复现状态。
 
 ---
 
@@ -265,7 +312,8 @@ npm run dashboard    # http://127.0.0.1:4788
 | 看"为什么不能定义成功指标" | `docs/AUDIT-METRICS-DECLINED.md` |
 | 看 Evidence-First Audit Packet 闭环 | `docs/EVIDENCE-FIRST-AUDIT-LAYER.md` |
 | 看 HTML 审计报告样例 | `dist/reports/index.html`（运行 `npm run report` 后生成） |
-| 看 v1.3.0 产品层迭代指南 | `docs/ITERATION-GUIDE-1.3.0.md` |
+| 3 分钟 AI 对话 intake | `docs/THREE-MINUTE-START.md` |
+| 看 v1.3.1 Lite intake 指南 | `docs/ITERATION-GUIDE-1.3.1.md` |
 | 看产品层压力测试记录 | `docs/PRODUCT-SURFACE-PRESSURE-TEST.md` |
 | 继续迭代/讨论项目 | 激活 `mercury-v8-iter` Skill |
 | 看版本历史 | `CHANGELOG.md` |

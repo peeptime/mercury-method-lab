@@ -21,6 +21,7 @@ jobs:
       - run: npm run cycle:status
       - run: npm run cycle:check
       - run: npm run dashboard:check
+      - run: npm run capture:check
       - run: npm run audit
       - run: npm run report
       - run: npm run audit:flow

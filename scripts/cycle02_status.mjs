@@ -27,7 +27,7 @@ const cycleEntries = reviewLedger.split("## Pre-Cycle Carryover")[0] ?? reviewLe
 const pendingCycleEntries = countMatches(cycleEntries, /\|\s*[^|\n]+\s*\|\s*pending\s*\|/g);
 
 console.log(`Mercury Method Lab ${packageJson.version} (${packageJson.codename})`);
-console.log(`cycle_line: ${packageJson.version.startsWith("1.2.") ? "v1.2.x patch" : packageJson.version.startsWith("1.3.") ? "v1.3.x product-surface unfreeze" : "outside Cycle 02 patch line"}`);
+console.log(`cycle_line: ${packageJson.version.startsWith("1.2.") ? "v1.2.x patch" : packageJson.version.startsWith("1.3.") ? "v1.3.x product-surface / Lite intake patch" : "outside Cycle 02 patch line"}`);
 console.log(`proof_pack_cases: ${caseCount}/10`);
 console.log(`failure_modes: ${modeCount}/20`);
 console.log(`charter_user_records: ${realUserRecords}/3 external-dependent`);
@@ -35,6 +35,7 @@ console.log(`cycle_review_pending_entries: ${pendingCycleEntries}`);
 console.log("");
 console.log("next_low_token_commands:");
 console.log("  npm run cycle:check");
+console.log("  npm run capture:check");
 console.log("  npm run validate:incr");
 console.log("  npm run index:incr");
 console.log("");

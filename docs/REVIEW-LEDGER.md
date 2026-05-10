@@ -23,6 +23,9 @@ Use:
 
 | Date | Artifact | Review State | Reviewer | Finding | Next Action |
 |---|---|---|---|---|---|
+| 2026-05-10 | `docs/CYCLE-02-COMMITMENT.md` -> `v1.3.0` | declined | project_owner_pending | `acknowledged_violation`: v1.3.0 contradicted the original `forbidden_version_lines`. The product-surface unfreeze is recorded as a project-owner/Codex decision, not proof that the Cycle 02 commitment was honored. | Keep README provenance declined; use v1.3.x only for patch-level product/Lite intake fixes until a real Cycle variable advances. |
+| 2026-05-10 | `README.md` / `README.en.md` | declined | project_owner_pending | README previously claimed project-level `human_reviewed: true` while referenced sub-artifacts remained declined. Project-level provenance now follows the lowest-reviewed referenced component. | Do not mark README true until referenced docs have named human review. |
+| 2026-05-10 | `docs/THREE-MINUTE-START.md` + Lite/dropzone capture path | declined | project_owner_pending | Low-friction capture is useful, but it only preserves source evidence; it does not grant audit approval or memory promotion. | Test with a real user before treating the entry path as validated. |
 | 2026-05-09 | `docs/CYCLE-02-COMMITMENT.md` | declined | project_owner_pending | AI-assisted commitment draft; useful as constraint, not human-approved policy. | Owner may accept, edit, or reject. |
 | 2026-05-09 | `docs/PROOF-PACK-001.md` | declined | project_owner_pending | Cases 002-010 are grounded in repo artifacts but not human-reviewed. | Owner review should decide which cases become canonical. |
 | 2026-05-09 | `docs/FAILURE-MODES.md` | declined | project_owner_pending | 22 modes are case-grounded but still AI-assisted taxonomy. | Owner review should rename, merge, or remove modes. |

@@ -4,6 +4,25 @@
 
 Every release entry must carry an explicit provenance declaration. Legacy entries that cannot be reconstructed are marked as unverified instead of being silently treated as human-only.
 
+## 1.3.1 - Lite Intake and Trust Ledger Patch (2026-05-10)
+> Provenance: `[AI_GENERATED]` drafted_by: Codex; humanReviewed: declined; reviewer: project_owner_pending; audit_ref: docs/REVIEW-LEDGER.md
+
+### Added
+
+- `scripts/capture_ai_conversation.mjs` adds a file/stdin/dropzone capture path for preserving AI conversation source evidence as temporary Audit Packets.
+- `npm run capture`, `capture:demo`, `capture:dropzone`, `capture:watch`, and `capture:check` expose the capture loop without requiring users to understand the internal packet schema.
+- `00_inbox/ai-conversations/` adds a local `.md` / `.txt` dropzone for low-friction AI conversation intake.
+- `docs/THREE-MINUTE-START.md` documents paste, file, and dropzone entry paths.
+- Lite Mode now supports URL prefill and optional `Save Capture` through `/api/capture`.
+- `examples/ai-conversation-capture.md` provides a runnable bad-memory capture fixture.
+
+### Changed
+
+- README provenance is corrected back to `human_reviewed: declined` until referenced docs receive named human review.
+- `docs/REVIEW-LEDGER.md` now records the v1.3.0/Cycle 02 version-line violation instead of hiding it.
+- `docs/CYCLE-02-COMMITMENT.md` keeps its original constraint and adds a status note acknowledging the later product-surface exception.
+- Cycle status/check wording, doctor, CI, dashboard product checks, latest guide generation, and release gate now include the capture check.
+
 ## 1.3.0 - Product Surface Pressure Test (2026-05-10)
 > Provenance: `[AI_GENERATED]` drafted_by: Codex; humanReviewed: declined; reviewer: project_owner_pending; audit_ref: docs/PRODUCT-SURFACE-PRESSURE-TEST.md
 

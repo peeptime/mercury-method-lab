@@ -19,7 +19,7 @@ const reviewLedger = await readText("docs/REVIEW-LEDGER.md");
 
 check("version stays on v1.2.x or has documented product-surface unfreeze", packageJson.version.startsWith("1.2.") || productSurfaceUnfreeze);
 if (productSurfaceUnfreeze) {
-  warnings.push("product surface unfreeze detected: method-layer Cycle 02 checks still apply, but v1.3.x is allowed for product UI work");
+  warnings.push("product surface / Lite intake patch line detected: method-layer Cycle 02 checks still apply, but v1.3.x is allowed for product UI and entry-friction fixes");
 }
 
 const cases = splitSections(proofPack, /^## Case \d{3}:[^\n]*$/gm);
