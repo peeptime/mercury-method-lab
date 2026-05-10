@@ -2,7 +2,17 @@ import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { audit, auditMemoryWrite, createAuditPacket, listPolicies, shouldWriteMemory } from "../src/mercury-audit/index.mjs";
+import {
+  assessDisagreement,
+  audit,
+  auditMemoryWrite,
+  createAuditPacket,
+  listAuditProfiles,
+  listAuditStandards,
+  listPolicies,
+  listSourceLevels,
+  shouldWriteMemory
+} from "../src/mercury-audit/index.mjs";
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
 
@@ -17,6 +27,8 @@ const unsupported = audit(packet, { policy: "standard" });
 assert.notEqual(unsupported.routing_decision, "accept");
 assert.equal(unsupported.failure_modes.includes("missing_source_refs"), true);
 assert.equal(unsupported.provenance.human_reviewed, "declined");
+assert.equal(unsupported.kernel.profile.id, "v8.1-reality-sync");
+assert.equal(unsupported.source_credibility.passes_floor, false);
 
 const valid = audit("The user asked for a local SDK wrapper before deeper integration work.", {
   id: "sdk_valid_001",
@@ -29,6 +41,7 @@ const valid = audit("The user asked for a local SDK wrapper before deeper integr
 });
 assert.equal(valid.routing_decision, "accept");
 assert.equal(shouldWriteMemory(valid), true);
+assert.equal(valid.source_credibility.passes_floor, true);
 
 const strictDelivery = audit("The customer confirmed the migration date.", {
   type: "customer_delivery",
@@ -52,6 +65,16 @@ const memoryHook = auditMemoryWrite({
 assert.equal(memoryHook.routing_decision, "accept");
 
 assert.equal(listPolicies().some((policy) => policy.name === "strict"), true);
+assert.equal(listAuditProfiles().some((profile) => profile.id === "external-auditor"), true);
+assert.equal(listAuditStandards().some((standard) => standard.id === "high-risk-memory"), true);
+assert.equal(listSourceLevels().some((level) => level.id === "ai_generated"), true);
+
+const disagreement = assessDisagreement([
+  { reviewer: "owner", routing_decision: "accept" },
+  { reviewer: "external", routing_decision: "quarantine" }
+]);
+assert.equal(disagreement.escalation_required, true);
+assert.equal(disagreement.recommended_route, "quarantine");
 
 const demo = spawnSync(process.execPath, ["examples/integration-demo/memory-write-hook.mjs"], {
   cwd: root,

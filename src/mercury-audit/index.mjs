@@ -1,10 +1,27 @@
 import { createHash } from "node:crypto";
-import { auditPacket } from "../../scripts/audit-core/audit_rules.mjs";
+import { auditKernel } from "./kernel.mjs";
 import { applyPolicy, listPolicies, resolvePolicy } from "./policy.mjs";
+import { getAuditProfile, listAuditProfiles } from "./profiles.mjs";
+import { getAuditStandard, listAuditStandards } from "./standards.mjs";
+import { assessSourceCredibility, classifySourceRef, listSourceLevels } from "./source-credibility.mjs";
+import { assessLifecycle } from "./lifecycle.mjs";
+import { assessDisagreement } from "./disagreement.mjs";
 
-export const MERCURY_AUDIT_API_VERSION = "0.1.0";
+export const MERCURY_AUDIT_API_VERSION = "0.2.0";
 
 export { applyPolicy, listPolicies, resolvePolicy };
+export {
+  assessDisagreement,
+  assessLifecycle,
+  assessSourceCredibility,
+  auditKernel,
+  classifySourceRef,
+  getAuditProfile,
+  getAuditStandard,
+  listAuditProfiles,
+  listAuditStandards,
+  listSourceLevels
+};
 
 export function createAuditPacket(content, context = {}) {
   const claim = String(content || "").trim();
@@ -34,8 +51,10 @@ export function audit(contentOrPacket, context = {}) {
     ? normalizePacket(contentOrPacket, context)
     : createAuditPacket(contentOrPacket, context);
   const knownPaths = new Set(context.knownPaths || context.known_paths || []);
-  const structuralResult = auditPacket(packet, { knownPaths });
-  const policyResult = applyPolicy(structuralResult, context.policy || "standard");
+  const policyResult = auditKernel(packet, {
+    ...context,
+    knownPaths
+  });
 
   return {
     api_version: MERCURY_AUDIT_API_VERSION,
@@ -53,6 +72,10 @@ export function audit(contentOrPacket, context = {}) {
     human_review_required: policyResult.human_review_required,
     confidence: policyResult.confidence,
     provenance: buildProvenance(packet, context),
+    kernel: policyResult.kernel,
+    source_credibility: policyResult.source_credibility,
+    lifecycle: policyResult.lifecycle,
+    review_disagreement: policyResult.review_disagreement,
     policy: policyResult.policy,
     raw_result: policyResult
   };

@@ -20,6 +20,9 @@ const reviewUxUnfreeze = packageJson.version.startsWith("1.5.")
 const sdkIntegrationUnfreeze = packageJson.version.startsWith("1.6.")
   && await exists("docs/SDK-API.md")
   && await exists("docs/OWASP-AISVS-C8-MAPPING.md");
+const auditKernelUnfreeze = packageJson.version.startsWith("1.7.")
+  && await exists("docs/AUDIT-KERNEL.md")
+  && await exists("docs/MERCURY-AGENT-RELATIONSHIP.md");
 const proofPack = await readText("docs/PROOF-PACK-001.md");
 const failureModes = await readText("docs/FAILURE-MODES.md");
 const charterUsers = await readText("docs/CHARTER-USER-RECORDS.md");
@@ -28,7 +31,7 @@ const auditRules = await readText("scripts/audit-core/audit_rules.mjs");
 const htmlReport = await readText("scripts/generate_audit_reports.mjs");
 const liteMode = await readText("dashboard/lite.html");
 
-check("version stays on an explicitly documented unfreeze line", packageJson.version.startsWith("1.2.") || productSurfaceUnfreeze || methodDepthUnfreeze || reviewUxUnfreeze || sdkIntegrationUnfreeze);
+check("version stays on an explicitly documented unfreeze line", packageJson.version.startsWith("1.2.") || productSurfaceUnfreeze || methodDepthUnfreeze || reviewUxUnfreeze || sdkIntegrationUnfreeze || auditKernelUnfreeze);
 if (productSurfaceUnfreeze) {
   warnings.push("product surface / Lite intake patch line detected: method-layer Cycle 02 checks still apply, but v1.3.x is allowed for product UI and entry-friction fixes");
 }
@@ -79,6 +82,28 @@ if (sdkIntegrationUnfreeze) {
   check("SDK exports audit API", sdkApi.includes("export function audit(") && sdkApi.includes("auditMemoryWrite"));
   check("package exports local SDK entry", Boolean(packageJson.exports?.["."]));
   check("package exposes SDK scripts", Boolean(packageJson.scripts?.["test:sdk"]) && Boolean(packageJson.scripts?.["demo:memory-hook"]) && Boolean(packageJson.scripts?.["benchmark:audit"]));
+}
+if (auditKernelUnfreeze) {
+  warnings.push("Audit kernel independence line detected: v1.7.x is allowed for profile, standard, source, lifecycle, disagreement, and brand-relationship work");
+  for (const path of [
+    "src/mercury-audit/kernel.mjs",
+    "src/mercury-audit/profiles.mjs",
+    "src/mercury-audit/standards.mjs",
+    "src/mercury-audit/source-credibility.mjs",
+    "src/mercury-audit/lifecycle.mjs",
+    "src/mercury-audit/disagreement.mjs",
+    "schemas/audit-profile.schema.json",
+    "schemas/audit-standard.schema.json",
+    "schemas/source-credibility.schema.json",
+    "docs/AUDIT-KERNEL.md",
+    "docs/ECOSYSTEM-POSITION.md",
+    "docs/MERCURY-AGENT-RELATIONSHIP.md"
+  ]) {
+    check(`audit kernel artifact exists: ${path}`, await exists(path));
+  }
+  const sdkApi = await readText("src/mercury-audit/index.mjs");
+  check("SDK exports kernel surfaces", sdkApi.includes("auditKernel") && sdkApi.includes("listAuditProfiles") && sdkApi.includes("assessSourceCredibility"));
+  check("README discloses Mercury Agent relationship", (await readText("README.en.md")).includes("not a fork, plugin, or official extension"));
 }
 
 const cases = splitSections(proofPack, /^## Case \d{3}:[^\n]*$/gm);

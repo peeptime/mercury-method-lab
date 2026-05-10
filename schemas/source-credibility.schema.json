@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/mercury/source-credibility.schema.json",
+  "title": "Mercury Source Credibility Result",
+  "type": "object",
+  "required": ["floor", "best_rank", "passes_floor", "sources"],
+  "properties": {
+    "floor": { "type": "string" },
+    "best_rank": { "type": "integer", "minimum": 0 },
+    "floor_rank": { "type": "integer", "minimum": 0 },
+    "passes_floor": { "type": "boolean" },
+    "sole_ai_generated": { "type": "boolean" },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["level", "rank", "ref"],
+        "properties": {
+          "level": { "type": "string" },
+          "rank": { "type": "integer" },
+          "ref": { "type": "string" }
+        }
+      }
+    },
+    "warnings": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "additionalProperties": false
+}

@@ -2,9 +2,9 @@
 
 **不让聪明变成垃圾。**
 
-Version: `1.6.0`
+Version: `1.7.0`
 
-Latest release: [v1.6.0 Pre-Storage Audit SDK](https://github.com/peeptime/mercury-method-lab/releases/tag/v1.6.0)
+Latest release: [v1.7.0 Audit Kernel Independence](https://github.com/peeptime/mercury-method-lab/releases/tag/v1.7.0)
 
 ```yaml
 provenance:
@@ -17,6 +17,24 @@ provenance:
     Until referenced docs are human-reviewed, the project README cannot claim true.
   audit_ref: docs/REVIEW-LEDGER.md
 ```
+
+---
+
+## Audit Kernel v1.7.0
+
+Mercury 现在把可迁移审计判断从作者本地工作流里拆出来。
+
+SDK 会经过一个可配置 audit kernel：
+
+- audit profiles
+- audit standards
+- source credibility floors
+- memory lifecycle checks
+- reviewer disagreement handling
+
+看 `docs/AUDIT-KERNEL.md`、`docs/ECOSYSTEM-POSITION.md`、`docs/MERCURY-AGENT-RELATIONSHIP.md`。
+
+Mercury Method Lab 不是 Mercury Agent 的 fork、插件或官方扩展。Mercury Agent 可以是上游输出来源之一；audit kernel 本身要保持 agent-agnostic。
 
 ---
 
@@ -409,6 +427,9 @@ npm run dashboard    # http://127.0.0.1:4788
 | 你要做什么 | 去哪里 |
 |-----------|--------|
 | 先从这里开始 | `docs/START-HERE.md` |
+| 看 audit kernel | `docs/AUDIT-KERNEL.md` |
+| 看生态位置 | `docs/ECOSYSTEM-POSITION.md` |
+| 看与 Mercury Agent 的关系 | `docs/MERCURY-AGENT-RELATIONSHIP.md` |
 | 看本地 SDK API | `docs/SDK-API.md` |
 | 看 memory-write hook demo | `docs/INTEGRATION-DEMO.md` |
 | 看本地 benchmark 说明 | `docs/BENCHMARKS.md` |
@@ -428,9 +449,10 @@ npm run dashboard    # http://127.0.0.1:4788
 | 看 Evidence-First Audit Packet 闭环 | `docs/EVIDENCE-FIRST-AUDIT-LAYER.md` |
 | 看 HTML 审计报告样例 | `dist/reports/index.html`（运行 `npm run report` 后生成） |
 | 3 分钟 AI 对话 intake | `docs/THREE-MINUTE-START.md` |
-| 看 v1.6.0 SDK iteration guide | `docs/ITERATION-GUIDE-1.6.0.md` |
-| 看 v1.5.0 review UX iteration guide | `docs/ITERATION-GUIDE-1.6.0.md` |
-| 看 v1.4.0 method iteration guide | `docs/ITERATION-GUIDE-1.6.0.md` |
+| 看 v1.7.0 kernel iteration guide | `docs/ITERATION-GUIDE-1.7.0.md` |
+| 看 v1.6.0 SDK iteration guide | `docs/ITERATION-GUIDE-1.7.0.md` |
+| 看 v1.5.0 review UX iteration guide | `docs/ITERATION-GUIDE-1.7.0.md` |
+| 看 v1.4.0 method iteration guide | `docs/ITERATION-GUIDE-1.7.0.md` |
 | 看产品层压力测试记录 | `docs/PRODUCT-SURFACE-PRESSURE-TEST.md` |
 | 继续迭代/讨论项目 | 激活 `mercury-v8-iter` Skill |
 | 看版本历史 | `CHANGELOG.md` |

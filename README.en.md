@@ -2,9 +2,9 @@
 
 **It keeps smart thoughts from becoming clean but useless waste.**
 
-Version: `1.6.0`
+Version: `1.7.0`
 
-Latest release: [v1.6.0 Pre-Storage Audit SDK](https://github.com/peeptime/mercury-method-lab/releases/tag/v1.6.0)
+Latest release: [v1.7.0 Audit Kernel Independence](https://github.com/peeptime/mercury-method-lab/releases/tag/v1.7.0)
 
 ```yaml
 provenance:
@@ -25,6 +25,24 @@ provenance:
 Mercury Method Lab is an evidence-first audit layer for AI-generated memory, agent outputs, and FDE delivery artifacts.
 
 It does not make agents do more work. It decides whether the work agents already produced deserves to be retained.
+
+---
+
+## Audit Kernel v1.7.0
+
+Mercury now separates portable audit judgment from the author's local workflow.
+
+The SDK runs an audit kernel with configurable:
+
+- audit profiles
+- audit standards
+- source credibility floors
+- memory lifecycle checks
+- reviewer disagreement handling
+
+See `docs/AUDIT-KERNEL.md`, `docs/ECOSYSTEM-POSITION.md`, and `docs/MERCURY-AGENT-RELATIONSHIP.md`.
+
+Mercury Method Lab is not a fork, plugin, or official extension of Mercury Agent. Mercury Agent can be one upstream source of agent outputs; the audit kernel is agent-agnostic.
 
 ---
 
@@ -408,6 +426,9 @@ Not everything needs to be acted on. Sometimes writing it down is enough.
 | What you want | Where to go |
 |---|---|
 | Start here | `docs/START-HERE.md` |
+| Audit kernel | `docs/AUDIT-KERNEL.md` |
+| Ecosystem position | `docs/ECOSYSTEM-POSITION.md` |
+| Mercury Agent relationship | `docs/MERCURY-AGENT-RELATIONSHIP.md` |
 | Local SDK API | `docs/SDK-API.md` |
 | Integration demo | `docs/INTEGRATION-DEMO.md` |
 | Benchmark notes | `docs/BENCHMARKS.md` |
@@ -425,9 +446,10 @@ Not everything needs to be acted on. Sometimes writing it down is enough.
 | Proof pack coverage matrix | `docs/PROOF-PACK-COVERAGE-MATRIX.md` |
 | Related work | `docs/RELATED-WORK.md` |
 | 3-minute AI conversation intake | `docs/THREE-MINUTE-START.md` |
-| v1.6.0 SDK iteration guide | `docs/ITERATION-GUIDE-1.6.0.md` |
-| v1.5.0 review UX iteration guide | `docs/ITERATION-GUIDE-1.6.0.md` |
-| v1.4.0 method iteration guide | `docs/ITERATION-GUIDE-1.6.0.md` |
+| v1.7.0 kernel iteration guide | `docs/ITERATION-GUIDE-1.7.0.md` |
+| v1.6.0 SDK iteration guide | `docs/ITERATION-GUIDE-1.7.0.md` |
+| v1.5.0 review UX iteration guide | `docs/ITERATION-GUIDE-1.7.0.md` |
+| v1.4.0 method iteration guide | `docs/ITERATION-GUIDE-1.7.0.md` |
 | Product surface pressure test | `docs/PRODUCT-SURFACE-PRESSURE-TEST.md` |
 | Version history | `CHANGELOG.md` |
 | Governance principles | `docs/GOVERNANCE.md` |

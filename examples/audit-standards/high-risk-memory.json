@@ -1,0 +1,11 @@
+{
+  "id": "high-risk-memory",
+  "label": "High-Risk Memory",
+  "description": "Stricter admission for customer, legal, medical, finance, user-profile, and policy memory.",
+  "require_source_refs": true,
+  "require_audit_refs_for_memory": true,
+  "require_boundary_for_policy": true,
+  "require_disagreement_resolution": true,
+  "source_floor": "primary_or_direct",
+  "stale_after_days": 30
+}

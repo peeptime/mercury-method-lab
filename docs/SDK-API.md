@@ -13,6 +13,8 @@ Mercury now exposes a local, zero-service SDK surface for host agents and memory
 
 This is not an npm-published package yet. It is a repository-local API that proves the integration shape before any public package claim is made.
 
+Since v1.7, `audit()` runs through the portable audit kernel described in `docs/AUDIT-KERNEL.md`.
+
 ## Minimal Use
 
 ```js
@@ -60,6 +62,10 @@ if (shouldWriteMemory(result)) {
 | `content_summary` | User-facing core claim, attribution, and confidence basis. |
 | `human_review_checklist` | A/B/C review prompts for source, confidence, attribution, and route. |
 | `provenance` | Default SDK provenance: `ai_assisted: true`, `human_reviewed: declined`. |
+| `kernel` | Active profile, standard, source credibility, lifecycle, disagreement, and control metadata. |
+| `source_credibility` | Source level assessment for the candidate's `source_refs`. |
+| `lifecycle` | Memory lifecycle state such as active candidate, review due, expired, or retired. |
+| `review_disagreement` | Reviewer route conflict state when multiple reviews are provided. |
 | `raw_result` | The full Mercury audit result for advanced hosts. |
 
 ## Policy Layer

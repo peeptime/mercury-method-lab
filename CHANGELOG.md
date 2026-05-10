@@ -4,6 +4,23 @@
 
 Every release entry must carry an explicit provenance declaration. Legacy entries that cannot be reconstructed are marked as unverified instead of being silently treated as human-only.
 
+## 1.7.0 - Audit Kernel Independence (2026-05-10)
+> Provenance: `[AI_GENERATED]` drafted_by: Codex; humanReviewed: declined; reviewer: project_owner_pending; audit_ref: docs/ITERATION-GUIDE-1.7.0.md
+
+### Added
+
+- `src/mercury-audit/kernel.mjs` introduces a portable audit kernel that combines structural audit, source credibility, lifecycle checks, reviewer disagreement, profiles, standards, and policy enforcement.
+- `profiles.mjs`, `standards.mjs`, `source-credibility.mjs`, `lifecycle.mjs`, and `disagreement.mjs` make previously implicit judgment surfaces configurable.
+- `schemas/audit-profile.schema.json`, `schemas/audit-standard.schema.json`, and `schemas/source-credibility.schema.json` document portable configuration contracts.
+- `examples/audit-profiles/` and `examples/audit-standards/` provide initial reusable profile/standard examples.
+- `docs/AUDIT-KERNEL.md`, `docs/ECOSYSTEM-POSITION.md`, and `docs/MERCURY-AGENT-RELATIONSHIP.md` address SDK thickness, ecosystem position, and brand relationship explicitly.
+
+### Changed
+
+- SDK API version moves to `0.2.0` and `audit()` now returns kernel metadata, source credibility, lifecycle state, and reviewer disagreement state.
+- README / README.en now disclose that Mercury Method Lab is not a Mercury Agent fork, plugin, or official extension.
+- SDK tests now assert profile, standard, source-level, and disagreement behavior.
+
 ## 1.6.0 - Pre-Storage Audit SDK (2026-05-10)
 > Provenance: `[AI_GENERATED]` drafted_by: Codex; humanReviewed: declined; reviewer: project_owner_pending; audit_ref: docs/ITERATION-GUIDE-1.6.0.md
 

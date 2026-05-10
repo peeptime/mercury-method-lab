@@ -43,6 +43,10 @@ if (packageJson.version.startsWith("1.6.")) {
   console.log("sdk_integration_docs: sdk-api/owasp-c8/integration-demo/benchmarks");
   console.log("sdk_integration_outputs: audit_api/memory_write_hook/policy_layer/local_benchmark");
 }
+if (packageJson.version.startsWith("1.7.")) {
+  console.log("audit_kernel_docs: audit-kernel/ecosystem-position/mercury-agent-relationship");
+  console.log("audit_kernel_outputs: profiles/standards/source_credibility/lifecycle/disagreement");
+}
 console.log("");
 console.log("next_low_token_commands:");
 console.log("  npm run cycle:check");
@@ -74,5 +78,6 @@ function cycleLine(version) {
   if (version.startsWith("1.4.")) return "v1.4.x method taxonomy / routing blueprint";
   if (version.startsWith("1.5.")) return "v1.5.x human review checklist UX";
   if (version.startsWith("1.6.")) return "v1.6.x pre-storage audit SDK";
+  if (version.startsWith("1.7.")) return "v1.7.x audit kernel independence";
   return "outside documented Cycle 02/04 line";
 }

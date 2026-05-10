@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/mercury/audit-standard.schema.json",
+  "title": "Mercury Audit Standard",
+  "type": "object",
+  "required": ["id", "label"],
+  "properties": {
+    "id": { "type": "string", "minLength": 1 },
+    "label": { "type": "string", "minLength": 1 },
+    "description": { "type": "string" },
+    "require_source_refs": { "type": "boolean" },
+    "require_audit_refs_for_memory": { "type": "boolean" },
+    "require_boundary_for_policy": { "type": "boolean" },
+    "require_disagreement_resolution": { "type": "boolean" },
+    "source_floor": { "enum": ["primary_or_direct", "traceable", "secondary", "ai_generated", "unknown"] },
+    "stale_after_days": { "type": "integer", "minimum": 1 }
+  },
+  "additionalProperties": true
+}

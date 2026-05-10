@@ -1,0 +1,9 @@
+{
+  "id": "external-auditor",
+  "label": "External Auditor",
+  "posture": "independent-review",
+  "description": "Assume project-owner claims need independent support before durable use.",
+  "minimum_route": "revise",
+  "require_human_for_high_risk": true,
+  "source_floor": "primary_or_direct"
+}

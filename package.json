@@ -1,7 +1,7 @@
 {
   "name": "mercury-method-lab",
-  "version": "1.6.0",
-  "codename": "Pre-Storage Audit SDK",
+  "version": "1.7.0",
+  "codename": "Audit Kernel Independence",
   "private": true,
   "type": "module",
   "description": "Evidence-first audit method for deciding which AI-generated claims deserve durable memory.",
