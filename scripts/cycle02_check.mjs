@@ -12,14 +12,29 @@ const warnings = [];
 const packageJson = await readJson("package.json");
 const productSurfaceUnfreeze = packageJson.version.startsWith("1.3.")
   && await exists("docs/PRODUCT-SURFACE-PRESSURE-TEST.md");
+const methodDepthUnfreeze = packageJson.version.startsWith("1.4.")
+  && await exists("docs/CYCLE-04-BLUEPRINT.md");
 const proofPack = await readText("docs/PROOF-PACK-001.md");
 const failureModes = await readText("docs/FAILURE-MODES.md");
 const charterUsers = await readText("docs/CHARTER-USER-RECORDS.md");
 const reviewLedger = await readText("docs/REVIEW-LEDGER.md");
 
-check("version stays on v1.2.x or has documented product-surface unfreeze", packageJson.version.startsWith("1.2.") || productSurfaceUnfreeze);
+check("version stays on an explicitly documented unfreeze line", packageJson.version.startsWith("1.2.") || productSurfaceUnfreeze || methodDepthUnfreeze);
 if (productSurfaceUnfreeze) {
   warnings.push("product surface / Lite intake patch line detected: method-layer Cycle 02 checks still apply, but v1.3.x is allowed for product UI and entry-friction fixes");
+}
+if (methodDepthUnfreeze) {
+  warnings.push("Cycle 04 method-depth line detected: Cycle 02 honesty checks still apply, but v1.4.x is allowed for taxonomy, routing theory, coverage, and related-work docs");
+  for (const path of [
+    "docs/AGENT-AUDIT-BLUEPRINT.md",
+    "docs/CYCLE-04-BLUEPRINT.md",
+    "docs/PROOF-PACK-COVERAGE-MATRIX.md",
+    "docs/RELATED-WORK.md",
+    "docs/ROUTING-THEORY.md"
+  ]) {
+    check(`Cycle 04 method doc exists: ${path}`, await exists(path));
+  }
+  check("Failure Mode Dictionary has taxonomy layer", failureModes.includes("## Taxonomy Layer"));
 }
 
 const cases = splitSections(proofPack, /^## Case \d{3}:[^\n]*$/gm);

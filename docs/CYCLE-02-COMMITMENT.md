@@ -83,3 +83,5 @@ This document does not claim Cycle 02 is complete. It pins the work so future ag
 The product-surface unfreeze is now recorded as an acknowledged project debt in `docs/REVIEW-LEDGER.md`. This document is not retroactively rewritten to pretend the commitment was honored.
 
 Until a real Cycle variable advances, future work should stay on `v1.3.x` patch-level product/Lite intake fixes and avoid new major framework names.
+
+`v1.4.0` later opens a documented Cycle 04 method-depth line in `docs/CYCLE-04-BLUEPRINT.md`. It is not evidence that Cycle 02 was completed; it is a project-owner direction change toward taxonomy, routing theory, coverage, related work, and implementer guidance.

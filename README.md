@@ -2,9 +2,9 @@
 
 **不让聪明变成垃圾。**
 
-Version: `1.3.1`
+Version: `1.4.0`
 
-Latest release: [v1.3.1 Lite Intake and Trust Ledger Patch](https://github.com/peeptime/mercury-method-lab/releases/tag/v1.3.1)
+Latest release: [v1.4.0 Method Taxonomy and Routing Blueprint](https://github.com/peeptime/mercury-method-lab/releases/tag/v1.4.0)
 
 ```yaml
 provenance:
@@ -42,6 +42,20 @@ output: archived proof, no runtime DB write
 ✅ Mercury Lab runs this check before anything enters long-term memory
 ❌ Most memory tools skip the check and promote everything
 ```
+
+---
+
+## Method Blueprint v1.4.0
+
+This release moves the center of gravity from "tool surface" to "reference method":
+
+- `docs/FAILURE-MODES.md` now groups the 22 modes into five top-level families.
+- `docs/ROUTING-THEORY.md` explains why Mercury uses `accept / revise / quarantine / discard`.
+- `docs/PROOF-PACK-COVERAGE-MATRIX.md` shows what Proof Pack 001 covers and which cases are still missing.
+- `docs/RELATED-WORK.md` places Mercury beside hallucination detection, fact verification, data quality, provenance, and AI risk work.
+- `docs/AGENT-AUDIT-BLUEPRINT.md` gives teams a practical adoption guide without forcing this repository's exact structure.
+
+Mercury is not claiming to be a certification authority. It is a blueprint other agent and memory-system builders can inspect, cite, adapt, or improve.
 
 ---
 
@@ -91,6 +105,7 @@ Cycle 02 的方法层规则写在 `docs/CYCLE-02-COMMITMENT.md`：不新增主�
 
 `v1.3.0` 是一次单独记录的产品层解冻，范围限定在 dashboard / Lite Mode / 设置与入口体验，见 `docs/PRODUCT-SURFACE-PRESSURE-TEST.md`。
 `v1.3.1` 继续保持 patch 线，只补 Lite / dropzone capture，并在 `docs/REVIEW-LEDGER.md` 里记录 Cycle 02 版本线债务，不把它粉饰成已经履约。
+`v1.4.0` 是方法论深挖版本：taxonomy、routing theory、coverage matrix、related work 和 implementer blueprint；不新增 dashboard 功能。
 
 低 token 复位入口：
 
@@ -126,6 +141,24 @@ accept / revise / quarantine / discard
 ```
 
 Markdown/YAML 是可信记录，HTML 是给人看的交付层。
+
+---
+
+## Agent Audit Blueprint
+
+For teams building agents or memory systems, the reusable control point is:
+
+```text
+before_write(memory_entry):
+  require source_refs
+  require audit_refs or quarantine
+  classify failure_modes
+  choose routing_decision
+  record provenance
+  only write when routing_decision == accept
+```
+
+Start with `docs/AGENT-AUDIT-BLUEPRINT.md`, then use `docs/ROUTING-THEORY.md` when route decisions are disputed.
 
 ---
 
@@ -310,10 +343,14 @@ npm run dashboard    # http://127.0.0.1:4788
 | 看前置审计契约 | `docs/AUDIT-CONTRACT.md` |
 | 看 AI 协作悖论修复 | `docs/METHODOLOGY-INTEGRITY.md` |
 | 看"为什么不能定义成功指标" | `docs/AUDIT-METRICS-DECLINED.md` |
+| Agent audit blueprint | `docs/AGENT-AUDIT-BLUEPRINT.md` |
+| Routing theory | `docs/ROUTING-THEORY.md` |
+| Proof Pack coverage matrix | `docs/PROOF-PACK-COVERAGE-MATRIX.md` |
+| Related work | `docs/RELATED-WORK.md` |
 | 看 Evidence-First Audit Packet 闭环 | `docs/EVIDENCE-FIRST-AUDIT-LAYER.md` |
 | 看 HTML 审计报告样例 | `dist/reports/index.html`（运行 `npm run report` 后生成） |
 | 3 分钟 AI 对话 intake | `docs/THREE-MINUTE-START.md` |
-| 看 v1.3.1 Lite intake 指南 | `docs/ITERATION-GUIDE-1.3.1.md` |
+| 看 v1.4.0 method iteration guide | `docs/ITERATION-GUIDE-1.4.0.md` |
 | 看产品层压力测试记录 | `docs/PRODUCT-SURFACE-PRESSURE-TEST.md` |
 | 继续迭代/讨论项目 | 激活 `mercury-v8-iter` Skill |
 | 看版本历史 | `CHANGELOG.md` |

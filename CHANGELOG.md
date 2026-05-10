@@ -4,6 +4,24 @@
 
 Every release entry must carry an explicit provenance declaration. Legacy entries that cannot be reconstructed are marked as unverified instead of being silently treated as human-only.
 
+## 1.4.0 - Method Taxonomy and Routing Blueprint (2026-05-10)
+> Provenance: `[AI_GENERATED]` drafted_by: Codex; humanReviewed: declined; reviewer: project_owner_pending; audit_ref: docs/CYCLE-04-BLUEPRINT.md
+
+### Added
+
+- `docs/CYCLE-04-BLUEPRINT.md` records the method-depth release boundary: taxonomy, routing theory, coverage, related work, and implementer blueprint rather than more product surface.
+- `docs/ROUTING-THEORY.md` explains the four routing decisions through evidence strength, audit closure, pollution risk, and boundary clarity.
+- `docs/PROOF-PACK-COVERAGE-MATRIX.md` maps Proof Pack 001 across routing decisions, failure-mode families, output types, and next target cases.
+- `docs/RELATED-WORK.md` positions Mercury against hallucination detection, fact verification, AI risk management, data quality, and provenance/lineage work.
+- `docs/AGENT-AUDIT-BLUEPRINT.md` gives agent and memory-system builders a practical adoption guide without requiring Mercury's repository structure.
+- `docs/ITERATION-GUIDE-1.4.0.md` captures the release-specific handoff for future agents.
+
+### Changed
+
+- `docs/FAILURE-MODES.md` now includes five top-level failure-mode families, boundary rules, and explicit coverage gaps.
+- README now leads with the method blueprint and implementer-facing audit control point before product-surface details.
+- Cycle status/check and doctor now recognize the documented v1.4.x method-depth line.
+
 ## 1.3.1 - Lite Intake and Trust Ledger Patch (2026-05-10)
 > Provenance: `[AI_GENERATED]` drafted_by: Codex; humanReviewed: declined; reviewer: project_owner_pending; audit_ref: docs/REVIEW-LEDGER.md
 

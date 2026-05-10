@@ -23,6 +23,7 @@ Use:
 
 | Date | Artifact | Review State | Reviewer | Finding | Next Action |
 |---|---|---|---|---|---|
+| 2026-05-10 | `docs/CYCLE-04-BLUEPRINT.md` + method-depth docs | declined | project_owner_pending | Cycle 04 reframes Mercury as a reference method and implementer blueprint, but the taxonomy, routing theory, coverage matrix, and related-work map are AI-assisted drafts. | Project owner should review before treating v1.4.0 as human-approved method policy. |
 | 2026-05-10 | `docs/CYCLE-02-COMMITMENT.md` -> `v1.3.0` | declined | project_owner_pending | `acknowledged_violation`: v1.3.0 contradicted the original `forbidden_version_lines`. The product-surface unfreeze is recorded as a project-owner/Codex decision, not proof that the Cycle 02 commitment was honored. | Keep README provenance declined; use v1.3.x only for patch-level product/Lite intake fixes until a real Cycle variable advances. |
 | 2026-05-10 | `README.md` / `README.en.md` | declined | project_owner_pending | README previously claimed project-level `human_reviewed: true` while referenced sub-artifacts remained declined. Project-level provenance now follows the lowest-reviewed referenced component. | Do not mark README true until referenced docs have named human review. |
 | 2026-05-10 | `docs/THREE-MINUTE-START.md` + Lite/dropzone capture path | declined | project_owner_pending | Low-friction capture is useful, but it only preserves source evidence; it does not grant audit approval or memory promotion. | Test with a real user before treating the entry path as validated. |

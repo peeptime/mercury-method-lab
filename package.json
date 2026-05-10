@@ -1,7 +1,7 @@
 {
   "name": "mercury-method-lab",
-  "version": "1.3.1",
-  "codename": "Lite Intake and Trust Ledger Patch",
+  "version": "1.4.0",
+  "codename": "Method Taxonomy and Routing Blueprint",
   "private": true,
   "type": "module",
   "description": "专门拦截听起来聪明但不该进入长期记忆的 AI 记忆审计层。",

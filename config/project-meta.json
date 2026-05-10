@@ -1,10 +1,10 @@
 {
   "project_name": "Mercury Method Lab",
   "package_name": "mercury-method-lab",
-  "version": "1.3.1",
-  "codename": "Lite Intake and Trust Ledger Patch",
-  "status": "lite-intake-trust-ledger-patch",
-  "position": "A memory-audit layer for intercepting AI outputs that sound smart but should not enter long-term memory yet.",
+  "version": "1.4.0",
+  "codename": "Method Taxonomy and Routing Blueprint",
+  "status": "method-taxonomy-and-routing-blueprint",
+  "position": "An evidence-first audit method for deciding which AI-generated claims deserve durable memory.",
   "version_policy": {
     "major": "Breaks artifact, memory, or upstream compatibility contracts.",
     "minor": "Adds a new compatible architecture capability, adapter, migration path, or public workflow.",
@@ -12,7 +12,7 @@
   },
   "compatibility_posture": {
     "upstream_project": "cosmicstack-labs/mercury-agent",
-    "relationship": "companion-workspace",
+    "relationship": "upstream-input-compatible-reference-method",
     "not_a_fork": true,
     "not_a_vendor_copy": true,
     "do_not_lock_to_local_runtime": true

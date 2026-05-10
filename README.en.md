@@ -2,9 +2,9 @@
 
 **It keeps smart thoughts from becoming clean but useless waste.**
 
-Version: `1.3.1`
+Version: `1.4.0`
 
-Latest release: [v1.3.1 Lite Intake and Trust Ledger Patch](https://github.com/peeptime/mercury-method-lab/releases/tag/v1.3.1)
+Latest release: [v1.4.0 Method Taxonomy and Routing Blueprint](https://github.com/peeptime/mercury-method-lab/releases/tag/v1.4.0)
 
 ```yaml
 provenance:
@@ -25,6 +25,20 @@ provenance:
 Mercury Method Lab is an evidence-first audit layer for AI-generated memory, agent outputs, and FDE delivery artifacts.
 
 It does not make agents do more work. It decides whether the work agents already produced deserves to be retained.
+
+---
+
+## Method Blueprint v1.4.0
+
+This release moves the center of gravity from "tool surface" to "reference method":
+
+- `docs/FAILURE-MODES.md` now groups the 22 modes into five top-level families.
+- `docs/ROUTING-THEORY.md` explains why Mercury uses `accept / revise / quarantine / discard`.
+- `docs/PROOF-PACK-COVERAGE-MATRIX.md` shows what Proof Pack 001 covers and which cases are still missing.
+- `docs/RELATED-WORK.md` places Mercury beside hallucination detection, fact verification, data quality, provenance, and AI risk work.
+- `docs/AGENT-AUDIT-BLUEPRINT.md` gives teams a practical adoption guide without forcing this repository's exact structure.
+
+Mercury is not claiming to be a certification authority. It is a blueprint other agent and memory-system builders can inspect, cite, adapt, or improve.
 
 ---
 
@@ -97,6 +111,8 @@ Cycle 02 method work is locked in `docs/CYCLE-02-COMMITMENT.md`: no new major fr
 
 `v1.3.1` keeps that work on a patch line: it adds Lite/dropzone capture and records the Cycle 02/version-line debt in `docs/REVIEW-LEDGER.md` instead of pretending it did not happen.
 
+`v1.4.0` is a method-depth release: taxonomy, routing theory, coverage matrix, related work, and implementer blueprint. It adds no new dashboard feature.
+
 Low-token reactivation:
 
 ```powershell
@@ -127,6 +143,24 @@ accept / revise / quarantine / discard
 ```
 
 Markdown/YAML are the trusted record. HTML is the human delivery layer.
+
+---
+
+## Agent Audit Blueprint
+
+For teams building agents or memory systems, the reusable control point is:
+
+```text
+before_write(memory_entry):
+  require source_refs
+  require audit_refs or quarantine
+  classify failure_modes
+  choose routing_decision
+  record provenance
+  only write when routing_decision == accept
+```
+
+Start with `docs/AGENT-AUDIT-BLUEPRINT.md`, then use `docs/ROUTING-THEORY.md` when route decisions are disputed.
 
 ---
 
@@ -308,8 +342,12 @@ Not everything needs to be acted on. Sometimes writing it down is enough.
 | Pre-audit contract | `docs/AUDIT-CONTRACT.md` |
 | AI collaboration paradox fix | `docs/METHODOLOGY-INTEGRITY.md` |
 | Why success metrics are dangerous | `docs/AUDIT-METRICS-DECLINED.md` |
+| Agent audit blueprint | `docs/AGENT-AUDIT-BLUEPRINT.md` |
+| Routing theory | `docs/ROUTING-THEORY.md` |
+| Proof pack coverage matrix | `docs/PROOF-PACK-COVERAGE-MATRIX.md` |
+| Related work | `docs/RELATED-WORK.md` |
 | 3-minute AI conversation intake | `docs/THREE-MINUTE-START.md` |
-| v1.3.1 Lite intake guide | `docs/ITERATION-GUIDE-1.3.1.md` |
+| v1.4.0 method iteration guide | `docs/ITERATION-GUIDE-1.4.0.md` |
 | Product surface pressure test | `docs/PRODUCT-SURFACE-PRESSURE-TEST.md` |
 | Version history | `CHANGELOG.md` |
 | Governance principles | `docs/GOVERNANCE.md` |
@@ -318,7 +356,7 @@ Not everything needs to be acted on. Sometimes writing it down is enough.
 
 ## Relationship to Mercury Agent
 
-Mercury Lab is not a fork. It is a companion layer.
+Mercury Lab is not a fork. It is a method layer. Mercury Agent is one possible upstream source of agent outputs, not the boundary of the method.
 
 | Layer | Owner |
 | --- | --- |

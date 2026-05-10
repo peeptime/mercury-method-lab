@@ -19,6 +19,40 @@ Each entry includes:
 - **Proof Pack Reference**: where this mode appears.
 - **Near Miss**: a similar situation that should not be mislabeled as this mode.
 
+## Taxonomy Layer
+
+The first 22 modes are no longer treated as a flat list. They are grouped into five top-level families so another auditor can decide where a new case belongs before inventing a new name.
+
+This taxonomy is a working classification, not a claim of completeness. It is meant to help stronger downstream implementers build reliable audit flows without treating Mercury Lab as a certification authority.
+
+| Family | Question It Answers | Failure Modes |
+|---|---|---|
+| Evidence Lineage Failures | Can the claim be traced to inspectable source and audit evidence? | FM-01, FM-02, FM-03, FM-12, FM-18 |
+| Memory Boundary Failures | Is the claim scoped tightly enough for durable reuse? | FM-04, FM-05, FM-08, FM-09, FM-10, FM-22 |
+| Delivery and Stakeholder Failures | Does the claim preserve real-world ambiguity before action? | FM-06, FM-07 |
+| Validation Leap Failures | Does the claim confuse plausibility, demos, or strategy with validation? | FM-11, FM-13, FM-19, FM-20, FM-21 |
+| Governance and Measurement Failures | Does the audit system preserve review honesty and avoid gameable targets? | FM-14, FM-15, FM-16, FM-17 |
+
+### Boundary Rules
+
+- If the artifact lacks a source, start with FM-01 before judging whether the source would have been strong.
+- If the artifact has a source but no review path, start with FM-02.
+- If a claim can steer future agents, apply memory-boundary modes even when the claim sounds minor.
+- If a customer or delivery context is involved, preserve disagreement before compressing the claim.
+- If a release, demo, category story, or metric is being used as validation, treat it as a validation-leap or governance failure rather than a simple evidence gap.
+
+### Current Coverage Gaps
+
+These are not official failure modes yet because they do not have enough proof-pack support:
+
+- Multi-agent contamination: one agent's output becomes another agent's source of truth.
+- Stale-but-reused memory: a once-valid statement is reused after its time boundary expires.
+- Code-output misvalidation: generated code passes a narrow test while violating the intended behavior.
+- Chart or data overclaim: a visual or summary statistic is used to support a stronger claim than the data permits.
+- Strategy survivorship bias: a visible successful case is treated as evidence for a whole category.
+
+Until these gaps have proof cases, they should remain coverage targets rather than canonical FM numbers.
+
 ## FM-01: missing_source_refs
 
 **Definition:** A claim asks to enter durable memory without showing where it came from. This is the most basic refusal point: if a future agent cannot inspect the original source, it cannot know whether the claim is a fact, a hypothesis, a preference, or a compressed retelling. Missing source refs are especially dangerous when the claim sounds operational.
