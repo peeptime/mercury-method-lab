@@ -16,7 +16,7 @@ provenance:
   review_note: |
     This project is still an AI-assisted method lab. It does not claim
     third-party validation, production adoption, or human-reviewed authority.
-  audit_ref: docs/ITERATION-GUIDE-2.0.2.md
+  audit_ref: docs/ITERATION-GUIDE-2.1.0.md
 ```
 
 ---
