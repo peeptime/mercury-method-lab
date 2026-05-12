@@ -13,8 +13,8 @@ This file is the short cross-session handoff. Keep it under 120 lines. Do not pa
 
 ## Current Snapshot
 
-- Current public version: `2.0.1`
-- Current posture: Mercury Admission Lab / Admission Reframe
+- Current public version: `2.0.2`
+- Current posture: Mercury Admission Lab / Admission Contract
 - Core proof: `docs/v0.9-proof-of-audit.md`
 - Current proof packs: `docs/PROOF-PACK-001.md`, `docs/PROOF-PACK-002.md`
 - Current runnable audit loop: `npm run audit`, `npm run audit:flow`, `npm run report`, `npm run test`, `npm run audit:profile`
@@ -30,7 +30,7 @@ This file is the short cross-session handoff. Keep it under 120 lines. Do not pa
 - Current v2.0 preflight docs: `docs/V2-PREFLIGHT-REQUIREMENTS.md`, `docs/V2-WORK-TRAIN.md`
 - Current v2.0 case docs: `docs/REAL-CASES-SUMMARY.md`, `cases/2026-05/`, `examples/starter-kit/`, `examples/integration-demo/openclaw-hook.mjs`
 - Current v2.0 interface docs: `src/mercury-audit/evidence-chain.mjs`, `docs/A2A-AGENT-CARD-BLUEPRINT.md`, `examples/a2a/agent-card.json`
-- Current v2.0 final docs: `docs/PERFORMANCE-2.0.md`, `docs/ITERATION-GUIDE-2.0.0.md`, `docs/ITERATION-GUIDE-2.0.1.md`, `08_skills/mercury-evidence-chain/`, `08_skills/mercury-memory-gate/`, `08_skills/mercury-case-capture/`
+- Current v2.0 final docs: `docs/PERFORMANCE-2.0.md`, `docs/ITERATION-GUIDE-2.0.0.md`, `docs/ITERATION-GUIDE-2.0.1.md`, `docs/ITERATION-GUIDE-2.0.2.md`, `08_skills/mercury-evidence-chain/`, `08_skills/mercury-memory-gate/`, `08_skills/mercury-case-capture/`
 - Release gate: `npm run release:gate`
 - Bad-memory proof must continue to export `routing_decision: discard`
 
@@ -57,6 +57,7 @@ This file is the short cross-session handoff. Keep it under 120 lines. Do not pa
 - `v2.0.0-alpha.3` adds the evidence-chain SDK helper, Lite drag attach, and A2A-compatible agent-card/message demo.
 - `v2.0.0` finishes the work train with a local audit-plus-evidence benchmark and three lightweight portable Mercury skills.
 - `v2.0.1` renames the public posture to Mercury Admission Lab, narrows claims to memory admission, and makes missing validation, cross-model audit, multi-agent contamination, and human trust anchor gaps explicit.
+- `v2.0.2` adds Admission Contract: user choices now record source material, model framing, user judgment, admitted object type, and future usage policy.
 - Current dashboard has runtime preferences in `config/preferences.json`; do not confuse them with durable project memory.
 - `karpathy-guidelines` skill is installed locally; restart Codex before expecting automatic skill activation.
 - `docs/ITERATION-STRATEGY-V2.md` is lower-weight historical strategy input: keep its problem diagnosis, but do not inherit its hard freeze/release restrictions.
@@ -82,7 +83,7 @@ This file is the short cross-session handoff. Keep it under 120 lines. Do not pa
 - Use `v1.8.x` for scenario packs, adapter contract, and scenario-aware review UX.
 - Use `v1.9.x` for Proof Pack 002, rule version governance, lifecycle governance, human-review disagreement, and anti-gaming tests.
 - Use `docs/V2-PREFLIGHT-REQUIREMENTS.md` and `docs/V2-WORK-TRAIN.md` before starting any 2.0 package.
-- Use `v2.0.1` as the stable admission-reframe baseline before adding new 2.x scope.
+- Use `v2.0.2` as the stable admission-contract baseline before adding new 2.x scope.
 - Do not add official failure modes without proof-pack or coverage-matrix support.
 - Do not silently migrate old accepted memories to a new ruleset without a re-audit record.
 - Do not let route-forcing or forged-review instructions pass as ordinary packet content.

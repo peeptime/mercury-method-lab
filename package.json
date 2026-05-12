@@ -1,10 +1,10 @@
 {
   "name": "mercury-method-lab",
-  "version": "2.0.1",
-  "codename": "Admission Reframe",
+  "version": "2.0.2",
+  "codename": "Admission Contract",
   "private": true,
   "type": "module",
-  "description": "Evidence-first memory admission lab for deciding which AI-generated claims deserve durable memory.",
+  "description": "Choice-gated knowledge admission protocol for deciding how AI-generated claims may enter memory.",
   "exports": {
     ".": "./src/mercury-audit/index.mjs"
   },

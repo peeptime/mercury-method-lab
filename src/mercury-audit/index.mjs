@@ -11,6 +11,7 @@ import { buildScenarioReviewGuidance } from "./review-ux.mjs";
 import { detectGamingAttempt, listGamingPatterns } from "./anti-gaming.mjs";
 import { MERCURY_RULESET_VERSION, compareRuleVersions, createRuleVersionRecord, needsReaudit } from "./rule-versioning.mjs";
 import { buildEvidenceChain, buildMissingEvidence } from "./evidence-chain.mjs";
+import { ADMISSION_CONTRACT_VERSION, MEMORY_OBJECT_TYPES, annotateChoicesWithAdmissionPolicy, buildAdmissionContract } from "./admission-contract.mjs";
 
 // ── New v2.0 fidelity modules ────────────────────────────────────────────
 import { detectMetaAuditContent, extractProblemResolutionPairs } from "./meta-audit.mjs";
@@ -18,7 +19,7 @@ import { verifyReportFidelity, applyFidelityGate } from "./fidelity.mjs";
 import { buildIterationTracker, getUnresolvedProblems } from "./iteration-track.mjs";
 import { generateTraceReport, renderTraceMarkdown, generateFidelityChecklist } from "./trace.mjs";
 
-export const MERCURY_AUDIT_API_VERSION = "0.5.0";
+export const MERCURY_AUDIT_API_VERSION = "0.6.0";
 
 export { applyPolicy, listPolicies, resolvePolicy };
 export {
@@ -26,6 +27,9 @@ export {
   assessLifecycle,
   assessSourceCredibility,
   auditKernel,
+  ADMISSION_CONTRACT_VERSION,
+  annotateChoicesWithAdmissionPolicy,
+  buildAdmissionContract,
   buildEvidenceChain,
   buildMissingEvidence,
   buildScenarioReviewGuidance,
@@ -46,6 +50,7 @@ export {
   listAuditScenarios,
   listAuditStandards,
   listSourceLevels,
+  MEMORY_OBJECT_TYPES,
   MERCURY_RULESET_VERSION,
   needsReaudit,
   renderTraceMarkdown,

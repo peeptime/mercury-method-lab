@@ -75,6 +75,10 @@ if (packageJson.version === "2.0.1") {
   console.log("v2_admission_reframe_docs: iteration-guide-2.0.1/readme/readme-en");
   console.log("v2_admission_reframe_outputs: naming-reframe/known-boundaries/empirical-validation-roadmap");
 }
+if (packageJson.version === "2.0.2") {
+  console.log("v2_admission_contract_docs: iteration-guide-2.0.2/readme/readme-en");
+  console.log("v2_admission_contract_outputs: buildAdmissionContract/choice-policy/admitted-object-usage-rights");
+}
 console.log("");
 console.log("next_low_token_commands:");
 console.log("  npm run cycle:check");
@@ -114,5 +118,6 @@ function cycleLine(version) {
   if (version.startsWith("2.0.0-alpha.3")) return "v2.0.0-alpha.3 evidence chain interface";
   if (version === "2.0.0") return "v2.0.0 portable evidence chain";
   if (version === "2.0.1") return "v2.0.1 admission reframe";
+  if (version === "2.0.2") return "v2.0.2 admission contract";
   return "outside documented Cycle 02/04 line";
 }

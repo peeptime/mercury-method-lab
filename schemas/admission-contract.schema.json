@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/mercury/admission-contract.schema.json",
+  "title": "Mercury Admission Contract",
+  "type": "object",
+  "required": [
+    "contract_version",
+    "packet_id",
+    "selected_choice",
+    "admitted_object",
+    "source_material",
+    "model_framing",
+    "user_judgment",
+    "future_usage_policy",
+    "provenance"
+  ],
+  "properties": {
+    "contract_version": { "type": "string" },
+    "packet_id": { "type": "string" },
+    "selected_choice": {
+      "type": "object",
+      "required": ["choice_id"],
+      "properties": {
+        "gap_id": { "type": "string" },
+        "choice_id": { "enum": ["A", "B", "C"] },
+        "label": { "type": "string" },
+        "action": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "admitted_object": {
+      "type": "object",
+      "required": ["object_type", "object_source", "claim", "can_be_promoted_without_review"],
+      "properties": {
+        "object_type": {
+          "enum": [
+            "fact",
+            "hypothesis",
+            "attribution",
+            "interpretation",
+            "open_question",
+            "preference",
+            "decision_record",
+            "temporary_note",
+            "reference"
+          ]
+        },
+        "object_source": {
+          "enum": ["source_material", "claim", "model_framing", "user_judgment"]
+        },
+        "claim": { "type": "string" },
+        "routing_decision_at_admission": { "type": "string" },
+        "can_be_promoted_without_review": { "type": "boolean" }
+      },
+      "additionalProperties": true
+    },
+    "source_material": {
+      "type": "object",
+      "properties": {
+        "refs": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "preserved_as_source": { "type": "boolean" }
+      },
+      "additionalProperties": true
+    },
+    "model_framing": { "type": "object" },
+    "user_judgment": { "type": "object" },
+    "future_usage_policy": {
+      "type": "object",
+      "required": [
+        "can_use_as_fact",
+        "can_participate_in_reasoning",
+        "can_trigger_action",
+        "requires_source_recheck",
+        "citation_required"
+      ],
+      "properties": {
+        "can_use_as_fact": { "type": "boolean" },
+        "can_participate_in_reasoning": { "type": "boolean" },
+        "can_trigger_action": { "type": "boolean" },
+        "requires_source_recheck": { "type": "boolean" },
+        "citation_required": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    },
+    "provenance": {
+      "type": "object",
+      "required": ["ai_assisted", "human_reviewed"],
+      "properties": {
+        "ai_assisted": { "type": "boolean" },
+        "human_reviewed": { "enum": ["declined"] },
+        "reviewer": { "type": "string" },
+        "generated_by": { "type": "string" },
+        "audit_ref": { "type": "string" }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

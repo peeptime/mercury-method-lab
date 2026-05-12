@@ -1,10 +1,10 @@
 {
   "project_name": "Mercury Admission Lab",
   "package_name": "mercury-method-lab",
-  "version": "2.0.1",
-  "codename": "Admission Reframe",
-  "status": "v2-admission-reframe",
-  "position": "An evidence-first memory admission lab for deciding which AI-generated claims deserve durable memory.",
+  "version": "2.0.2",
+  "codename": "Admission Contract",
+  "status": "v2-admission-contract",
+  "position": "A choice-gated knowledge admission protocol for deciding how AI-generated claims may enter memory.",
   "version_policy": {
     "major": "Breaks artifact, memory, or upstream compatibility contracts.",
     "minor": "Adds a new compatible architecture capability, adapter, migration path, or public workflow.",

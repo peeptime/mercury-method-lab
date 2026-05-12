@@ -1,4 +1,7 @@
 import { classifySourceRef } from "./source-credibility.mjs";
+import { annotateChoicesWithAdmissionPolicy } from "./admission-contract.mjs";
+
+const sourceCredibilityCache = new Map();
 
 const gapChoiceCatalog = {
   missing_source_refs: {
@@ -71,14 +74,14 @@ export function buildEvidenceChain(input, context = {}) {
     evidence_nodes: sourceRefs.map((ref) => ({
       ref,
       role: "source",
-      credibility: classifySourceRef(ref)
+      credibility: cachedSourceCredibility(ref)
     })),
     audit_nodes: auditRefs.map((ref) => ({
       ref,
       role: "audit_ref"
     })),
     missing_evidence: missingEvidence,
-    suggested_choices: buildChoices(missingEvidence),
+    suggested_choices: annotateChoicesWithAdmissionPolicy(buildChoices(missingEvidence)),
     review_record_template: reviewRecordTemplate(result, missingEvidence),
     provenance: {
       ai_assisted: true,
@@ -238,4 +241,17 @@ function slug(value) {
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "")
     .slice(0, 40);
+}
+
+function cachedSourceCredibility(ref) {
+  if (sourceCredibilityCache.has(ref)) {
+    return sourceCredibilityCache.get(ref);
+  }
+
+  const value = classifySourceRef(ref);
+  if (sourceCredibilityCache.size > 512) {
+    sourceCredibilityCache.clear();
+  }
+  sourceCredibilityCache.set(ref, value);
+  return value;
 }

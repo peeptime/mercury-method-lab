@@ -53,6 +53,11 @@ const v2AdmissionReframe = packageJson.version === "2.0.1"
   && (await readText("README.en.md")).includes("Known Boundaries")
   && (await readText("README.md")).includes("Mercury Admission Lab")
   && (await readText("README.md")).includes("已知边界");
+const v2AdmissionContract = packageJson.version === "2.0.2"
+  && await exists("docs/ITERATION-GUIDE-2.0.2.md")
+  && await exists("src/mercury-audit/admission-contract.mjs")
+  && (await readText("README.en.md")).includes("structured admission choices")
+  && (await readText("README.md")).includes("Admission Contract");
 const proofPack = await readText("docs/PROOF-PACK-001.md");
 const proofPack002 = await readText("docs/PROOF-PACK-002.md");
 const failureModes = await readText("docs/FAILURE-MODES.md");
@@ -62,7 +67,7 @@ const auditRules = await readText("scripts/audit-core/audit_rules.mjs");
 const htmlReport = await readText("scripts/generate_audit_reports.mjs");
 const liteMode = await readText("dashboard/lite.html");
 
-check("version stays on an explicitly documented unfreeze line", packageJson.version.startsWith("1.2.") || productSurfaceUnfreeze || methodDepthUnfreeze || reviewUxUnfreeze || sdkIntegrationUnfreeze || auditKernelUnfreeze || scenarioPackUnfreeze || proofGovernanceUnfreeze || v2PreflightUnfreeze || v2CaseFoundationUnfreeze || v2EvidenceInterfaceUnfreeze || v2PortableEvidenceChain || v2AdmissionReframe);
+check("version stays on an explicitly documented unfreeze line", packageJson.version.startsWith("1.2.") || productSurfaceUnfreeze || methodDepthUnfreeze || reviewUxUnfreeze || sdkIntegrationUnfreeze || auditKernelUnfreeze || scenarioPackUnfreeze || proofGovernanceUnfreeze || v2PreflightUnfreeze || v2CaseFoundationUnfreeze || v2EvidenceInterfaceUnfreeze || v2PortableEvidenceChain || v2AdmissionReframe || v2AdmissionContract);
 if (productSurfaceUnfreeze) {
   warnings.push("product surface / Lite intake patch line detected: method-layer Cycle 02 checks still apply, but v1.3.x is allowed for product UI and entry-friction fixes");
 }
@@ -245,6 +250,16 @@ if (v2AdmissionReframe) {
   check("README discloses no external validation", (await readText("README.en.md")).includes("External team adoption") && (await readText("README.md")).includes("已被外部团队采用"));
   check("README roadmap includes ground-truth validation", (await readText("README.en.md")).includes("Ground-Truth Track") && (await readText("README.md")).includes("Ground-Truth Track"));
   check("README keeps human review declined", (await readText("README.en.md")).includes("human_reviewed: declined") && (await readText("README.md")).includes("human_reviewed: declined"));
+}
+if (v2AdmissionContract) {
+  warnings.push("2.0.2 admission contract line detected: patch is allowed for choice closure, admitted-object taxonomy, and future usage policy metadata");
+  const sdkApi = await readText("src/mercury-audit/index.mjs");
+  const contractModule = await readText("src/mercury-audit/admission-contract.mjs");
+  check("2.0.2 guide exists", await exists("docs/ITERATION-GUIDE-2.0.2.md"));
+  check("SDK exports Admission Contract helpers", sdkApi.includes("buildAdmissionContract") && sdkApi.includes("MEMORY_OBJECT_TYPES"));
+  check("Admission Contract separates source/framing/judgment/object", contractModule.includes("source_material") && contractModule.includes("model_framing") && contractModule.includes("user_judgment") && contractModule.includes("admitted_object"));
+  check("Admission Contract records future usage policy", contractModule.includes("future_usage_policy") && contractModule.includes("can_use_as_fact") && contractModule.includes("can_trigger_action"));
+  check("README states no truth verdicts", (await readText("README.en.md")).includes("does not produce truth verdicts") && (await readText("README.md")).includes("does not produce truth verdicts"));
 }
 
 const cases = splitSections(proofPack, /^## Case \d{3}:[^\n]*$/gm);

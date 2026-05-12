@@ -4,6 +4,22 @@
 
 Every release entry must carry an explicit provenance declaration. Legacy entries that cannot be reconstructed are marked as unverified instead of being silently treated as human-only.
 
+## 2.0.2 - Admission Contract (2026-05-12)
+> Provenance: `[AI_GENERATED]` drafted_by: Codex; humanReviewed: declined; reviewer: project_owner_pending; audit_ref: docs/ITERATION-GUIDE-2.0.2.md
+
+### Added
+
+- `src/mercury-audit/admission-contract.mjs` adds `buildAdmissionContract()`, `annotateChoicesWithAdmissionPolicy()`, `ADMISSION_CONTRACT_VERSION`, and `MEMORY_OBJECT_TYPES`.
+- Evidence-chain choices now include admission policy metadata for future memory identity and usage rights.
+- `scripts/test_evidence_chain.mjs` now verifies Admission Contract behavior and usage constraints.
+
+### Changed
+
+- Public positioning moves from memory admission lab toward a choice-gated knowledge admission protocol.
+- README and README.en now state that Mercury produces structured admission choices, not truth verdicts.
+- `benchmark:v2` now measures the audit + evidence-chain + admission-contract path and reports the current package version.
+- SDK API version moves to `0.6.0`.
+
 ## 2.0.1 - Admission Reframe (2026-05-12)
 > Provenance: `[AI_GENERATED]` drafted_by: Codex; humanReviewed: declined; reviewer: project_owner_pending; audit_ref: docs/ITERATION-GUIDE-2.0.1.md
 

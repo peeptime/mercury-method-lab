@@ -1,7 +1,9 @@
 import { performance } from "node:perf_hooks";
-import { audit, auditMemoryWrite, buildEvidenceChain } from "../src/mercury-audit/index.mjs";
+import { readFileSync } from "node:fs";
+import { audit, auditMemoryWrite, buildAdmissionContract, buildEvidenceChain } from "../src/mercury-audit/index.mjs";
 
 const iterations = Number(process.env.MERCURY_V2_BENCHMARK_ITERATIONS || process.argv[2] || 2000);
+const packageJson = JSON.parse(readFileSync(new URL("../package.json", import.meta.url), "utf8"));
 
 const samples = [
   {
@@ -47,7 +49,7 @@ const samples = [
 ];
 
 const routingCounts = {};
-const chainCounts = { total_claims: 0, total_missing_choices: 0 };
+const chainCounts = { total_claims: 0, total_missing_choices: 0, total_admission_contracts: 0 };
 const start = performance.now();
 
 for (let index = 0; index < iterations; index += 1) {
@@ -56,20 +58,22 @@ for (let index = 0; index < iterations; index += 1) {
     ? auditMemoryWrite({ content: sample.content, ...sample.context })
     : audit(sample.content, sample.context);
   const chain = buildEvidenceChain(result.packet, result);
+  const contract = buildAdmissionContract(chain, { choice_id: index % 3 === 0 ? "A" : index % 3 === 1 ? "B" : "C" });
 
   routingCounts[result.routing_decision] = (routingCounts[result.routing_decision] || 0) + 1;
   chainCounts.total_claims += chain.core_claim ? 1 : 0;
   chainCounts.total_missing_choices += chain.suggested_choices.length;
+  chainCounts.total_admission_contracts += contract.contract_version ? 1 : 0;
 }
 
 const totalMs = performance.now() - start;
 const summary = {
-  version: "2.0.0",
-  benchmark: "v2_audit_plus_evidence_chain",
+  version: packageJson.version,
+  benchmark: "v2_audit_evidence_chain_admission_contract",
   iterations,
   total_ms: round(totalMs),
-  average_ms_per_audit_chain: round(totalMs / iterations),
-  audit_chains_per_second: round((iterations / totalMs) * 1000),
+  average_ms_per_audit_chain_contract: round(totalMs / iterations),
+  audit_chain_contracts_per_second: round((iterations / totalMs) * 1000),
   routing_counts: routingCounts,
   evidence_chain_counts: chainCounts,
   note: "Local structural benchmark only; no external LLM, browser, network, or storage adapter call is included."

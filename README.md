@@ -1,11 +1,11 @@
 # Mercury Admission Lab
 
-**把 AI 输出先送过证据门，再决定它有没有资格进入长期记忆。**
+**把 AI 输出先送过证据门，再决定它能以什么身份进入长期记忆。**
 
 Formerly: `Mercury Method Lab`  
 Repository: `peeptime/mercury-method-lab`  
-Version: `2.0.1`
-Latest release: [v2.0.1 Admission Reframe](https://github.com/peeptime/mercury-method-lab/releases/tag/v2.0.1)
+Version: `2.0.2`
+Latest release: [v2.0.2 Admission Contract](https://github.com/peeptime/mercury-method-lab/releases/tag/v2.0.2)
 
 ```yaml
 provenance:
@@ -16,16 +16,16 @@ provenance:
   review_note: |
     This project is still an AI-assisted method lab. It does not claim
     third-party validation, production adoption, or human-reviewed authority.
-  audit_ref: docs/ITERATION-GUIDE-2.0.1.md
+  audit_ref: docs/ITERATION-GUIDE-2.0.2.md
 ```
 
 ---
 
 ## 一句话
 
-Mercury Admission Lab 是一个面向 LLM 输出、Agent 记忆和知识迁移材料的 **memory admission** 实验仓库。
+Mercury Admission Lab 是一个面向 LLM 输出、Agent 记忆和知识迁移材料的 **choice-gated knowledge admission protocol**。
 
-它不负责给内容打“看起来多可信”的分数，而是判断一个 AI 产物是否有资格被保留、复用、写入长期记忆或进入交付材料。
+它不替用户判断世界真伪，而是把 claim 进入知识库之前的认知选择过程结构化。
 
 ```text
 评分 = 这个内容看起来有多可信
@@ -36,14 +36,51 @@ Mercury 只把第二件事作为核心问题。
 
 ---
 
-## 2.0.1 改名原因
+## Mercury 产出什么
 
-`Mercury Method Lab` 容易让人以为这是一个完整方法论或已验证框架。`Mercury Admission Lab` 更窄，也更诚实：
+Mercury does not produce truth verdicts. Mercury produces structured admission choices.
 
-- 核心动作是 admission gate，不是通用审计标准。
-- 当前价值在命名、证据链、失败模式和记忆准入原则。
-- 当前限制同样明确：缺少外部用户验证、标注数据集、precision/recall、跨模型审计和真人信任锚点。
-- 所有 AI 辅助判断默认保留 `human_reviewed: declined`，不伪造人工背书。
+2.0.2 新增 **Admission Contract**：当用户选择 A/B/C 后，系统记录用户到底让什么对象进入记忆，以及未来能怎样使用。
+
+Admission Contract 会分开记录：
+
+- `source_material`：原始来源，必须可回看。
+- `model_framing`：Mercury 对材料的 claim 提取、证据排列和 confidence framing。
+- `user_judgment`：用户选择了哪个选项，以及 review state。
+- `admitted_object`：最终允许进入知识库的对象。
+
+`admitted_object` 可以是：
+
+```text
+fact
+hypothesis
+attribution
+interpretation
+open_question
+preference
+decision_record
+temporary_note
+reference
+```
+
+这样可以避免一个危险滑移：
+
+```text
+材料里提到 X
+-> Mercury 高密度组织了 X
+-> 用户点了接受
+-> 知识库把 X 当事实使用
+```
+
+在 2.0.2 中，用户可以明确选择：
+
+```text
+把 X 作为 hypothesis 保存
+允许参与思考
+禁止直接作为事实引用
+禁止触发行动
+未来引用前必须重新检查来源
+```
 
 ---
 
@@ -51,10 +88,11 @@ Mercury 只把第二件事作为核心问题。
 
 ```text
 AI 输出 / 用户材料
-  -> 提取核心主张
+  -> 提取核心 claim
   -> 构建 source-linked evidence chain
   -> 标注来源、归属、置信依据和缺失证据
-  -> 给出 missing-evidence A/B/C 选择
+  -> 给出 missing-evidence A/B/C choices
+  -> 为用户选择生成 Admission Contract
   -> 进入 memory-write gate
   -> accept / revise / quarantine / discard
   -> 保存为 case、audit report 或 portable skill handoff
@@ -62,11 +100,10 @@ AI 输出 / 用户材料
 
 主要入口：
 
-- `buildEvidenceChain()`：从材料生成证据链和缺失证据选择。
+- `buildEvidenceChain()`：生成 evidence chain 和 A/B/C choices。
+- `buildAdmissionContract()`：记录用户选择后被准入的对象身份、证据条件和未来使用权。
 - `auditMemoryWrite()`：在长期记忆写入前做路由判断。
-- `cases/2026-05/`：保存可复现的本地案例。
-- `08_skills/mercury-*`：把核心行为打包成可迁移技能。
-- `benchmark:v2`：测量本地结构化路径，不声称准确率。
+- `benchmark:v2`：测量 audit + evidence chain + admission contract 的本地结构化路径，不声称准确率。
 
 ---
 
@@ -87,16 +124,17 @@ Mercury Admission Lab 目前不声称：
 
 ---
 
-## 2.0.1 路线图
+## 2.0.2 路线图
 
-下一步优先级从“继续扩展概念”改为“证明准入门真的有用”：
+下一步优先级不是扩大审计范围，而是验证 choice-gated admission 是否真的让用户更清楚地管理知识状态：
 
-1. **Ground-Truth Track**：构建 30-100 条标注样本，覆盖已知错误、可信回答和失败模式，开始统计 precision / recall。
-2. **Cross-Model Audit**：用不同模型分别生成和审计，记录分歧，而不是让同源 LLM 自审自批。
-3. **Programmable Checks**：凡是 URL、数字、代码、格式或可执行事实，优先用程序验证，不交给 LLM 主观判断。
-4. **Adversarial Injection Tests**：把对立证据、诱导指令和 route-forcing 输入纳入测试。
-5. **Multi-Agent Contamination Track**：把共享记忆污染从覆盖缺口提升为主线风险。
-6. **Human Trust Anchor**：至少让一个关键文档或核心审计路径获得真人审核记录。
+1. **Admission Contract Review**：测试用户是否看得懂自己准入了什么对象，以及它能怎样被未来系统使用。
+2. **Ground-Truth Track**：构建 30-100 条标注样本，开始统计 precision / recall。
+3. **Cross-Model Audit**：分离生成模型和审计模型，记录分歧。
+4. **Programmable Checks**：URL、数字、代码、格式或可执行事实优先用程序验证。
+5. **Adversarial Injection Tests**：测试 route-forcing、对立证据和审计提示操纵。
+6. **Multi-Agent Contamination Track**：把共享记忆污染作为主线风险，而不是脚注。
+7. **Human Trust Anchor**：至少让一个关键文档或核心审计路径获得真人审核记录。
 
 ---
 
@@ -130,7 +168,7 @@ http://127.0.0.1:4788/lite.html
 
 | Skill | 作用 |
 |---|---|
-| `mercury-evidence-chain` | 把混乱材料整理成 source-linked evidence chain，并给出 missing-evidence A/B/C 选择 |
+| `mercury-evidence-chain` | 把混乱材料整理成 source-linked evidence chain，并给出 missing-evidence A/B/C choices |
 | `mercury-memory-gate` | 判断候选记忆能否写入长期系统，输出四档路由 |
 | `mercury-case-capture` | 把 AI 输出、审计结果和复核状态保存成可迁移 case folder |
 
@@ -148,31 +186,15 @@ npm run skills:check
 
 ---
 
-## 相关工作
-
-Mercury Admission Lab 借鉴并对齐这些方向，但不声称替代它们：
-
-- A-MAC：memory admission control 的分解式判断。
-- MemSAD：记忆系统异常检测与攻击建模。
-- SelfCheckGPT：黑盒自一致性幻觉检测。
-- OWASP AISVS C8：内存、嵌入与向量数据库安全。
-
-当前仓库把这些工作视为参考坐标，不把已有研究包装成原创。
-
----
-
 ## 关键文档
 
 | 需要了解 | 文档 |
 |---|---|
 | 角色入口 | `docs/START-HERE.md` |
 | 项目边界 | `docs/SCOPE.md` |
-| 2.0.1 handoff | `docs/ITERATION-GUIDE-2.0.1.md` |
+| 2.0.2 handoff | `docs/ITERATION-GUIDE-2.0.2.md` |
 | SDK API | `docs/SDK-API.md` |
 | 审计内核 | `docs/AUDIT-KERNEL.md` |
-| 场景包 | `docs/SCENARIO-PACKS.md` |
-| 适配器契约 | `docs/ADAPTER-CONTRACT.md` |
-| Proof Pack 002 | `docs/PROOF-PACK-002.md` |
 | Failure Modes | `docs/FAILURE-MODES.md` |
 | Routing Theory | `docs/ROUTING-THEORY.md` |
 | Related Work | `docs/RELATED-WORK.md` |
@@ -193,7 +215,8 @@ npm run release:gate
 ```powershell
 npm run validate:incr
 npm run index:incr
-npm run skills:check
+npm run test:evidence
+npm run benchmark:v2
 ```
 
 `dist/` 是生成产物，不作为长期事实源。Markdown / YAML / JSON 才是可审计记录。
@@ -207,7 +230,8 @@ npm run skills:check
 不让 AI 自己审计自己并批准自己
 不伪造 source_refs、audit_refs 或 human_reviewed:true
 不把捕获材料直接当作记忆
+不把 Mercury 的 framing 偷偷当成原材料事实
 不定义会被 Agent gaming 的成功指标
 ```
 
-Mercury 的价值不是产出更多内容，而是让不该留下的内容更难留下来。
+Mercury 的价值不是产出更多内容，而是让用户的知识准入选择变得结构化、可追踪，并且能约束后续使用。

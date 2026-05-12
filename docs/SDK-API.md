@@ -17,6 +17,7 @@ Since v1.7, `audit()` runs through the portable audit kernel described in `docs/
 Since v1.8, hosts can pass `scenario` to apply scenario defaults.
 Since v1.9, audit results include anti-gaming state and a `ruleset_version`.
 Since v2.0.0-alpha.3, hosts can call `buildEvidenceChain()` to expose source nodes, missing evidence, and A/B/C next choices.
+Since v2.0.2, hosts can call `buildAdmissionContract()` to close a user choice into an admitted object, evidence condition, and future usage policy.
 
 ## Minimal Use
 
@@ -108,6 +109,30 @@ console.log(chain.suggested_choices);
 ```
 
 The helper is designed for Generative UI surfaces: it turns an audit result into a small evidence-chain object that can drive review prompts without exposing every internal field.
+
+## Admission Contract Helper
+
+```js
+import { audit, buildAdmissionContract, buildEvidenceChain } from "./src/mercury-audit/index.mjs";
+
+const result = audit("The user always wants every AI answer stored forever.", {
+  type: "memory_candidate",
+  risk_level: "high",
+  source_refs: [],
+  audit_refs: []
+});
+
+const chain = buildEvidenceChain(result);
+const contract = buildAdmissionContract(chain, {
+  gap_id: "missing_source_refs",
+  choice_id: "B"
+});
+
+console.log(contract.admitted_object.object_type); // interpretation
+console.log(contract.future_usage_policy.can_use_as_fact); // false
+```
+
+Admission Contract separates `source_material`, `model_framing`, `user_judgment`, and `admitted_object`. It records what may enter memory and what future systems must not do with it.
 
 ## Policy Layer
 

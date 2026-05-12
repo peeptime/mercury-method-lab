@@ -4,8 +4,8 @@
 
 Formerly: `Mercury Method Lab`  
 Repository: `peeptime/mercury-method-lab`  
-Version: `2.0.1`
-Latest release: [v2.0.1 Admission Reframe](https://github.com/peeptime/mercury-method-lab/releases/tag/v2.0.1)
+Version: `2.0.2`
+Latest release: [v2.0.2 Admission Contract](https://github.com/peeptime/mercury-method-lab/releases/tag/v2.0.2)
 
 ```yaml
 provenance:
@@ -16,14 +16,14 @@ provenance:
   review_note: |
     This project is still an AI-assisted method lab. It does not claim
     third-party validation, production adoption, or human-reviewed authority.
-  audit_ref: docs/ITERATION-GUIDE-2.0.1.md
+  audit_ref: docs/ITERATION-GUIDE-2.0.2.md
 ```
 
 ---
 
 ## One Sentence
 
-Mercury Admission Lab is a **memory admission** experiment for LLM outputs, agent memory, and knowledge-transfer artifacts.
+Mercury Admission Lab is a **choice-gated knowledge admission protocol** for LLM outputs, agent memory, and knowledge-transfer artifacts.
 
 It does not ask how credible content appears. It asks whether that content deserves to be retained, reused, written into durable memory, or delivered to another person.
 
@@ -33,6 +33,23 @@ Admission = whether this content deserves to be remembered.
 ```
 
 Mercury focuses on admission.
+
+---
+
+## What Mercury Produces
+
+Mercury does not produce truth verdicts. Mercury produces structured admission choices.
+
+In 2.0.2, a user choice can be closed into an **Admission Contract** that separates:
+
+- `source_material`: the original refs that should remain inspectable.
+- `model_framing`: Mercury's claim extraction, evidence ordering, and confidence basis.
+- `user_judgment`: the selected choice and review state.
+- `admitted_object`: the memory object that may enter a knowledge base.
+
+The admitted object has an explicit type such as `fact`, `hypothesis`, `attribution`, `interpretation`, `open_question`, `preference`, `decision_record`, `temporary_note`, or `reference`.
+
+This prevents a quiet slide from "the material mentioned X" to "Mercury framed X confidently" to "the knowledge base treats X as fact."
 
 ---
 
@@ -55,6 +72,7 @@ AI output / user material
   -> build a source-linked evidence chain
   -> record source attribution, confidence basis, and missing evidence
   -> offer missing-evidence A/B/C choices
+  -> generate an Admission Contract for the selected choice
   -> run the memory-write gate
   -> accept / revise / quarantine / discard
   -> preserve as a case, audit report, or portable skill handoff
@@ -63,6 +81,7 @@ AI output / user material
 Main entry points:
 
 - `buildEvidenceChain()` builds source-linked claim chains and missing-evidence choices.
+- `buildAdmissionContract()` records what a selected choice admits, under what evidence condition, and with what future usage rights.
 - `auditMemoryWrite()` gates durable memory writes.
 - `cases/2026-05/` stores reproducible local cases.
 - `08_skills/mercury-*` packages the core behavior for other agents.
@@ -87,16 +106,17 @@ These are release priorities, not footnotes.
 
 ---
 
-## 2.0.1 Roadmap
+## 2.0.2 Roadmap
 
 The next focus is proving whether the admission gate works:
 
-1. **Ground-Truth Track**: build 30-100 labeled examples covering known wrong answers, credible answers, and failure modes, then measure precision / recall.
-2. **Cross-Model Audit**: separate generation and audit models, and record disagreement instead of relying on same-source self-approval.
-3. **Programmable Checks**: use code or APIs for URLs, numbers, executable facts, and format checks whenever possible.
-4. **Adversarial Injection Tests**: test route-forcing, opposing evidence, and audit-prompt manipulation.
-5. **Multi-Agent Contamination Track**: promote shared-memory contamination from a coverage gap to a mainline risk.
-6. **Human Trust Anchor**: get at least one key document or audit path reviewed by a named human.
+1. **Admission Contract Review**: test whether users understand what object they admitted and what it may be used for.
+2. **Ground-Truth Track**: build 30-100 labeled examples covering known wrong answers, credible answers, and failure modes, then measure precision / recall.
+3. **Cross-Model Audit**: separate generation and audit models, and record disagreement instead of relying on same-source self-approval.
+4. **Programmable Checks**: use code or APIs for URLs, numbers, executable facts, and format checks whenever possible.
+5. **Adversarial Injection Tests**: test route-forcing, opposing evidence, and audit-prompt manipulation.
+6. **Multi-Agent Contamination Track**: promote shared-memory contamination from a coverage gap to a mainline risk.
+7. **Human Trust Anchor**: get at least one key document or audit path reviewed by a named human.
 
 ---
 
@@ -165,7 +185,7 @@ Mercury Admission Lab treats these as reference coordinates, not original invent
 |---|---|
 | Start by role | `docs/START-HERE.md` |
 | Scope boundary | `docs/SCOPE.md` |
-| 2.0.1 handoff | `docs/ITERATION-GUIDE-2.0.1.md` |
+| 2.0.2 handoff | `docs/ITERATION-GUIDE-2.0.2.md` |
 | SDK API | `docs/SDK-API.md` |
 | Audit kernel | `docs/AUDIT-KERNEL.md` |
 | Scenario packs | `docs/SCENARIO-PACKS.md` |
