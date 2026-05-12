@@ -4,7 +4,29 @@
 
 Every release entry must carry an explicit provenance declaration. Legacy entries that cannot be reconstructed are marked as unverified instead of being silently treated as human-only.
 
-## 2.0.0 - Portable Evidence Chain (2026-05-10)
+## 2.1.0 - Report Fidelity & Meta-Audit Engine (2026-05-12)
+> Provenance: `[AI_GENERATED]` drafted_by: Codex; humanReviewed: declined; reviewer: project_owner_pending; audit_ref: docs/V2-AUDIT-FIDELITY-CAPABILITIES.md
+
+### Added
+
+- `src/mercury-audit/meta-audit.mjs` — **F3: Meta-Audit Detection**。新增 `detectMetaAuditContent()`、`extractProblemResolutionPairs()`，识别多轮迭代审计材料，避免将已完成审计的内容当原材料重审。
+- `src/mercury-audit/fidelity.mjs` — **F1: Report-Source Fidelity Verification**。新增 `verifyReportFidelity()`、`applyFidelityGate()`，验证审计报告的每个结论是否在原材料中有对应引用，防止生成"已解决却仍列为未解决"的虚假问题清单。
+- `src/mercury-audit/iteration-track.mjs` — **F2: Round-Aware Problem Resolution Tracker**。新增 `buildIterationTracker()`、`getUnresolvedProblems()`，追踪"第一轮提出的问题是否在后续轮次中被消解"，生成问题-解决对照表。
+- `src/mercury-audit/trace.mjs` — **F4: Audit Traceability Annotations**。新增 `generateTraceReport()`、`renderTraceMarkdown()`、`generateFidelityChecklist()`，为每个审计结论生成原文引用和溯源标注，提升报告可验证性。
+- `src/mercury-audit/test_fidelity_modules.mjs` — 四个新模块的完整测试套件（10 个测试，全部通过）。
+- `docs/V2-AUDIT-FIDELITY-CAPABILITIES.md` — 系统性梳理报告忠实度与逻辑能力体系，定义 F1/F2/F3/F4 四类能力缺口及实现路径。
+- `docs/V2-MDX-SUPPORT-CHANGES.md` — v2.x MDX 支持需求文档，记录需修改的文件清单及具体改动位置。
+
+### Changed
+
+- SDK API 版本从 `0.4.0` 升级至 `0.5.0`。
+- `src/mercury-audit/index.mjs` 新增 `fullAudit()` 函数，作为 F1-F4 的统一编排入口。
+- 标准 `audit()` 函数行为不变（向后兼容），`fullAudit()` 提供完整忠实度验证路径。
+- 报告忠实度低的审计结果自动触发 `human_review_required: true` 并添加 `report_fidelity_low` blocker。
+
+### Added
+
+- ## 2.0.0 - Portable Evidence Chain (2026-05-10)
 > Provenance: `[AI_GENERATED]` drafted_by: Codex; humanReviewed: declined; reviewer: project_owner_pending; audit_ref: docs/ITERATION-GUIDE-2.0.0.md
 
 ### Added

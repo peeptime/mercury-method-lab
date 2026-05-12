@@ -5,14 +5,20 @@ import { getAuditProfile, listAuditProfiles } from "./profiles.mjs";
 import { getAuditStandard, listAuditStandards } from "./standards.mjs";
 import { assessSourceCredibility, classifySourceRef, listSourceLevels } from "./source-credibility.mjs";
 import { assessLifecycle } from "./lifecycle.mjs";
-import { assessDisagreement } from "./disagreement.mjs";
+import { assessDisagreement, mergeReviewerDecision } from "./disagreement.mjs";
 import { getAuditScenario, listAuditScenarios, scenarioDefaults } from "./scenarios.mjs";
 import { buildScenarioReviewGuidance } from "./review-ux.mjs";
 import { detectGamingAttempt, listGamingPatterns } from "./anti-gaming.mjs";
 import { MERCURY_RULESET_VERSION, compareRuleVersions, createRuleVersionRecord, needsReaudit } from "./rule-versioning.mjs";
 import { buildEvidenceChain, buildMissingEvidence } from "./evidence-chain.mjs";
 
-export const MERCURY_AUDIT_API_VERSION = "0.4.0";
+// ── New v2.0 fidelity modules ────────────────────────────────────────────
+import { detectMetaAuditContent, extractProblemResolutionPairs } from "./meta-audit.mjs";
+import { verifyReportFidelity, applyFidelityGate } from "./fidelity.mjs";
+import { buildIterationTracker, getUnresolvedProblems } from "./iteration-track.mjs";
+import { generateTraceReport, renderTraceMarkdown, generateFidelityChecklist } from "./trace.mjs";
+
+export const MERCURY_AUDIT_API_VERSION = "0.5.0";
 
 export { applyPolicy, listPolicies, resolvePolicy };
 export {
@@ -27,9 +33,14 @@ export {
   compareRuleVersions,
   createRuleVersionRecord,
   detectGamingAttempt,
+  detectMetaAuditContent,
+  extractProblemResolutionPairs,
   getAuditScenario,
   getAuditProfile,
   getAuditStandard,
+  getUnresolvedProblems,
+  generateTraceReport,
+  generateFidelityChecklist,
   listGamingPatterns,
   listAuditProfiles,
   listAuditScenarios,
@@ -37,7 +48,11 @@ export {
   listSourceLevels,
   MERCURY_RULESET_VERSION,
   needsReaudit,
-  scenarioDefaults
+  renderTraceMarkdown,
+  scenarioDefaults,
+  verifyReportFidelity,
+  applyFidelityGate,
+  buildIterationTracker
 };
 
 export function createAuditPacket(content, context = {}) {
@@ -107,6 +122,100 @@ export function audit(contentOrPacket, context = {}) {
     policy: policyResult.policy,
     raw_result: policyResult
   };
+}
+
+/**
+ * v2.0 新增：全量审计（含忠实度验证）
+ *
+ * 完整流程：
+ *  ① 元级审计识别（F3）→ 是否为已完成审计的材料？
+ *  ② 轮次感知追踪（F2）→ 哪些问题已消解？
+ *  ③ 报告忠实度验证（F1）→ 未消解的问题是否在原材料中有对应引用？
+ *  ④ 溯源标注（F4）→ 每个结论附带原文引用
+ *  ⑤ 如忠实度低，触发 human_review_required
+ *
+ * @param {string|Object} contentOrPacket
+ * @param {Object} context - 可选 { source_content: string } 提供原材料全文以启用完整F1-F4
+ * @returns {Object} full audit result with fidelity + trace
+ */
+export function fullAudit(contentOrPacket, context = {}) {
+  const sourceContent = context.source_content || extractContent(contentOrPacket);
+
+  // ① 元级审计识别
+  const metaDetection = sourceContent ? detectMetaAuditContent(sourceContent) : null;
+
+  // ② 轮次感知追踪（仅当检测到元级审计材料时）
+  let iterationTracker = null;
+  if (metaDetection?.is_meta && sourceContent) {
+    iterationTracker = buildIterationTracker(sourceContent);
+  }
+
+  // ③ 标准审计（kernel）
+  const baseAudit = audit(contentOrPacket, context);
+
+  // ④ 忠实度验证（需要原材料全文）
+  let fidelityReport = null;
+  let traceReport = null;
+  let adjustedAudit = baseAudit;
+
+  if (sourceContent) {
+    fidelityReport = verifyReportFidelity(baseAudit, sourceContent);
+    adjustedAudit = applyFidelityGate(baseAudit, fidelityReport);
+
+    // ⑤ 溯源标注
+    traceReport = generateTraceReport(adjustedAudit, sourceContent, fidelityReport);
+  }
+
+  // ⑥ 生成忠实度调整后的 Human Review Checklist
+  const fidelityChecklist = traceReport && fidelityReport
+    ? generateFidelityChecklist(adjustedAudit, traceReport, fidelityReport)
+    : [];
+
+  // 合并 Checklist（忠实度项 + 原 Checklist）
+  const mergedChecklist = [
+    ...fidelityChecklist,
+    ...(adjustedAudit.human_review_checklist || [])
+  ];
+
+  return {
+    ...adjustedAudit,
+    human_review_checklist: mergedChecklist.length > 0 ? mergedChecklist : adjustedAudit.human_review_checklist,
+    api_version: MERCURY_AUDIT_API_VERSION,
+    // 新增字段
+    meta_audit: metaDetection,
+    iteration_tracker: iterationTracker,
+    fidelity: fidelityReport,
+    trace: traceReport,
+    fidelity_gate_passed: fidelityReport ? fidelityReport.fidelity_score >= 1.0 : true,
+    // 如果是元级审计材料，调整 routing
+    routing_decision: routingDecisionFromMetaAudit(
+      adjustedAudit.routing_decision,
+      iterationTracker,
+      fidelityReport
+    )
+  };
+}
+
+/**
+ * Derive routing decision from meta-audit material.
+ * If all problems are resolved, upgrade from quarantine to revise.
+ */
+function routingDecisionFromMetaAudit(baseDecision, tracker, fidelity) {
+  if (!tracker || !fidelity) return baseDecision;
+
+  // All round problems resolved + fidelity high → upgrade
+  if (tracker.unresolved_count === 0 && fidelity.fidelity_score >= 1.0) {
+    if (baseDecision === "quarantine") return "revise";
+    if (baseDecision === "revise") return "revise";
+  }
+
+  return baseDecision;
+}
+
+function extractContent(contentOrPacket) {
+  if (typeof contentOrPacket === "string") return contentOrPacket;
+  if (typeof contentOrPacket === "object" && contentOrPacket.claim) return contentOrPacket.claim;
+  return null;
 }
 
 export function auditMemoryWrite(candidate = {}) {
