@@ -1,10 +1,10 @@
 {
   "name": "mercury-method-lab",
-  "version": "2.0.0",
-  "codename": "Portable Evidence Chain",
+  "version": "2.0.1",
+  "codename": "Admission Reframe",
   "private": true,
   "type": "module",
-  "description": "Evidence-first audit method for deciding which AI-generated claims deserve durable memory.",
+  "description": "Evidence-first memory admission lab for deciding which AI-generated claims deserve durable memory.",
   "exports": {
     ".": "./src/mercury-audit/index.mjs"
   },

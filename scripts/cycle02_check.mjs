@@ -47,6 +47,12 @@ const v2PortableEvidenceChain = packageJson.version === "2.0.0"
   && await exists("08_skills/mercury-evidence-chain/SKILL.md")
   && await exists("08_skills/mercury-memory-gate/SKILL.md")
   && await exists("08_skills/mercury-case-capture/SKILL.md");
+const v2AdmissionReframe = packageJson.version === "2.0.1"
+  && await exists("docs/ITERATION-GUIDE-2.0.1.md")
+  && (await readText("README.en.md")).includes("Mercury Admission Lab")
+  && (await readText("README.en.md")).includes("Known Boundaries")
+  && (await readText("README.md")).includes("Mercury Admission Lab")
+  && (await readText("README.md")).includes("已知边界");
 const proofPack = await readText("docs/PROOF-PACK-001.md");
 const proofPack002 = await readText("docs/PROOF-PACK-002.md");
 const failureModes = await readText("docs/FAILURE-MODES.md");
@@ -56,7 +62,7 @@ const auditRules = await readText("scripts/audit-core/audit_rules.mjs");
 const htmlReport = await readText("scripts/generate_audit_reports.mjs");
 const liteMode = await readText("dashboard/lite.html");
 
-check("version stays on an explicitly documented unfreeze line", packageJson.version.startsWith("1.2.") || productSurfaceUnfreeze || methodDepthUnfreeze || reviewUxUnfreeze || sdkIntegrationUnfreeze || auditKernelUnfreeze || scenarioPackUnfreeze || proofGovernanceUnfreeze || v2PreflightUnfreeze || v2CaseFoundationUnfreeze || v2EvidenceInterfaceUnfreeze || v2PortableEvidenceChain);
+check("version stays on an explicitly documented unfreeze line", packageJson.version.startsWith("1.2.") || productSurfaceUnfreeze || methodDepthUnfreeze || reviewUxUnfreeze || sdkIntegrationUnfreeze || auditKernelUnfreeze || scenarioPackUnfreeze || proofGovernanceUnfreeze || v2PreflightUnfreeze || v2CaseFoundationUnfreeze || v2EvidenceInterfaceUnfreeze || v2PortableEvidenceChain || v2AdmissionReframe);
 if (productSurfaceUnfreeze) {
   warnings.push("product surface / Lite intake patch line detected: method-layer Cycle 02 checks still apply, but v1.3.x is allowed for product UI and entry-friction fixes");
 }
@@ -232,6 +238,13 @@ if (v2PortableEvidenceChain) {
   check("package exposes 2.0 performance and skill checks", Boolean(packageJson.scripts?.["benchmark:v2"]) && Boolean(packageJson.scripts?.["skills:check"]));
   const performanceNotes = await readText("docs/PERFORMANCE-2.0.md");
   check("2.0 performance notes preserve local benchmark boundary", performanceNotes.includes("no external LLM") && performanceNotes.includes("not to claim production throughput"));
+}
+if (v2AdmissionReframe) {
+  warnings.push("2.0.1 admission reframe line detected: patch is allowed for public naming, limitation disclosure, and empirical-validation roadmap");
+  check("2.0.1 guide exists", await exists("docs/ITERATION-GUIDE-2.0.1.md"));
+  check("README discloses no external validation", (await readText("README.en.md")).includes("External team adoption") && (await readText("README.md")).includes("已被外部团队采用"));
+  check("README roadmap includes ground-truth validation", (await readText("README.en.md")).includes("Ground-Truth Track") && (await readText("README.md")).includes("Ground-Truth Track"));
+  check("README keeps human review declined", (await readText("README.en.md")).includes("human_reviewed: declined") && (await readText("README.md")).includes("human_reviewed: declined"));
 }
 
 const cases = splitSections(proofPack, /^## Case \d{3}:[^\n]*$/gm);

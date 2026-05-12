@@ -4,6 +4,16 @@
 
 Every release entry must carry an explicit provenance declaration. Legacy entries that cannot be reconstructed are marked as unverified instead of being silently treated as human-only.
 
+## 2.0.1 - Admission Reframe (2026-05-12)
+> Provenance: `[AI_GENERATED]` drafted_by: Codex; humanReviewed: declined; reviewer: project_owner_pending; audit_ref: docs/ITERATION-GUIDE-2.0.1.md
+
+### Changed
+
+- Renames the public project posture from **Mercury Method Lab** to **Mercury Admission Lab** while preserving the repository/package name for compatibility.
+- Reframes README and README.en around memory admission, evidence gates, and the distinction between credibility scoring and durable-memory admission.
+- Makes the current limitations explicit: no external adoption proof, no third-party human review, no labeled precision/recall benchmark, no cross-model certification, and no solved multi-agent contamination model.
+- Moves the next roadmap toward ground-truth benchmarks, cross-model audit, programmable checks, adversarial injection tests, multi-agent contamination coverage, and a human trust anchor.
+
 ## 2.1.0 - Report Fidelity & Meta-Audit Engine (2026-05-12)
 > Provenance: `[AI_GENERATED]` drafted_by: Codex; humanReviewed: declined; reviewer: project_owner_pending; audit_ref: docs/V2-AUDIT-FIDELITY-CAPABILITIES.md
 
