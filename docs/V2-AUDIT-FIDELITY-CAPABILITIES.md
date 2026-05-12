@@ -223,4 +223,63 @@ src/
 
 ---
 
-*本文档基于实测反馈系统性整理，待 v2.0 迭代实现。*
+*本文档基于实测反馈系统性整理。*
+
+---
+
+## 六、F5 · 审计稳定性验证（v2.1.0 新增）
+
+### 问题本质
+
+Mercury 的路由决策（accept / revise / quarantine / discard）必须稳定：
+同一份材料二次审计，不应给出截然不同的判断。
+不稳定的结果本身就是一个质量信号——它说明审计过程受到随机因素干扰或存在 gaming 空间。
+
+### F5 的四个检查维度
+
+| 检查维度 | 内容 | 严重性 |
+|---|---|---|
+| routing_inconsistency | 两次运行 routing_decision 不一致 | 高 |
+| low_fidelity_accept | fidelity_score 低但 routing 是 accept | 高 |
+| confidence_routing_mismatch | confidence 标注与 routing 结果矛盾 | 中 |
+| human_review_inconsistency | accept 无 human_review 但 fidelity 低 | 高 |
+
+### 降级策略
+
+```
+accept  → revise  （不稳定时）
+revise  → quarantine
+quarantine → quarantine（不变）
+discard → discard（终端状态，不降级）
+```
+
+### API 用法
+
+```js
+import { fullAudit, verifyAuditStability, applyStabilityGate } from "mercury-method-lab";
+
+// 方式 A：在 fullAudit 中 opt-in
+const result = fullAudit(content, { source_content: content, check_stability: true });
+
+// 方式 B：显式调用
+const result = fullAudit(content, { source_content: content });
+const stability = verifyAuditStability(result);
+const adjusted = applyStabilityGate(result, stability);
+```
+
+### F1-F5 × routing 联动
+
+F1（低忠实度）和 F5（不稳定）有一个共同下游效应：
+
+> 如果 fidelity_score < 0.8 或 stability_score < 0.8，
+> routing_decision 应自动降级，且 human_review_required = true。
+
+这不是"改变审计结果"，而是"让审计结果更诚实地反映不确定性"。
+
+### 为什么 F5 比 F1 更难实现
+
+F1 的验证对象是"报告 vs 原材料"——客观可查。
+F5 的验证对象是"审计过程本身"——它要求运行两次并比较结果。
+
+在 LLM 环境下，即使相同输入也可能产生不同输出的 token 概率分布。
+F5 的实际意义不是"让两次结果完全相同"，而是检测"是否存在极端不一致（accept vs discard）"。

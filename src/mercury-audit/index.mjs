@@ -18,6 +18,7 @@ import { detectMetaAuditContent, extractProblemResolutionPairs } from "./meta-au
 import { verifyReportFidelity, applyFidelityGate } from "./fidelity.mjs";
 import { buildIterationTracker, getUnresolvedProblems } from "./iteration-track.mjs";
 import { generateTraceReport, renderTraceMarkdown, generateFidelityChecklist } from "./trace.mjs";
+import { verifyAuditStability, applyStabilityGate } from "./fidelity-stability.mjs";
 
 export const MERCURY_AUDIT_API_VERSION = "0.6.0";
 
@@ -57,7 +58,10 @@ export {
   scenarioDefaults,
   verifyReportFidelity,
   applyFidelityGate,
-  buildIterationTracker
+  buildIterationTracker,
+  // F5
+  verifyAuditStability,
+  applyStabilityGate
 };
 
 export function createAuditPacket(content, context = {}) {
@@ -158,7 +162,7 @@ export function fullAudit(contentOrPacket, context = {}) {
   // ③ 标准审计（kernel）
   const baseAudit = audit(contentOrPacket, context);
 
-  // ④ 忠实度验证（需要原材料全文）
+  // ④ 忠实度验证 F1（需要原材料全文）
   let fidelityReport = null;
   let traceReport = null;
   let adjustedAudit = baseAudit;
@@ -167,7 +171,7 @@ export function fullAudit(contentOrPacket, context = {}) {
     fidelityReport = verifyReportFidelity(baseAudit, sourceContent);
     adjustedAudit = applyFidelityGate(baseAudit, fidelityReport);
 
-    // ⑤ 溯源标注
+    // ⑤ 溯源标注 F4
     traceReport = generateTraceReport(adjustedAudit, sourceContent, fidelityReport);
   }
 
@@ -182,19 +186,31 @@ export function fullAudit(contentOrPacket, context = {}) {
     ...(adjustedAudit.human_review_checklist || [])
   ];
 
+  // ⑦ F5 稳定性检查（opt-in，避免破坏现有流程）
+  let stabilityResult = null;
+  let finalAudit = adjustedAudit;
+
+  if (context.check_stability) {
+    stabilityResult = verifyAuditStability(adjustedAudit);
+    finalAudit = applyStabilityGate(adjustedAudit, stabilityResult);
+  }
+
   return {
-    ...adjustedAudit,
-    human_review_checklist: mergedChecklist.length > 0 ? mergedChecklist : adjustedAudit.human_review_checklist,
+    ...finalAudit,
+    human_review_checklist: mergedChecklist.length > 0 ? mergedChecklist : finalAudit.human_review_checklist,
     api_version: MERCURY_AUDIT_API_VERSION,
-    // 新增字段
+    // F1-F4 字段
     meta_audit: metaDetection,
     iteration_tracker: iterationTracker,
     fidelity: fidelityReport,
     trace: traceReport,
     fidelity_gate_passed: fidelityReport ? fidelityReport.fidelity_score >= 1.0 : true,
-    // 如果是元级审计材料，调整 routing
+    // F5 字段（opt-in）
+    stability: stabilityResult,
+    stability_gate_passed: stabilityResult ? stabilityResult.is_stable : null,
+    // routing 调整（综合 F1-F5）
     routing_decision: routingDecisionFromMetaAudit(
-      adjustedAudit.routing_decision,
+      finalAudit.routing_decision,
       iterationTracker,
       fidelityReport
     )

@@ -28,6 +28,7 @@
     "report": "node scripts/generate_audit_reports.mjs",
     "audit:flow": "node scripts/simulate_memory_flow.mjs",
     "test": "node scripts/test_audit_packets.mjs && node scripts/test_sdk_api.mjs && node scripts/test_governance.mjs",
+    "test:fidelity": "node src/mercury-audit/test_fidelity_modules.mjs && node src/mercury-audit/test_fidelity_routing_integration.mjs",
     "test:sdk": "node scripts/test_sdk_api.mjs",
     "test:governance": "node scripts/test_governance.mjs",
     "demo:memory-hook": "node examples/integration-demo/memory-write-hook.mjs",

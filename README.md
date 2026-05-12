@@ -5,7 +5,7 @@
 Formerly: `Mercury Method Lab`  
 Repository: `peeptime/mercury-method-lab`  
 Version: `2.0.2`
-Latest release: [v2.0.2 Admission Contract](https://github.com/peeptime/mercury-method-lab/releases/tag/v2.0.2)
+Latest release: [v2.1.0 F5 Stability + Type-Aware Admission](https://github.com/peeptime/mercury-method-lab/releases/tag/v2.1.0)
 
 ```yaml
 provenance:
@@ -103,6 +103,8 @@ AI 输出 / 用户材料
 - `buildEvidenceChain()`：生成 evidence chain 和 A/B/C choices。
 - `buildAdmissionContract()`：记录用户选择后被准入的对象身份、证据条件和未来使用权。
 - `auditMemoryWrite()`：在长期记忆写入前做路由判断。
+- `fullAudit()`：运行 F1–F5 全链路审计（忠实度、轮次追踪、元级识别、溯源标注、稳定性），在路由决策前完成所有检查。使用 `check_stability: true` 开启 F5 稳定性门控。
+- `test:fidelity`：运行 F1–F5 完整集成测试套件。
 - `benchmark:v2`：测量 audit + evidence chain + admission contract 的本地结构化路径，不声称准确率。
 
 ---
@@ -124,7 +126,17 @@ Mercury Admission Lab 目前不声称：
 
 ---
 
-## 2.0.2 路线图
+## 2.1.0 变更
+
+本次更新新增 **F5 稳定性引擎** 并正式确立类型感知路由约束：
+
+- **F5 稳定性引擎**（`verifyAuditStability` + `applyStabilityGate`）：检测 routing 决策不一致、低忠实度+accept 组合、confidence 与 routing 结果矛盾。不稳定时自动降级：`accept → revise → quarantine`。`discard` 是终端状态，不降级。
+- **类型感知路由**：9 种准入对象类型各有不同的证据要求和使用约束，记录于 `docs/TYPE-MECE-ANALYSIS.md`。
+- **程序性知识处理**：`reference` 类型对象可携带 `provenance_type: procedural_knowledge` 并附带明确的使用范围约束。
+- **SDK API**：`verifyAuditStability` 和 `applyStabilityGate` 已从主入口导出。
+- **测试**：21 个 F1–F5 × routing 集成测试，全部通过。
+
+## 2.0.2 路线图（已过期）
 
 下一步优先级不是扩大审计范围，而是验证 choice-gated admission 是否真的让用户更清楚地管理知识状态：
 
