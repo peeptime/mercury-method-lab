@@ -1,3 +1,5 @@
+new day02.0
+
 # Mercury Method Lab
 
 **把 AI 输出变成可审计证据链，而不是直接写进长期记忆。**
