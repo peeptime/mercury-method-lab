@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Mercury Method Lab</title>
     <link rel="icon" href="data:,">
-    <link rel="stylesheet" href="/styles.css?v=20260510a">
+    <link rel="stylesheet" href="/styles.css?v=20260513a">
   </head>
   <body>
     <main class="shell">
@@ -36,7 +36,7 @@
             <h1 data-i18n="pageTitle">Submit a viewpoint, then let the pipeline carry it.</h1>
           </div>
           <div class="toolbar">
-            <span id="buildBadge" class="build-badge" aria-label="GUI build">v2026.05.02-c</span>
+            <span id="buildBadge" class="build-badge" aria-label="GUI build">v2026.05.13</span>
             <div class="topbar-language">
               <span class="language-label" data-i18n="languageLabel">Language</span>
               <div class="language-mode" aria-label="Language mode">
@@ -99,6 +99,56 @@
                 <span data-i18n="submitNote">You provide material. The system handles naming, storage, routing, and first response.</span>
               </div>
             </form>
+
+            <!-- v2.1.5: Intake Feedback Panel -->
+            <div id="intakeFeedback" class="feedback-panel" role="region" aria-label="Content quality feedback">
+              <h3>快速质量评估</h3>
+              <div class="feedback-score-row">
+                <div class="feedback-score-ring">
+                  <svg viewBox="0 0 64 64">
+                    <circle class="bg" cx="32" cy="32" r="27" />
+                    <circle id="feedbackRingFg" class="fg" cx="32" cy="32" r="27"
+                      stroke-dasharray="169.65" stroke-dashoffset="169.65" />
+                  </svg>
+                  <div class="feedback-score-value">
+                    <span id="feedbackScoreValue">—</span>
+                    <span>/10</span>
+                  </div>
+                </div>
+                <div class="feedback-score-meta">
+                  <span id="feedbackQualityBadge" class="quality-badge">—</span>
+                  <p id="feedbackWordCount">— 字 · — claims</p>
+                  <p id="feedbackRoutingHint">路由建议：—</p>
+                </div>
+              </div>
+
+              <div class="feedback-dimensions">
+                <div class="feedback-dim">
+                  <strong id="dimStructure">—</strong>
+                  <span>结构</span>
+                </div>
+                <div class="feedback-dim">
+                  <strong id="dimEvidence">—</strong>
+                  <span>证据</span>
+                </div>
+                <div class="feedback-dim">
+                  <strong id="dimConclusion">—</strong>
+                  <span>结论</span>
+                </div>
+                <div class="feedback-dim">
+                  <strong id="dimSpecificity">—</strong>
+                  <span>具体性</span>
+                </div>
+              </div>
+
+              <div id="feedbackFlags" class="feedback-flags"></div>
+              <div id="feedbackClaims" class="feedback-claims"></div>
+              <div id="feedbackLoading" class="feedback-loading" style="display:none">分析中...</div>
+              <div class="feedback-actions">
+                <button class="secondary" id="feedbackRefreshBtn" type="button">重新分析</button>
+              </div>
+            </div>
+
             <a href="#artifacts" class="quick-link" data-i18n="quickArtifacts">查看历史 artifacts &rarr;</a>
             <div id="intakeResult" class="intake-result empty">Submit material to see the system's clean intake statement here.</div>
           </article>

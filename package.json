@@ -1,7 +1,8 @@
 {
   "name": "mercury-method-lab",
-  "version": "2.0.2",
-  "codename": "Admission Contract",
+  "version": "2.1.5",
+  "codename": "Quick Intake Feedback",
+  "releaseDate": "2026-05-13",
   "private": true,
   "type": "module",
   "description": "Choice-gated knowledge admission protocol for deciding how AI-generated claims may enter memory.",

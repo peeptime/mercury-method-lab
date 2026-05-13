@@ -4,7 +4,7 @@
 
 Formerly: `Mercury Method Lab`  
 Repository: `peeptime/mercury-method-lab`  
-Version: `2.0.2`
+Version: `2.1.5`
 Latest release: [v2.1.0 F5 Stability + Type-Aware Admission](https://github.com/peeptime/mercury-method-lab/releases/tag/v2.1.0)
 
 ```yaml

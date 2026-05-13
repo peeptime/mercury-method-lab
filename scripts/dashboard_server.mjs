@@ -10,6 +10,9 @@ import { fileURLToPath } from "node:url";
 const { validate: goalValidate, createActionPlan: goalCreateActionPlan } = await import("./goal-validator.mjs").catch(() => ({ validate: null, createActionPlan: null }));
 const { captureText: captureAiText } = await import("./capture_ai_conversation.mjs").catch(() => ({ captureText: null }));
 
+// v2.1.5: intake-feedback module
+const { scoreContentQuick, extractClaims, INTAKE_FEEDBACK_VERSION } = await import("../src/mercury-audit/intake-feedback.mjs").catch(() => ({ scoreContentQuick: null, extractClaims: null, INTAKE_FEEDBACK_VERSION: "unavailable" }));
+
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
 const dashboardRoot = join(root, "dashboard");
 const port = Number(process.env.MERCURY_DASHBOARD_PORT || 4788);
@@ -134,6 +137,29 @@ const server = createServer(async (req, res) => {
     if (url.pathname === "/api/lite-audit" && req.method === "POST") {
       const body = await readJson(req);
       return sendJson(res, { ok: true, result: liteAudit(body.text || "") });
+    }
+
+    // ── v2.1.5: Quick intake-feedback (no LLM) ────────────────────────────────
+    if (url.pathname === "/api/intake-feedback" && req.method === "POST") {
+      const body = await readJson(req);
+      const text = body.text || "";
+      const moduleVersion = INTAKE_FEEDBACK_VERSION;
+      if (!scoreContentQuick) {
+        return sendJson(res, { ok: false, error: "intake-feedback module unavailable" }, 503);
+      }
+      const result = scoreContentQuick(text);
+      return sendJson(res, { ok: true, moduleVersion, ...result });
+    }
+
+    // ── v2.1.5: Extract discrete claims ──────────────────────────────────────
+    if (url.pathname === "/api/extract-claims" && req.method === "POST") {
+      const body = await readJson(req);
+      const text = body.text || "";
+      if (!extractClaims) {
+        return sendJson(res, { ok: false, error: "intake-feedback module unavailable" }, 503);
+      }
+      const claims = extractClaims(text);
+      return sendJson(res, { ok: true, claims, count: claims.length });
     }
 
     if (url.pathname === "/api/capture" && req.method === "POST") {

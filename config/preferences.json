@@ -1,24 +1,25 @@
 {
   "version": 1,
   "onboarding": {
-    "completed": false,
-    "step": 0
+    "completed": true,
+    "step": 0,
+    "skipped": false
   },
   "general": {
     "startup_behavior": "last_page",
     "auto_reconnect": true,
-    "recent_files_count": 10,
-    "language": "system",
-    "timezone": "local"
+    "recent_files_count": 3,
+    "language": "zh-CN",
+    "timezone": "utc"
   },
   "interface": {
     "theme": "system",
-    "accent": "#7a1d1d",
+    "accent": "#4c3f84",
     "font_scale": "medium",
     "font_family": "system",
-    "compact": false,
+    "compact": true,
     "show_line_numbers": true,
-    "sidebar_width": 240
+    "sidebar_width": 208
   },
   "storage": {
     "index_path": "11_indexes",

@@ -329,6 +329,7 @@ function init() {
   renderExecutionMode();
   renderAnalysisPersona();
   renderDeploymentReadiness();
+  bindIntakeFeedbackEvents();
   load();
 }
 
@@ -944,6 +945,11 @@ async function createIntake(event) {
     selectedDetail = null;
     await load();
     renderIntakeResult(result.intake, result.queue_path);
+    // v2.1.5: trigger intake-feedback automatically
+    const materialText = $("#intakeMaterial")?.value || result.intake?.clean_statement || "";
+    if (materialText.trim().length > 20) {
+      fetchIntakeFeedback(materialText);
+    }
     setStatus(t("intakeReady"), "ok");
     $("#intakeResult").scrollIntoView({ behavior: "smooth", block: "center" });
   } catch (error) {
@@ -1224,4 +1230,130 @@ function escapeHtml(value) {
 
 function escapeAttr(value) {
   return escapeHtml(value).replaceAll('"', "&quot;");
+}
+
+// ── v2.1.5: Intake Feedback ───────────────────────────────────────────────
+
+let feedbackDebounceTimer = null;
+
+function bindIntakeFeedbackEvents() {
+  const material = $("#intakeMaterial");
+  if (!material) return;
+  material.addEventListener("input", () => {
+    clearTimeout(feedbackDebounceTimer);
+    feedbackDebounceTimer = setTimeout(() => {
+      const text = material.value.trim();
+      if (text.length > 50) {
+        fetchIntakeFeedback(text);
+      } else {
+        $("#intakeFeedback").classList.remove("visible");
+      }
+    }, 800);
+  });
+
+  $("#feedbackRefreshBtn")?.addEventListener("click", () => {
+    const text = material?.value?.trim() || "";
+    if (text.length > 20) fetchIntakeFeedback(text);
+  });
+}
+
+async function fetchIntakeFeedback(text) {
+  const panel = $("#intakeFeedback");
+  if (!panel) return;
+
+  const loading = $("#feedbackLoading");
+  const claims = $("#feedbackClaims");
+  const flags = $("#feedbackFlags");
+  if (loading) loading.style.display = "block";
+  if (claims) claims.innerHTML = "";
+  if (flags) flags.innerHTML = "";
+  panel.classList.add("visible");
+
+  try {
+    const res = await fetch("/api/intake-feedback", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text }),
+    });
+    const data = await res.json();
+    if (!data.ok) {
+      panel.classList.remove("visible");
+      return;
+    }
+    renderFeedbackResult(data);
+  } catch {
+    panel.classList.remove("visible");
+  }
+}
+
+function renderFeedbackResult(data) {
+  const loading = $("#feedbackLoading");
+  if (loading) loading.style.display = "none";
+
+  const { scores, qualityLevel, wordCount, claimCount, routingHint, flags, sampleClaims } = data;
+  const overall = scores?.overall ?? 0;
+
+  // Score ring
+  const ring = $("#feedbackRingFg");
+  if (ring) {
+    const circumference = 2 * Math.PI * 27;
+    const offset = circumference * (1 - overall / 10);
+    ring.style.strokeDashoffset = offset;
+    ring.className = "fg " + (qualityLevel || "medium");
+  }
+
+  const sv = $("#feedbackScoreValue");
+  if (sv) sv.textContent = overall;
+  const badge = $("#feedbackQualityBadge");
+  if (badge) {
+    badge.textContent = { high: "高质量", medium: "中等质量", low: "低质量" }[qualityLevel] || qualityLevel;
+    badge.className = "quality-badge " + (qualityLevel || "medium");
+  }
+  const wc = $("#feedbackWordCount");
+  if (wc) wc.textContent = wordCount + " 字 · " + claimCount + " 个主张";
+  const rh = $("#feedbackRoutingHint");
+  if (rh) {
+    const hintLabels = { accept: "建议准入", revise: "建议修订", quarantine: "建议隔离" };
+    rh.textContent = "路由建议：" + (hintLabels[routingHint] || routingHint);
+  }
+
+  // Dimensions
+  const ds = $("#dimStructure");
+  const de = $("#dimEvidence");
+  const dc = $("#dimConclusion");
+  const dsp = $("#dimSpecificity");
+  if (ds) ds.textContent = scores?.structure ? "Yes" : "No";
+  if (de) de.textContent = scores?.evidence ? "Yes" : "No";
+  if (dc) dc.textContent = scores?.conclusion ? "Yes" : "No";
+  if (dsp) dsp.textContent = scores?.specificity ? "Yes" : "No";
+
+  // Flags
+  const flagsEl = $("#feedbackFlags");
+  if (flagsEl) {
+    const flagList = [
+      { key: "heavyHedging", label: "Warning: 过度修饰", type: "warn" },
+      { key: "undefinedScope", label: "Warning: 范围未定义", type: "warn" },
+      { key: "noEvidence", label: "Error: 无证据来源", type: "error" },
+      { key: "noConclusion", label: "Warning: 无结论", type: "warn" },
+    ];
+    flagsEl.innerHTML = flagList
+      .filter((f) => flags?.[f.key])
+      .map((f) => '<span class="feedback-flag ' + f.type + '">' + f.label + "</span>")
+      .join("");
+  }
+
+  // Sample claims
+  const claimsEl = $("#feedbackClaims");
+  if (claimsEl && sampleClaims?.length) {
+    const typeLabel = { factual: "事实型", opinion: "观点型", speculative: "推测型", procedural: "程序型", unclear: "未分类" };
+    const header = "<h4>主张样本（前 " + Math.min(3, sampleClaims.length) + " 条）</h4>";
+    const items = sampleClaims.slice(0, 3).map((c) => {
+      const t = typeLabel[c.indicator] || c.indicator || "unclear";
+      const txt = escapeHtml((c.claim || "").slice(0, 200));
+      return '<div class="feedback-claim ' + (c.indicator || "unclear") + '">' +
+        '<div class="feedback-claim-header"><span class="feedback-claim-type">' + t + '</span></div>' +
+        '<div class="feedback-claim-text">' + txt + '</div></div>';
+    }).join("");
+    claimsEl.innerHTML = header + items;
+  }
 }

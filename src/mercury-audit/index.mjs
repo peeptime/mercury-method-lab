@@ -20,7 +20,7 @@ import { buildIterationTracker, getUnresolvedProblems } from "./iteration-track.
 import { generateTraceReport, renderTraceMarkdown, generateFidelityChecklist } from "./trace.mjs";
 import { verifyAuditStability, applyStabilityGate } from "./fidelity-stability.mjs";
 
-export const MERCURY_AUDIT_API_VERSION = "0.6.0";
+export const MERCURY_AUDIT_API_VERSION = "0.7.0";
 
 export { applyPolicy, listPolicies, resolvePolicy };
 export {

@@ -6,7 +6,7 @@
         "zh": "对话入口",
         "en": "Conversation"
       },
-      "status": "active",
+      "status": "reserved",
       "original_purpose": {
         "zh": "通过 CLI 或 Telegram 发起对话。",
         "en": "Start conversations through CLI or Telegram."
@@ -25,7 +25,7 @@
         "zh": "本地文件管理",
         "en": "Local Files"
       },
-      "status": "active",
+      "status": "disabled",
       "original_purpose": {
         "zh": "读取、创建、编辑和删除文件。",
         "en": "Read, create, edit, and delete files."
@@ -46,7 +46,7 @@
         "zh": "命令执行",
         "en": "Commands"
       },
-      "status": "reserved",
+      "status": "active",
       "original_purpose": {
         "zh": "执行 shell、npm、git 等命令。",
         "en": "Run shell, npm, git, and related commands."

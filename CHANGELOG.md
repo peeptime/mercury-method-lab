@@ -4,6 +4,29 @@
 
 Every release entry must carry an explicit provenance declaration. Legacy entries that cannot be reconstructed are marked as unverified instead of being silently treated as human-only.
 
+## 2.1.5 - Quick Intake Feedback (2026-05-13)
+> Provenance: `[AI_GENERATED]` drafted_by: QClaw; humanReviewed: declined; reviewer: project_owner_pending; audit_ref: ITERATION-GUIDE-2.1.5.md
+
+### Added
+
+- `src/mercury-audit/intake-feedback.mjs` — **Quick Audit Feedback Engine**。新增 `scoreContentQuick()`、`extractClaims()`、`selfAuditReport()`、`analyzeContentBatch()` 四个无 LLM 依赖的结构化内容分析函数。提供：主张提取（四类：事实型/推测型/观点型/程序型）、5维度内容质量评分（结构/结论/证据/具体性/总评分）、快速路由建议（accept/revise/quarantine）、内容旗帜标注（过度修饰/范围未定义/无证据/无结论）。
+- Dashboard `/api/intake-feedback` — 接收文本，返回质量评分 + 主张列表 + 路由建议 + 旗帜标注。
+- Dashboard `/api/extract-claims` — 接收文本，返回主张列表（claim + indicator + position）。
+- Dashboard GUI 新增 **Intake Feedback 面板**：提交后自动触发质量评估环形图、维度指标、旗帜列表、主张样本预览。支持文本输入防抖触发（800ms）、手动重新分析按钮。
+- Dashboard 样式升级：`styles.css` 新增 13 个反馈面板相关类（`feedback-panel`、`feedback-score-ring`、`quality-badge`、`feedback-dim`、`feedback-flag`、`feedback-claim` 等）。
+
+### Changed
+
+- `package.json` 版本从 `2.0.2` 升至 `2.1.5`，codename 更新为 `Quick Intake Feedback`，新增 `releaseDate` 字段。
+- `src/mercury-audit/index.mjs` SDK API 版本从 `0.6.0` 升至 `0.7.0`。
+- Dashboard 资源版本从 `20260510a` 升至 `20260513a`，`index.html` 构建标签同步更新。
+
+### Known Issues (v2.1.5)
+
+- 反馈评分算法为规则型，不依赖 LLM，适合作为快速参考而非权威判断。
+- 自评模块（`selfAuditReport`）建议用于 Mercury 自身产出的审计，不用于外部材料。
+- 主张提取使用正则模式，大段代码或表格内容可能产生误判。
+
 ## 2.0.2 - Admission Contract (2026-05-12)
 > Provenance: `[AI_GENERATED]` drafted_by: Codex; humanReviewed: declined; reviewer: project_owner_pending; audit_ref: docs/ITERATION-GUIDE-2.0.2.md
 
