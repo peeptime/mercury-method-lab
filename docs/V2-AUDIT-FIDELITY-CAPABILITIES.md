@@ -256,7 +256,7 @@ discard → discard（终端状态，不降级）
 ### API 用法
 
 ```js
-import { fullAudit, verifyAuditStability, applyStabilityGate } from "mercury-method-lab";
+import { fullAudit, verifyAuditStability, applyStabilityGate } from "@GlimpseGate/admission-lab";
 
 // 方式 A：在 fullAudit 中 opt-in
 const result = fullAudit(content, { source_content: content, check_stability: true });

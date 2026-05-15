@@ -921,7 +921,7 @@ function riskForLite({ routingDecision, blockers }) {
 
 async function checkLatestRelease(currentVersion, includePrerelease = false) {
   try {
-    const releases = await githubJson("/repos/peeptime/mercury-method-lab/releases?per_page=10");
+    const releases = await githubJson("/repos/peeptime/GlimpseGate-admission-lab/releases?per_page=10");
     const latest = releases.find((release) => includePrerelease || !release.prerelease);
     if (!latest) {
       return { ok: true, current_version: currentVersion, latest_version: currentVersion, update_available: false };
@@ -954,7 +954,7 @@ function githubJson(path) {
       method: "GET",
       headers: {
         "Accept": "application/vnd.github+json",
-        "User-Agent": "Mercury-Method-Lab-Dashboard"
+        "User-Agent": "GlimpseGate-Admission-Lab-Dashboard"
       },
       timeout: 5000
     }, (res) => {

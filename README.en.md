@@ -2,10 +2,10 @@
 
 **Send AI outputs through an evidence gate before deciding whether they deserve durable memory.**
 
-Formerly: `Mercury Method Lab`  
-Repository: `peeptime/mercury-method-lab`  
+Formerly: `Mercury Method Lab`
+Repository: `peeptime/GlimpseGate-admission-lab`
 Version: `2.1.5`
-Latest release: [v2.1.0 F5 Stability + Type-Aware Admission](https://github.com/peeptime/mercury-method-lab/releases/tag/v2.1.0)
+Latest release: [v2.1.0 F5 Stability + Type-Aware Admission](https://github.com/peeptime/GlimpseGate-admission-lab/releases/tag/v2.1.0)
 
 ```yaml
 provenance:
@@ -85,8 +85,8 @@ Main entry points:
 - `auditMemoryWrite()` gates durable memory writes.
 - `cases/2026-05/` stores reproducible local cases.
 - `08_skills/mercury-*` packages the core behavior for other agents.
-- `fullAudit()` runs F1–F5 checks (fidelity, iteration tracking, meta-audit, trace, stability) before routing decisions. Use `check_stability: true` to enable F5 stability gate.
-- `test:fidelity` runs the full F1–F5 integration test suite.
+- `fullAudit()` runs F1-F5 checks (fidelity, iteration tracking, meta-audit, trace, stability) before routing decisions. Use `check_stability: true` to enable F5 stability gate.
+- `test:fidelity` runs the full F1-F5 integration test suite.
 - `benchmark:v2` measures the local structured path; it is not an accuracy benchmark.
 
 ---
@@ -116,7 +116,7 @@ This release adds the **F5 Stability Engine** and formalizes type-aware admissio
 - **Type-aware routing**: each of the 9 admission object types has its own evidence requirements and usage constraints, documented in `docs/TYPE-MECE-ANALYSIS.md`.
 - **Procedural knowledge handling**: `reference`-type objects can carry `provenance_type: procedural_knowledge` with scoped usage rules.
 - **SDK API**: `verifyAuditStability` and `applyStabilityGate` are now exported from the main entry.
-- **Tests**: 21 new integration tests for F1–F5 × routing, all passing.
+- **Tests**: 21 new integration tests for F1-F5 × routing, all passing.
 
 ## 2.0.2 Roadmap (superseded)
 

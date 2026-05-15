@@ -50,7 +50,7 @@ The Mercury discipline remains the same: no durable memory without source, audit
 ## Minimal Example
 
 ```js
-import { audit } from "mercury-method-lab";
+import { audit } from "@GlimpseGate/admission-lab";
 
 const result = audit("The customer approved the migration plan.", {
   type: "customer_delivery",

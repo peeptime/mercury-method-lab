@@ -435,7 +435,7 @@ T+12h   【P0止血】state-machine.json 修正 + 模板元数据补充
 用户输入（原文）：
 ```
 如果以OPC VC天使投资人的角度来评判这个人的能力和潜力，
-https://github.com/peeptime/mercury-method-lab
+https://github.com/peeptime/GlimpseGate-admission-lab
 要经得起审计 补充信息，它是一个agent，使用的是OPUS 4.7。
 ```
 
@@ -483,7 +483,7 @@ provenance:
   ai_model: Opus 4.7
   prompt: |
     如果以OPC VC天使投资人的角度来评判这个人的能力和潜力，
-    https://github.com/peeptime/mercury-method-lab
+    https://github.com/peeptime/GlimpseGate-admission-lab
     要经得起审计 补充信息，它是一个agent，使用的是OPUS 4.7。
   humanReviewed: false  # ⚠️ IC Memo自身未经过human audit，这是它最大的红旗
   self_audit_flag: |

@@ -26,7 +26,7 @@ v2.1.0 是 v2.0.x 系列的功能性深化版本，不是 API 破坏性变更。
 
 **核心导出：**
 ```js
-import { verifyAuditStability, applyStabilityGate } from "mercury-method-lab";
+import { verifyAuditStability, applyStabilityGate } from "@GlimpseGate/admission-lab";
 ```
 
 **验证方式：**

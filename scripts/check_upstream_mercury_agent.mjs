@@ -10,7 +10,7 @@ async function fetchJson(url) {
   const response = await fetch(url, {
     headers: {
       "accept": "application/json",
-      "user-agent": "mercury-method-lab-upstream-check"
+      "user-agent": "GlimpseGate-admission-lab-upstream-check"
     }
   });
 

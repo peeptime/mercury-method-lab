@@ -47,7 +47,7 @@
 
 ```
 用户prompt："以OPC VC天使投资人的角度来评判这个人的能力和潜力，
-             https://github.com/peeptime/mercury-method-lab，
+             https://github.com/peeptime/GlimpseGate-admission-lab，
              要经得起审计，补充信息，它是一个agent，使用的是OPUS 4.7。"
 
 判断框架、评分维度、格式设计、数据来源、脚注引用：全为Opus 4.7自主推理

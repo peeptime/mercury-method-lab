@@ -24,7 +24,7 @@ Scenario packs let teams use the same Mercury kernel without pretending every do
 ## SDK Use
 
 ```js
-import { audit } from "mercury-method-lab";
+import { audit } from "@GlimpseGate/admission-lab";
 
 const result = audit("The agent fixed the production bug.", {
   scenario: "ai-coding",

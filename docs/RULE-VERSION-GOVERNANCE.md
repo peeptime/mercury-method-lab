@@ -50,7 +50,7 @@ Do not silently rewrite an old route. Store a new decision record with the new `
 ## SDK Surface
 
 ```js
-import { createRuleVersionRecord, needsReaudit } from "mercury-method-lab";
+import { createRuleVersionRecord, needsReaudit } from "@GlimpseGate/admission-lab";
 
 const record = createRuleVersionRecord({ packet_id: "case_012", route: "revise" });
 const review = needsReaudit(record);

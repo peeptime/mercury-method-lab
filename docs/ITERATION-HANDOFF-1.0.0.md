@@ -24,7 +24,7 @@
 
 ```
 工作目录：  Z:\AI 202604\trae01\v8-mercury-backend
-GitHub：    https://github.com/peeptime/mercury-method-lab
+GitHub：    https://github.com/peeptime/GlimpseGate-admission-lab
 Dashboard： http://127.0.0.1:4788
 Node：      >= 20
 包管理：     npm

@@ -98,7 +98,7 @@ git push origin main
 git push origin v{version}
 
 # 5. 确认 GitHub
-gh release create v{version} --repo peeptime/mercury-method-lab --title "v{version}"
+gh release create v{version} --repo peeptime/GlimpseGate-admission-lab --title "v{version}"
 ```
 
 ---

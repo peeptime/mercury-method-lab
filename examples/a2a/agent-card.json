@@ -2,7 +2,7 @@
   "name": "Mercury Method Lab",
   "description": "Evidence-first audit agent for AI memory candidates, agent outputs, and review artifacts.",
   "version": "2.0.0",
-  "url": "https://github.com/peeptime/mercury-method-lab",
+  "url": "https://github.com/peeptime/GlimpseGate-admission-lab",
   "capabilities": {
     "streaming": false,
     "pushNotifications": false,

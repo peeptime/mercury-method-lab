@@ -103,7 +103,7 @@ It should not require a user to understand Proof Packs, routing theory, or the w
 
 ## Current Installed Skill Support
 
-- `mercury-method-lab-iteration`: active local project workflow.
+- `GlimpseGate-admission-lab-iteration`: active local project workflow.
 - `agent-release-hardening`: active release/version hardening.
 - `karpathy-guidelines`: installed locally; restart Codex for automatic activation.
 

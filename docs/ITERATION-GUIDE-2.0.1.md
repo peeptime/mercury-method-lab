@@ -16,7 +16,7 @@ provenance:
 
 Public name: **Mercury Admission Lab**.
 
-Repository/package compatibility remains `peeptime/mercury-method-lab` / `mercury-method-lab`.
+Repository/package compatibility remains `peeptime/GlimpseGate-admission-lab` / `@GlimpseGate/admission-lab`.
 
 ## Why This Patch Exists
 

@@ -1,6 +1,6 @@
 ---
 name: mercury-lab
-description: "Mercury Method Lab 工作流入口。当用户提到 Mercury、Mercury Lab、V8、token中转分析、事件研判、结构判断，或涉及 Z:\\AI 202604\\trae01\\v8-mercury-backend 项目时触发。负责：任务路由、方法调用、artifact 状态管理、审计闭环、GitHub 同步。兼容 GitHub (https://github.com/peeptime/mercury-method-lab) 与本地工作目录。"
+description: "Mercury Method Lab 工作流入口。当用户提到 Mercury、Mercury Lab、V8、token中转分析、事件研判、结构判断，或涉及 Z:\\AI 202604\\trae01\\v8-mercury-backend 项目时触发。负责：任务路由、方法调用、artifact 状态管理、审计闭环、GitHub 同步。兼容 GitHub (https://github.com/peeptime/GlimpseGate-admission-lab) 与本地工作目录。"
 allowed_tools: [Read, Grep, Write, Bash]
 ---
 
@@ -40,7 +40,7 @@ Mercury Lab 是 AI 推理质量的约束器——不是聊天界面，是执行�
 | 名称 | 路径 |
 |------|------|
 | **本地 Mercury 后台** | `Z:\AI 202604\trae01\v8-mercury-backend\` |
-| **上游 GitHub** | `https://github.com/peeptime/mercury-method-lab` |
+| **上游 GitHub** | `https://github.com/peeptime/GlimpseGate-admission-lab` |
 | **Skill 目录** | `~/.qclaw-oversea/skills/mercury-lab/` |
 
 ---

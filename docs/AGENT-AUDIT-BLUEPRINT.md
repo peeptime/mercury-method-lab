@@ -103,7 +103,7 @@ before_write(memory_entry):
 Repository-local SDK equivalent:
 
 ```js
-import { auditMemoryWrite, shouldWriteMemory } from "mercury-method-lab";
+import { auditMemoryWrite, shouldWriteMemory } from "@GlimpseGate/admission-lab";
 
 const result = auditMemoryWrite(memoryCandidate);
 

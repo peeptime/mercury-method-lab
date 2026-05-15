@@ -1,6 +1,6 @@
 {
   "project_name": "Mercury Admission Lab",
-  "package_name": "mercury-method-lab",
+  "package_name": "@GlimpseGate/admission-lab",
   "version": "2.1.5",
   "codename": "Admission Contract",
   "status": "v2-admission-contract",
