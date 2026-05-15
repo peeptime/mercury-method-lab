@@ -5,7 +5,9 @@
 Formerly: `Mercury Method Lab`
 Repository: `peeptime/GlimpseGate-admission-lab`
 Version: `2.1.5`
-Latest release: [v2.1.0 F5 Stability + Type-Aware Admission](https://github.com/peeptime/GlimpseGate-admission-lab/releases/tag/v2.1.0)
+Latest release: [v2.1.6 Architecture Migration](https://github.com/peeptime/GlimpseGate-admission-lab/releases/tag/v2.1.6)
+
+**架构映射**：[HTML（人工阅读）](architecture.html) · [JSON（智能体使用）](architecture.json)
 
 ```yaml
 provenance:

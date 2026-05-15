@@ -1,0 +1,183 @@
+import fs from 'fs';
+const root = 'Z:/AI 202604/trae01/mercury-method-lab';
+
+// Core modules
+const coreFiles = [
+  ['index.mjs',11347,'主入口，导出 fullAudit、buildAdmissionContract 等核心 API'],
+  ['fidelity-stability.mjs',10125,'F5 稳定性引擎：检测 routing 不一致、自动降级路由'],
+  ['evidence-chain.mjs',9469,'证据链构建：提取核心 claim、构建 source-linked evidence chain'],
+  ['admission-contract.mjs',7185,'Admission Contract 管理：记录用户选择后的准入对象'],
+  ['iteration-track.mjs',6481,'轮次感知与消解追踪'],
+  ['trace.mjs',6980,'溯源标注：为报告结论添加原材料位置'],
+  ['intake-feedback.mjs',9856,'快速反馈机制：生成 A/B/C 选择'],
+  ['fidelity.mjs',6086,'F1 报告忠实度验证'],
+  ['kernel.mjs',4371,'审计内核：核心审计逻辑和路由决策'],
+  ['scenarios.mjs',3692,'场景处理：处理不同审计场景'],
+  ['anti-gaming.mjs',3546,'防作弊：检测 route-forcing、审计提示操纵'],
+  ['source-credibility.mjs',3063,'来源可信度评估'],
+  ['meta-audit.mjs',6012,'元级审计：识别已完成审计的材料'],
+  ['policy.mjs',1923,'策略定义'],
+  ['profiles.mjs',1900,'配置文件处理'],
+  ['standards.mjs',1669,'标准定义'],
+  ['lifecycle.mjs',2029,'生命周期管理'],
+  ['disagreement.mjs',1689,'分歧处理'],
+  ['rule-versioning.mjs',1634,'规则版本化管理'],
+  ['review-ux.mjs',1734,'审查 UX 定义'],
+  ['test_fidelity_modules.mjs',5098,'F1-F5 模块单元测试'],
+  ['test_fidelity_routing_integration.mjs',15246,'F1-F5 × routing 集成测试（21 个用例）'],
+];
+
+// Scripts
+const scripts = [
+  ['dashboard_server.mjs',59156,'本地仪表板服务器（http://127.0.0.1:4788）'],
+  ['goal-validator.mjs',30336,'目标验证器'],
+  ['run_v8_analysis.mjs',24217,'运行 V8 分析'],
+  ['cycle02_check.mjs',19181,'Cycle 02 全面检查'],
+  ['capture_ai_conversation.mjs',9507,'捕获 AI 对话'],
+  ['build_real_cases.mjs',8893,'构建真实案例'],
+  ['generate_audit_reports.mjs',11305,'生成审计报告'],
+  ['rebuild_index.mjs',12285,'重建项目索引'],
+  ['export_memory_bundle.mjs',7958,'导出记忆包'],
+  ['sync_commit_surfaces.mjs',7588,'同步提交表面'],
+  ['generate_latest_guide.mjs',7594,'生成最新指南'],
+  ['doctor.mjs',6692,'项目诊断工具'],
+  ['validate_artifacts.mjs',6885,'验证项目工件'],
+  ['check_upstream_mercury_agent.mjs',2136,'检查上游 mercury-agent'],
+  ['benchmark_v2_paths.mjs',3206,'基准测试 V2 路径'],
+  ['import_viewpoint.mjs',2940,'导入观点'],
+  ['ingest_document.mjs',2803,'摄取文档'],
+  ['cycle02_status.mjs',5959,'Cycle 02 状态检查'],
+  ['validate_incremental.mjs',3235,'增量验证'],
+  ['check_dashboard_product.mjs',3105,'检查仪表板产品'],
+  ['test_audit_packets.mjs',3716,'测试审计包'],
+  ['test_sdk_api.mjs',3957,'测试 SDK API'],
+  ['simulate_memory_flow.mjs',2093,'模拟记忆流程'],
+  ['test_governance.mjs',1546,'测试治理规则'],
+  ['test_evidence_chain.mjs',2292,'测试证据链'],
+  ['check_real_cases.mjs',1857,'检查真实案例'],
+  ['audit_packet_runner.mjs',1915,'运行审计包'],
+  ['check_capture_intake.mjs',1533,'检查捕获输入'],
+  ['profile_audit_packets.mjs',1374,'分析审计包性能'],
+  ['benchmark_audit_sdk.mjs',1758,'基准测试审计 SDK'],
+  ['run_mercury_skill_test.mjs',1535,'运行 Mercury 技能测试'],
+  ['model_config.mjs',2697,'模型配置'],
+  ['incremental_common.mjs',1580,'增量通用模块'],
+  ['sync_skills.mjs',1129,'同步技能到本机'],
+  ['check_mercury_skills.mjs',1414,'检查 Mercury 技能'],
+  ['install_git_hooks.mjs',525,'安装 Git hooks'],
+  ['start_mercury_provider.mjs',1717,'启动 Mercury LLM 提供者'],
+  ['rebuild_index_incremental.mjs',1000,'增量重建索引'],
+  ['test_ark_coding_plan.mjs',946,'测试 Ark 编码计划'],
+];
+
+// Config
+const configs = [
+  ['project-meta.json',846,'项目元信息（名称、版本、策略、上游关系）'],
+  ['mercury-capabilities.json',4483,'能力列表（对话、文件管理、Git、技能等）'],
+  ['methods.json',4446,'分析方法配置（V8.0-V8.5 人格、Agent 上下文策略）'],
+  ['model-providers.json',3939,'LLM 模型提供者配置'],
+  ['integrations.json',1252,'集成配置（gbrain、OpenClaw、GitHub 等）'],
+  ['memory-architecture.json',2127,'记忆架构配置'],
+  ['memory-targets.json',1666,'记忆目标配置'],
+  ['rule-routing.json',2204,'规则路由配置'],
+  ['upstream-mercury-agent.json',1943,'上游 mercury-agent 集成配置'],
+  ['architecture-entrypoints.json',2457,'架构入口点配置'],
+  ['permissions.json',1189,'权限配置'],
+  ['preferences.json',1132,'用户偏好配置'],
+  ['state-machine.json',681,'状态机配置'],
+];
+
+// Skills
+const skills = [
+  ['mercury-lab','Mercury Lab 工作流入口'],
+  ['mercury-evidence-chain','证据链构建 + A/B/C choices'],
+  ['mercury-memory-gate','四档路由（accept/revise/quarantine/discard）'],
+  ['mercury-case-capture','AI 输出 + 审计结果保存为 case folder'],
+  ['fact-cleaner','事实清洗'],
+  ['redteam-auditor','红队审计'],
+  ['constraint-checker','约束检查'],
+  ['equilibrium-explainer','均衡解释'],
+  ['action-translator','动作转换'],
+  ['cycle-02-curator','Cycle 02 管理'],
+];
+
+// Cases
+const cases = [
+  'agent-overgeneralization-001',
+  'agent-project-summary-001',
+  'ai-coding-test-passing-but-wrong',
+  'fde-customer-delivery-001',
+  'memory-pollution-001',
+  'multi-agent-source-laundering',
+  'openclaw-supported-memory-write',
+  'openclaw-unsupported-memory-write',
+  'time-sensitive-memory-expiry',
+  'valid-project-decision-001',
+];
+
+// NPM Scripts
+const npmScripts = [
+  ['npm run dashboard','启动本地仪表板（http://127.0.0.1:4788）'],
+  ['npm run doctor','运行项目诊断工具'],
+  ['npm run validate','验证项目工件完整性'],
+  ['npm run validate:incr','增量验证（更快速）'],
+  ['npm run test','运行所有测试'],
+  ['npm run test:fidelity','运行 F1-F5 忠实度与稳定性测试'],
+  ['npm run test:sdk','测试 SDK API'],
+  ['npm run test:evidence','测试证据链'],
+  ['npm run audit','运行审计包'],
+  ['npm run audit:profile','分析审计包性能'],
+  ['npm run report','生成审计报告'],
+  ['npm run audit:flow','模拟记忆流程'],
+  ['npm run cases:build','构建真实案例'],
+  ['npm run cases:check','检查真实案例'],
+  ['npm run benchmark:audit','基准测试审计 SDK'],
+  ['npm run benchmark:v2','基准测试 V2 路径'],
+  ['npm run sync:skills','同步技能到本机'],
+  ['npm run skills:check','检查 Mercury 技能'],
+  ['npm run index','重建项目索引'],
+  ['npm run guide:latest','生成最新指南'],
+  ['npm run cycle:status','Cycle 02 状态检查'],
+  ['npm run cycle:check','Cycle 02 全面检查'],
+  ['npm run capture','捕获 AI 对话'],
+  ['npm run capture:dropzone','捕获对话到 dropzone'],
+  ['npm run export:memory','导出记忆包'],
+  ['npm run export:gbrain','导出记忆包（gbrain 格式）'],
+  ['npm run demo:starter','运行入门演示'],
+  ['npm run demo:memory-hook','演示记忆写入 hook'],
+  ['npm run demo:openclaw','演示 OpenClaw hook'],
+  ['npm run demo:a2a','演示 Agent-to-Agent 消息'],
+  ['npm run check:upstream','检查上游 mercury-agent'],
+  ['npm run release:gate','发布门禁检查'],
+  ['npm run v8:analyze','运行 V8 分析'],
+  ['npm run goal:validate','验证目标'],
+];
+
+// Build JSON
+const arch = {
+  project_meta: {
+    name: 'Mercury Admission Lab',
+    package_name: '@GlimpseGate/admission-lab',
+    version: '2.1.6',
+    codename: 'Architecture Migration',
+    description: 'Choice-gated knowledge admission protocol for deciding how AI-generated claims may enter memory.',
+    github: { owner: 'peeptime', name: 'GlimpseGate-admission-lab', url: 'https://github.com/peeptime/GlimpseGate-admission-lab' },
+    display_name: 'GlimpseGate(peeptime)',
+    status: 'v2-admission-contract',
+  },
+  core_modules: { path: 'src/mercury-audit/', description: '核心审计引擎，F1-F5 忠实度与稳定性检测', modules: coreFiles.map(([name,size,desc])=>({name,size,description:desc})) },
+  tooling_scripts: { path: 'scripts/', description: '工具链脚本：测试、验证、构建、分析、导出等', scripts: scripts.map(([name,size,desc])=>({name,size,description:desc})) },
+  configuration: { path: 'config/', description: '配置系统', files: configs.map(([name,size,desc])=>({name,size,description:desc})) },
+  skill_system: { path: '08_skills/', description: '技能系统：专项能力模块', skills: skills.map(([name,desc])=>({name,description:desc})) },
+  cases_library: { path: 'cases/', cases },
+  npm_scripts: npmScripts.map(([cmd,desc])=>({command:cmd,description:desc})),
+  entry_points: {
+    sdk_import: 'import { fullAudit, buildAdmissionContract } from "@GlimpseGate/admission-lab";',
+    npm_install: 'npm install @GlimpseGate/admission-lab',
+    dashboard: 'http://127.0.0.1:4788/lite.html',
+    github: 'https://github.com/peeptime/GlimpseGate-admission-lab',
+  },
+};
+
+fs.writeFileSync(`${root}/architecture.json`, JSON.stringify(arch, null, 2), 'utf8');
+console.log('JSON written, size:', fs.statSync(`${root}/architecture.json`).size);

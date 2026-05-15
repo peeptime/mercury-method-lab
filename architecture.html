@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mercury Admission Lab — Architecture Map v2.1.6</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI','PingFang SC',sans-serif;background:#0d1117;color:#c9d1d9;min-height:100vh;line-height:1.6}
+a{color:#58a6ff;text-decoration:none}
+a:hover{text-decoration:underline}
+header{background:#161b22;border-bottom:1px solid #30363d;padding:24px 40px}
+header h1{color:#f0f6fc;font-size:1.5rem;margin-bottom:4px}
+header p{color:#8b949e;font-size:0.9rem}
+.badge{display:inline-block;background:#1f6feb;padding:2px 10px;border-radius:12px;font-size:0.8rem;margin-right:8px}
+.tag{display:inline-block;background:#21262d;border:1px solid #30363d;padding:1px 8px;border-radius:8px;font-size:0.75rem;margin:2px}
+nav{background:#161b22;border-bottom:1px solid #30363d;padding:12px 40px;position:sticky;top:0;z-index:10;overflow-x:auto;white-space:nowrap}
+nav a{margin-right:20px;color:#8b949e;font-size:0.9rem}
+nav a:hover,.nav-active{color:#58a6ff!important}
+main{max-width:1200px;margin:0 auto;padding:32px 40px}
+section{margin-bottom:48px}
+h2{color:#f0f6fc;border-bottom:1px solid #30363d;padding-bottom:8px;margin-bottom:20px;font-size:1.2rem}
+h3{color:#58a6ff;margin:16px 0 10px;font-size:1rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+.card{background:#161b22;border:1px solid #30363d;border-radius:8px;padding:16px}
+.card:hover{border-color:#58a6ff}
+.card h4{color:#f0f6fc;font-size:0.95rem;margin-bottom:6px}
+.card p{color:#8b949e;font-size:0.85rem}
+.card .size{color:#484f58;font-size:0.75rem;margin-top:4px}
+.files-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:12px}
+.file-item{background:#161b22;border:1px solid #30363d;border-radius:6px;padding:12px 14px}
+.file-item .name{color:#7ee787;font-size:0.88rem;margin-bottom:4px}
+.file-item .desc{color:#8b949e;font-size:0.82rem}
+.file-item .size{color:#484f58;font-size:0.75rem;margin-top:4px}
+.scripts-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:10px}
+.script-item{background:#161b22;border:1px solid #30363d;border-radius:6px;padding:10px 14px;display:flex;gap:12px;align-items:baseline}
+.script-item code{flex:0 0 auto;color:#79c0ff;font-size:0.85rem}
+.script-item span{flex:1;color:#8b949e;font-size:0.82rem}
+.toc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.toc-item{display:block;background:#161b22;border:1px solid #30363d;border-radius:6px;padding:14px 16px}
+.toc-item .title{color:#58a6ff;font-size:0.92rem;margin-bottom:4px}
+.toc-item .sub{color:#8b949e;font-size:0.8rem}
+.install-box{background:#161b22;border:1px solid #30363d;border-radius:8px;padding:20px 24px;font-size:0.9rem;line-height:2}
+.install-box code{background:#21262d;padding:2px 8px;border-radius:4px;color:#f0883e;font-size:0.88rem}
+.install-box .label{color:#f0f6fc;font-weight:bold;margin-bottom:8px}
+.footer{text-align:center;color:#484f58;font-size:0.8rem;padding:32px;border-top:1px solid #30363d;margin-top:48px}
+.highlight-box{background:#0d4429;border:1px solid #238636;border-radius:8px;padding:16px 20px;margin:16px 0}
+.highlight-box h3{color:#3fb950;margin-top:0}
+pre{background:#161b22;border:1px solid #30363d;border-radius:6px;padding:14px;font-size:0.85rem;overflow-x:auto;line-height:1.5;margin:12px 0}
+pre code{color:#c9d1d9}
+table{width:100%;border-collapse:collapse;background:#161b22;border-radius:8px;overflow:hidden}
+th{background:#1c2128;color:#8b949e;text-align:left;padding:10px 14px;font-weight:normal;font-size:0.85rem;border-bottom:1px solid #30363d}
+td{padding:10px 14px;border-bottom:1px solid #21262d;font-size:0.88rem}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#1c2128}
+.kbd{background:#21262d;border:1px solid #30363d;border-radius:4px;padding:1px 6px;font-size:0.8rem}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Mercury Admission Lab</h1>
+  <p>Choice-gated knowledge admission protocol for deciding how AI-generated claims may enter memory.</p>
+</header>
+
+<nav>
+  <a href="#overview">概览</a>
+  <a href="#install">安装</a>
+  <a href="#core">核心模块</a>
+  <a href="#scripts">工具链</a>
+  <a href="#config">配置</a>
+  <a href="#skills">技能</a>
+  <a href="#cases">案例</a>
+  <a href="#scripts-index">NPM 脚本</a>
+</nav>
+
+<main>
+
+<section id="overview">
+<h2>📋 项目概览</h2>
+<div class="grid">
+  <div class="card">
+    <h4>Package</h4>
+    <p><code>@GlimpseGate/admission-lab</code></p>
+    <p class="size">Version 2.1.6</p>
+  </div>
+  <div class="card">
+    <h4>GitHub</h4>
+    <p><a href="https://github.com/peeptime/GlimpseGate-admission-lab">peeptime/GlimpseGate-admission-lab</a></p>
+  </div>
+  <div class="card">
+    <h4>Dashboard</h4>
+    <p><a href="http://127.0.0.1:4788/lite.html">127.0.0.1:4788/lite.html</a></p>
+    <p class="size">启动：<kbd class="kbd">npm run dashboard</kbd></p>
+  </div>
+  <div class="card">
+    <h4>Node 要求</h4>
+    <p><code>&gt;= 20</code></p>
+  </div>
+  <div class="card">
+    <h4>状态</h4>
+    <p>v2-admission-contract</p>
+  </div>
+  <div class="card">
+    <h4>上游</h4>
+    <p><code>cosmicstack-labs/mercury-agent</code></p>
+    <p class="size">不是 fork，不是 vendor copy</p>
+  </div>
+</div>
+</section>
+
+<section id="install">
+<h2>🚀 快速安装</h2>
+<div class="install-box">
+  <div class="label">安装新包（已重命名）</div>
+  <pre><code>npm uninstall mercury-method-lab
+npm install @GlimpseGate/admission-lab</code></pre>
+</div>
+<div class="install-box">
+  <div class="label">SDK 导入</div>
+  <pre><code>import { fullAudit, buildAdmissionContract, auditMemoryWrite,
+     buildEvidenceChain, verifyAuditStability, applyStabilityGate }
+  from "@GlimpseGate/admission-lab";</code></pre>
+</div>
+<div class="install-box">
+  <div class="label">快速开始</div>
+  <pre><code>npm install
+npm run demo:starter
+npm run dashboard</code></pre>
+</div>
+</section>
+
+<section id="core">
+<h2>⚙️ 核心模块 <span style="font-weight:normal;color:#8b949e;font-size:0.9rem">src/mercury-audit/</span></h2>
+<p style="color:#8b949e;margin-bottom:16px;font-size:0.9rem">F1–F5 忠实度与稳定性检测引擎，API 版本 0.6.0</p>
+<div class="files-list">
+  <div class="file-item">
+    <div class="name">index.mjs</div>
+    <div class="desc">主入口，导出 fullAudit、buildAdmissionContract 等核心 API</div>
+    <div class="size">11.1 KB</div>
+  </div>
+<div class="file-item">
+    <div class="name">fidelity-stability.mjs</div>
+    <div class="desc">F5 稳定性引擎：检测 routing 不一致、自动降级路由</div>
+    <div class="size">9.9 KB</div>
+  </div>
+<div class="file-item">
+    <div class="name">evidence-chain.mjs</div>
+    <div class="desc">证据链构建：提取核心 claim、构建 source-linked evidence chain</div>
+    <div class="size">9.2 KB</div>
+  </div>
+<div class="file-item">
+    <div class="name">admission-contract.mjs</div>
+    <div class="desc">Admission Contract 管理：记录用户选择后的准入对象</div>
+    <div class="size">7.0 KB</div>
+  </div>
+<div class="file-item">
+    <div class="name">iteration-track.mjs</div>
+    <div class="desc">轮次感知与消解追踪</div>
+    <div class="size">6.3 KB</div>
+  </div>
+<div class="file-item">
+    <div class="name">trace.mjs</div>
+    <div class="desc">溯源标注：为报告结论添加原材料位置</div>
+    <div class="size">6.8 KB</div>
+  </div>
+<div class="file-item">
+    <div class="name">intake-feedback.mjs</div>
+    <div class="desc">快速反馈机制：生成 A/B/C 选择</div>
+    <div class="size">9.6 KB</div>
+  </div>
+<div class="file-item">
+    <div class="name">fidelity.mjs</div>
+    <div class="desc">F1 报告忠实度验证</div>
+    <div class="size">5.9 KB</div>
+  </div>
+<div class="file-item">
+    <div class="name">kernel.mjs</div>
+    <div class="desc">审计内核：核心审计逻辑和路由决策</div>
+    <div class="size">4.3 KB</div>
+  </div>
+<div class="file-item">
+    <div class="name">scenarios.mjs</div>
+    <div class="desc">场景处理：处理不同审计场景</div>
+    <div class="size">3.6 KB</div>
+  </div>
+<div class="file-item">
+    <div class="name">anti-gaming.mjs</div>
+    <div class="desc">防作弊：检测 route-forcing、审计提示操纵</div>
+    <div class="size">3.5 KB</div>
+  </div>
+<div class="file-item">
+    <div class="name">source-credibility.mjs</div>
+    <div class="desc">来源可信度评估</div>
+    <div class="size">3.0 KB</div>
+  </div>
+<div class="file-item">
+    <div class="name">meta-audit.mjs</div>
+    <div class="desc">元级审计：识别已完成审计的材料</div>
+    <div class="size">5.9 KB</div>
+  </div>
+<div class="file-item">
+    <div class="name">policy.mjs</div>
+    <div class="desc">策略定义</div>
+    <div class="size">1.9 KB</div>
+  </div>
+<div class="file-item">
+    <div class="name">profiles.mjs</div>
+    <div class="desc">配置文件处理</div>
+    <div class="size">1.9 KB</div>
+  </div>
+<div class="file-item">
+    <div class="name">standards.mjs</div>
+    <div class="desc">标准定义</div>
+    <div class="size">1.6 KB</div>
+  </div>
+<div class="file-item">
+    <div class="name">lifecycle.mjs</div>
+    <div class="desc">生命周期管理</div>
+    <div class="size">2.0 KB</div>
+  </div>
+<div class="file-item">
+    <div class="name">disagreement.mjs</div>
+    <div class="desc">分歧处理</div>
+    <div class="size">1.6 KB</div>
+  </div>
+<div class="file-item">
+    <div class="name">rule-versioning.mjs</div>
+    <div class="desc">规则版本化管理</div>
+    <div class="size">1.6 KB</div>
+  </div>
+<div class="file-item">
+    <div class="name">review-ux.mjs</div>
+    <div class="desc">审查 UX 定义</div>
+    <div class="size">1.7 KB</div>
+  </div>
+<div class="file-item">
+    <div class="name">test_fidelity_modules.mjs</div>
+    <div class="desc">F1-F5 模块单元测试</div>
+    <div class="size">5.0 KB</div>
+  </div>
+<div class="file-item">
+    <div class="name">test_fidelity_routing_integration.mjs</div>
+    <div class="desc">F1-F5 × routing 集成测试（21 个用例）</div>
+    <div class="size">14.9 KB</div>
+  </div>
+</div>
+</section>
+
+<section id="scripts">
+<h2>🔧 工具链脚本 <span style="font-weight:normal;color:#8b949e;font-size:0.9rem">scripts/</span></h2>
+<div class="scripts-list">
+  <div class="script-item">
+    <code>dashboard_server.mjs</code>
+    <span>本地仪表板服务器（http://127.0.0.1:4788）</span>
+  </div>
+<div class="script-item">
+    <code>goal-validator.mjs</code>
+    <span>目标验证器</span>
+  </div>
+<div class="script-item">
+    <code>run_v8_analysis.mjs</code>
+    <span>运行 V8 分析</span>
+  </div>
+<div class="script-item">
+    <code>cycle02_check.mjs</code>
+    <span>Cycle 02 全面检查</span>
+  </div>
+<div class="script-item">
+    <code>capture_ai_conversation.mjs</code>
+    <span>捕获 AI 对话</span>
+  </div>
+<div class="script-item">
+    <code>build_real_cases.mjs</code>
+    <span>构建真实案例</span>
+  </div>
+<div class="script-item">
+    <code>generate_audit_reports.mjs</code>
+    <span>生成审计报告</span>
+  </div>
+<div class="script-item">
+    <code>rebuild_index.mjs</code>
+    <span>重建项目索引</span>
+  </div>
+<div class="script-item">
+    <code>export_memory_bundle.mjs</code>
+    <span>导出记忆包</span>
+  </div>
+<div class="script-item">
+    <code>sync_commit_surfaces.mjs</code>
+    <span>同步提交表面</span>
+  </div>
+<div class="script-item">
+    <code>generate_latest_guide.mjs</code>
+    <span>生成最新指南</span>
+  </div>
+<div class="script-item">
+    <code>doctor.mjs</code>
+    <span>项目诊断工具</span>
+  </div>
+<div class="script-item">
+    <code>validate_artifacts.mjs</code>
+    <span>验证项目工件</span>
+  </div>
+<div class="script-item">
+    <code>check_upstream_mercury_agent.mjs</code>
+    <span>检查上游 mercury-agent</span>
+  </div>
+<div class="script-item">
+    <code>benchmark_v2_paths.mjs</code>
+    <span>基准测试 V2 路径</span>
+  </div>
+<div class="script-item">
+    <code>import_viewpoint.mjs</code>
+    <span>导入观点</span>
+  </div>
+<div class="script-item">
+    <code>ingest_document.mjs</code>
+    <span>摄取文档</span>
+  </div>
+<div class="script-item">
+    <code>cycle02_status.mjs</code>
+    <span>Cycle 02 状态检查</span>
+  </div>
+<div class="script-item">
+    <code>validate_incremental.mjs</code>
+    <span>增量验证</span>
+  </div>
+<div class="script-item">
+    <code>check_dashboard_product.mjs</code>
+    <span>检查仪表板产品</span>
+  </div>
+<div class="script-item">
+    <code>test_audit_packets.mjs</code>
+    <span>测试审计包</span>
+  </div>
+<div class="script-item">
+    <code>test_sdk_api.mjs</code>
+    <span>测试 SDK API</span>
+  </div>
+<div class="script-item">
+    <code>simulate_memory_flow.mjs</code>
+    <span>模拟记忆流程</span>
+  </div>
+<div class="script-item">
+    <code>test_governance.mjs</code>
+    <span>测试治理规则</span>
+  </div>
+<div class="script-item">
+    <code>test_evidence_chain.mjs</code>
+    <span>测试证据链</span>
+  </div>
+<div class="script-item">
+    <code>check_real_cases.mjs</code>
+    <span>检查真实案例</span>
+  </div>
+<div class="script-item">
+    <code>audit_packet_runner.mjs</code>
+    <span>运行审计包</span>
+  </div>
+<div class="script-item">
+    <code>check_capture_intake.mjs</code>
+    <span>检查捕获输入</span>
+  </div>
+<div class="script-item">
+    <code>profile_audit_packets.mjs</code>
+    <span>分析审计包性能</span>
+  </div>
+<div class="script-item">
+    <code>benchmark_audit_sdk.mjs</code>
+    <span>基准测试审计 SDK</span>
+  </div>
+<div class="script-item">
+    <code>run_mercury_skill_test.mjs</code>
+    <span>运行 Mercury 技能测试</span>
+  </div>
+<div class="script-item">
+    <code>model_config.mjs</code>
+    <span>模型配置</span>
+  </div>
+<div class="script-item">
+    <code>incremental_common.mjs</code>
+    <span>增量通用模块</span>
+  </div>
+<div class="script-item">
+    <code>sync_skills.mjs</code>
+    <span>同步技能到本机</span>
+  </div>
+<div class="script-item">
+    <code>check_mercury_skills.mjs</code>
+    <span>检查 Mercury 技能</span>
+  </div>
+<div class="script-item">
+    <code>install_git_hooks.mjs</code>
+    <span>安装 Git hooks</span>
+  </div>
+<div class="script-item">
+    <code>start_mercury_provider.mjs</code>
+    <span>启动 Mercury LLM 提供者</span>
+  </div>
+<div class="script-item">
+    <code>rebuild_index_incremental.mjs</code>
+    <span>增量重建索引</span>
+  </div>
+<div class="script-item">
+    <code>test_ark_coding_plan.mjs</code>
+    <span>测试 Ark 编码计划</span>
+  </div>
+</div>
+</section>
+
+<section id="config">
+<h2>⚡ 配置系统 <span style="font-weight:normal;color:#8b949e;font-size:0.9rem">config/</span></h2>
+<div class="files-list">
+  <div class="file-item">
+    <div class="name">project-meta.json</div>
+    <div class="desc">项目元信息（名称、版本、策略、上游关系）</div>
+    <div class="size">846 B</div>
+  </div>
+<div class="file-item">
+    <div class="name">mercury-capabilities.json</div>
+    <div class="desc">能力列表（对话、文件管理、Git、技能等）</div>
+    <div class="size">4483 B</div>
+  </div>
+<div class="file-item">
+    <div class="name">methods.json</div>
+    <div class="desc">分析方法配置（V8.0-V8.5 人格、Agent 上下文策略）</div>
+    <div class="size">4446 B</div>
+  </div>
+<div class="file-item">
+    <div class="name">model-providers.json</div>
+    <div class="desc">LLM 模型提供者配置</div>
+    <div class="size">3939 B</div>
+  </div>
+<div class="file-item">
+    <div class="name">integrations.json</div>
+    <div class="desc">集成配置（gbrain、OpenClaw、GitHub 等）</div>
+    <div class="size">1252 B</div>
+  </div>
+<div class="file-item">
+    <div class="name">memory-architecture.json</div>
+    <div class="desc">记忆架构配置</div>
+    <div class="size">2127 B</div>
+  </div>
+<div class="file-item">
+    <div class="name">memory-targets.json</div>
+    <div class="desc">记忆目标配置</div>
+    <div class="size">1666 B</div>
+  </div>
+<div class="file-item">
+    <div class="name">rule-routing.json</div>
+    <div class="desc">规则路由配置</div>
+    <div class="size">2204 B</div>
+  </div>
+<div class="file-item">
+    <div class="name">upstream-mercury-agent.json</div>
+    <div class="desc">上游 mercury-agent 集成配置</div>
+    <div class="size">1943 B</div>
+  </div>
+<div class="file-item">
+    <div class="name">architecture-entrypoints.json</div>
+    <div class="desc">架构入口点配置</div>
+    <div class="size">2457 B</div>
+  </div>
+<div class="file-item">
+    <div class="name">permissions.json</div>
+    <div class="desc">权限配置</div>
+    <div class="size">1189 B</div>
+  </div>
+<div class="file-item">
+    <div class="name">preferences.json</div>
+    <div class="desc">用户偏好配置</div>
+    <div class="size">1132 B</div>
+  </div>
+<div class="file-item">
+    <div class="name">state-machine.json</div>
+    <div class="desc">状态机配置</div>
+    <div class="size">681 B</div>
+  </div>
+</div>
+</section>
+
+<section id="skills">
+<h2>🎯 技能系统 <span style="font-weight:normal;color:#8b949e;font-size:0.9rem">08_skills/</span></h2>
+<div class="grid">
+  <div class="card">
+    <h4>mercury-lab</h4>
+    <p>Mercury Lab 工作流入口</p>
+  </div>
+<div class="card">
+    <h4>mercury-evidence-chain</h4>
+    <p>证据链构建 + A/B/C choices</p>
+  </div>
+<div class="card">
+    <h4>mercury-memory-gate</h4>
+    <p>四档路由（accept/revise/quarantine/discard）</p>
+  </div>
+<div class="card">
+    <h4>mercury-case-capture</h4>
+    <p>AI 输出 + 审计结果保存为 case folder</p>
+  </div>
+<div class="card">
+    <h4>fact-cleaner</h4>
+    <p>事实清洗</p>
+  </div>
+<div class="card">
+    <h4>redteam-auditor</h4>
+    <p>红队审计</p>
+  </div>
+<div class="card">
+    <h4>constraint-checker</h4>
+    <p>约束检查</p>
+  </div>
+<div class="card">
+    <h4>equilibrium-explainer</h4>
+    <p>均衡解释</p>
+  </div>
+<div class="card">
+    <h4>action-translator</h4>
+    <p>动作转换</p>
+  </div>
+<div class="card">
+    <h4>cycle-02-curator</h4>
+    <p>Cycle 02 管理</p>
+  </div>
+</div>
+</section>
+
+<section id="cases">
+<h2>📁 案例库 <span style="font-weight:normal;color:#8b949e;font-size:0.9rem">cases/</span></h2>
+<p style="color:#8b949e;margin-bottom:12px;font-size:0.9rem">验证 Mercury 方法的真实场景，2026-05 共 10 个案例</p>
+<div class="grid">
+  <div class="card"><h4>agent-overgeneralization-001</h4></div>
+<div class="card"><h4>agent-project-summary-001</h4></div>
+<div class="card"><h4>ai-coding-test-passing-but-wrong</h4></div>
+<div class="card"><h4>fde-customer-delivery-001</h4></div>
+<div class="card"><h4>memory-pollution-001</h4></div>
+<div class="card"><h4>multi-agent-source-laundering</h4></div>
+<div class="card"><h4>openclaw-supported-memory-write</h4></div>
+<div class="card"><h4>openclaw-unsupported-memory-write</h4></div>
+<div class="card"><h4>time-sensitive-memory-expiry</h4></div>
+<div class="card"><h4>valid-project-decision-001</h4></div>
+</div>
+</section>
+
+<section id="scripts-index">
+<h2>📜 NPM 脚本索引</h2>
+<table>
+  <thead><tr><th>命令</th><th>说明</th></tr></thead>
+  <tbody>
+    <tr><td><code>npm run dashboard</code></td><td>启动本地仪表板（http://127.0.0.1:4788）</td></tr>
+<tr><td><code>npm run doctor</code></td><td>运行项目诊断工具</td></tr>
+<tr><td><code>npm run validate</code></td><td>验证项目工件完整性</td></tr>
+<tr><td><code>npm run validate:incr</code></td><td>增量验证（更快速）</td></tr>
+<tr><td><code>npm run test</code></td><td>运行所有测试</td></tr>
+<tr><td><code>npm run test:fidelity</code></td><td>运行 F1-F5 忠实度与稳定性测试</td></tr>
+<tr><td><code>npm run test:sdk</code></td><td>测试 SDK API</td></tr>
+<tr><td><code>npm run test:evidence</code></td><td>测试证据链</td></tr>
+<tr><td><code>npm run audit</code></td><td>运行审计包</td></tr>
+<tr><td><code>npm run audit:profile</code></td><td>分析审计包性能</td></tr>
+<tr><td><code>npm run report</code></td><td>生成审计报告</td></tr>
+<tr><td><code>npm run audit:flow</code></td><td>模拟记忆流程</td></tr>
+<tr><td><code>npm run cases:build</code></td><td>构建真实案例</td></tr>
+<tr><td><code>npm run cases:check</code></td><td>检查真实案例</td></tr>
+<tr><td><code>npm run benchmark:audit</code></td><td>基准测试审计 SDK</td></tr>
+<tr><td><code>npm run benchmark:v2</code></td><td>基准测试 V2 路径</td></tr>
+<tr><td><code>npm run sync:skills</code></td><td>同步技能到本机</td></tr>
+<tr><td><code>npm run skills:check</code></td><td>检查 Mercury 技能</td></tr>
+<tr><td><code>npm run index</code></td><td>重建项目索引</td></tr>
+<tr><td><code>npm run guide:latest</code></td><td>生成最新指南</td></tr>
+<tr><td><code>npm run cycle:status</code></td><td>Cycle 02 状态检查</td></tr>
+<tr><td><code>npm run cycle:check</code></td><td>Cycle 02 全面检查</td></tr>
+<tr><td><code>npm run capture</code></td><td>捕获 AI 对话</td></tr>
+<tr><td><code>npm run capture:dropzone</code></td><td>捕获对话到 dropzone</td></tr>
+<tr><td><code>npm run export:memory</code></td><td>导出记忆包</td></tr>
+<tr><td><code>npm run export:gbrain</code></td><td>导出记忆包（gbrain 格式）</td></tr>
+<tr><td><code>npm run demo:starter</code></td><td>运行入门演示</td></tr>
+<tr><td><code>npm run demo:memory-hook</code></td><td>演示记忆写入 hook</td></tr>
+<tr><td><code>npm run demo:openclaw</code></td><td>演示 OpenClaw hook</td></tr>
+<tr><td><code>npm run demo:a2a</code></td><td>演示 Agent-to-Agent 消息</td></tr>
+<tr><td><code>npm run check:upstream</code></td><td>检查上游 mercury-agent</td></tr>
+<tr><td><code>npm run release:gate</code></td><td>发布门禁检查</td></tr>
+<tr><td><code>npm run v8:analyze</code></td><td>运行 V8 分析</td></tr>
+<tr><td><code>npm run goal:validate</code></td><td>验证目标</td></tr>
+  </tbody>
+</table>
+</section>
+
+<section>
+<h2>📚 核心文档</h2>
+<table>
+  <thead><tr><th>文档</th><th>说明</th></tr></thead>
+  <tbody>
+    <tr><td><a href="docs/START-HERE.md">START-HERE.md</a></td><td>角色入口文档</td></tr>
+    <tr><td><a href="docs/SCOPE.md">SCOPE.md</a></td><td>项目边界定义</td></tr>
+    <tr><td><a href="docs/SDK-API.md">SDK-API.md</a></td><td>SDK API 文档</td></tr>
+    <tr><td><a href="docs/AUDIT-KERNEL.md">AUDIT-KERNEL.md</a></td><td>审计内核文档</td></tr>
+    <tr><td><a href="docs/FAILURE-MODES.md">FAILURE-MODES.md</a></td><td>失败模式文档</td></tr>
+    <tr><td><a href="docs/ROUTING-THEORY.md">ROUTING-THEORY.md</a></td><td>路由理论文档</td></tr>
+    <tr><td><a href="docs/V2-AUDIT-FIDELITY-CAPABILITIES.md">V2-AUDIT-FIDELITY-CAPABILITIES.md</a></td><td>F1–F5 能力定义</td></tr>
+    <tr><td><a href="docs/TYPE-MECE-ANALYSIS.md">TYPE-MECE-ANALYSIS.md</a></td><td>9 种准入对象类型 MECE 分析</td></tr>
+    <tr><td><a href="docs/ITERATION-GUIDE-LATEST.md">ITERATION-GUIDE-LATEST.md</a></td><td>当前版本迭代指南</td></tr>
+    <tr><td><a href="docs/ITERATION-GUIDE-2.1.0.md">ITERATION-GUIDE-2.1.0.md</a></td><td>v2.1.0 交接文档</td></tr>
+    <tr><td><a href="docs/GOVERNANCE.md">GOVERNANCE.md</a></td><td>项目治理原则</td></tr>
+    <tr><td><a href="docs/METHODOLOGY-INTEGRITY.md">METHODOLOGY-INTEGRITY.md</a></td><td>provenance 完整性规则</td></tr>
+    <tr><td><a href="docs/AGENT-AUDIT-BLUEPRINT.md">AGENT-AUDIT-BLUEPRINT.md</a></td><td>Agent 审计蓝图</td></tr>
+  </tbody>
+</table>
+</section>
+
+<section>
+<h2>🗂️ 项目目录结构</h2>
+<pre><code>src/mercury-audit/    核心审计引擎（F1-F5）
+scripts/              工具链（40+ 脚本）
+config/               配置系统（13 个文件）
+08_skills/            技能模块（10 个技能）
+cases/                真实案例库
+examples/             集成演示和示例
+docs/                 方法论文档
+schemas/               数据 schema
+submissions/          提交队列
+00_raw/               原始材料
+01_segmented/         切分材料
+02_cleaned/           清洗材料
+07_audit_reports/     审计报告
+dist/                 生成产物（不作为事实源）</code></pre>
+</section>
+
+</main>
+
+<div class="footer">
+  Mercury Admission Lab v2.1.6 · <a href="https://github.com/peeptime/GlimpseGate-admission-lab">https://github.com/peeptime/GlimpseGate-admission-lab</a> ·
+  架构文档由 AI 辅助生成 · provenance: <code>ai_assisted: true</code>
+</div>
+
+</body>
+</html>

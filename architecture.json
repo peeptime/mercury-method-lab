@@ -1,0 +1,609 @@
+{
+  "project_meta": {
+    "name": "Mercury Admission Lab",
+    "package_name": "@GlimpseGate/admission-lab",
+    "version": "2.1.6",
+    "codename": "Architecture Migration",
+    "description": "Choice-gated knowledge admission protocol for deciding how AI-generated claims may enter memory.",
+    "github": {
+      "owner": "peeptime",
+      "name": "GlimpseGate-admission-lab",
+      "url": "https://github.com/peeptime/GlimpseGate-admission-lab"
+    },
+    "display_name": "GlimpseGate(peeptime)",
+    "status": "v2-admission-contract"
+  },
+  "core_modules": {
+    "path": "src/mercury-audit/",
+    "description": "核心审计引擎，F1-F5 忠实度与稳定性检测",
+    "modules": [
+      {
+        "name": "index.mjs",
+        "size": 11347,
+        "description": "主入口，导出 fullAudit、buildAdmissionContract 等核心 API"
+      },
+      {
+        "name": "fidelity-stability.mjs",
+        "size": 10125,
+        "description": "F5 稳定性引擎：检测 routing 不一致、自动降级路由"
+      },
+      {
+        "name": "evidence-chain.mjs",
+        "size": 9469,
+        "description": "证据链构建：提取核心 claim、构建 source-linked evidence chain"
+      },
+      {
+        "name": "admission-contract.mjs",
+        "size": 7185,
+        "description": "Admission Contract 管理：记录用户选择后的准入对象"
+      },
+      {
+        "name": "iteration-track.mjs",
+        "size": 6481,
+        "description": "轮次感知与消解追踪"
+      },
+      {
+        "name": "trace.mjs",
+        "size": 6980,
+        "description": "溯源标注：为报告结论添加原材料位置"
+      },
+      {
+        "name": "intake-feedback.mjs",
+        "size": 9856,
+        "description": "快速反馈机制：生成 A/B/C 选择"
+      },
+      {
+        "name": "fidelity.mjs",
+        "size": 6086,
+        "description": "F1 报告忠实度验证"
+      },
+      {
+        "name": "kernel.mjs",
+        "size": 4371,
+        "description": "审计内核：核心审计逻辑和路由决策"
+      },
+      {
+        "name": "scenarios.mjs",
+        "size": 3692,
+        "description": "场景处理：处理不同审计场景"
+      },
+      {
+        "name": "anti-gaming.mjs",
+        "size": 3546,
+        "description": "防作弊：检测 route-forcing、审计提示操纵"
+      },
+      {
+        "name": "source-credibility.mjs",
+        "size": 3063,
+        "description": "来源可信度评估"
+      },
+      {
+        "name": "meta-audit.mjs",
+        "size": 6012,
+        "description": "元级审计：识别已完成审计的材料"
+      },
+      {
+        "name": "policy.mjs",
+        "size": 1923,
+        "description": "策略定义"
+      },
+      {
+        "name": "profiles.mjs",
+        "size": 1900,
+        "description": "配置文件处理"
+      },
+      {
+        "name": "standards.mjs",
+        "size": 1669,
+        "description": "标准定义"
+      },
+      {
+        "name": "lifecycle.mjs",
+        "size": 2029,
+        "description": "生命周期管理"
+      },
+      {
+        "name": "disagreement.mjs",
+        "size": 1689,
+        "description": "分歧处理"
+      },
+      {
+        "name": "rule-versioning.mjs",
+        "size": 1634,
+        "description": "规则版本化管理"
+      },
+      {
+        "name": "review-ux.mjs",
+        "size": 1734,
+        "description": "审查 UX 定义"
+      },
+      {
+        "name": "test_fidelity_modules.mjs",
+        "size": 5098,
+        "description": "F1-F5 模块单元测试"
+      },
+      {
+        "name": "test_fidelity_routing_integration.mjs",
+        "size": 15246,
+        "description": "F1-F5 × routing 集成测试（21 个用例）"
+      }
+    ]
+  },
+  "tooling_scripts": {
+    "path": "scripts/",
+    "description": "工具链脚本：测试、验证、构建、分析、导出等",
+    "scripts": [
+      {
+        "name": "dashboard_server.mjs",
+        "size": 59156,
+        "description": "本地仪表板服务器（http://127.0.0.1:4788）"
+      },
+      {
+        "name": "goal-validator.mjs",
+        "size": 30336,
+        "description": "目标验证器"
+      },
+      {
+        "name": "run_v8_analysis.mjs",
+        "size": 24217,
+        "description": "运行 V8 分析"
+      },
+      {
+        "name": "cycle02_check.mjs",
+        "size": 19181,
+        "description": "Cycle 02 全面检查"
+      },
+      {
+        "name": "capture_ai_conversation.mjs",
+        "size": 9507,
+        "description": "捕获 AI 对话"
+      },
+      {
+        "name": "build_real_cases.mjs",
+        "size": 8893,
+        "description": "构建真实案例"
+      },
+      {
+        "name": "generate_audit_reports.mjs",
+        "size": 11305,
+        "description": "生成审计报告"
+      },
+      {
+        "name": "rebuild_index.mjs",
+        "size": 12285,
+        "description": "重建项目索引"
+      },
+      {
+        "name": "export_memory_bundle.mjs",
+        "size": 7958,
+        "description": "导出记忆包"
+      },
+      {
+        "name": "sync_commit_surfaces.mjs",
+        "size": 7588,
+        "description": "同步提交表面"
+      },
+      {
+        "name": "generate_latest_guide.mjs",
+        "size": 7594,
+        "description": "生成最新指南"
+      },
+      {
+        "name": "doctor.mjs",
+        "size": 6692,
+        "description": "项目诊断工具"
+      },
+      {
+        "name": "validate_artifacts.mjs",
+        "size": 6885,
+        "description": "验证项目工件"
+      },
+      {
+        "name": "check_upstream_mercury_agent.mjs",
+        "size": 2136,
+        "description": "检查上游 mercury-agent"
+      },
+      {
+        "name": "benchmark_v2_paths.mjs",
+        "size": 3206,
+        "description": "基准测试 V2 路径"
+      },
+      {
+        "name": "import_viewpoint.mjs",
+        "size": 2940,
+        "description": "导入观点"
+      },
+      {
+        "name": "ingest_document.mjs",
+        "size": 2803,
+        "description": "摄取文档"
+      },
+      {
+        "name": "cycle02_status.mjs",
+        "size": 5959,
+        "description": "Cycle 02 状态检查"
+      },
+      {
+        "name": "validate_incremental.mjs",
+        "size": 3235,
+        "description": "增量验证"
+      },
+      {
+        "name": "check_dashboard_product.mjs",
+        "size": 3105,
+        "description": "检查仪表板产品"
+      },
+      {
+        "name": "test_audit_packets.mjs",
+        "size": 3716,
+        "description": "测试审计包"
+      },
+      {
+        "name": "test_sdk_api.mjs",
+        "size": 3957,
+        "description": "测试 SDK API"
+      },
+      {
+        "name": "simulate_memory_flow.mjs",
+        "size": 2093,
+        "description": "模拟记忆流程"
+      },
+      {
+        "name": "test_governance.mjs",
+        "size": 1546,
+        "description": "测试治理规则"
+      },
+      {
+        "name": "test_evidence_chain.mjs",
+        "size": 2292,
+        "description": "测试证据链"
+      },
+      {
+        "name": "check_real_cases.mjs",
+        "size": 1857,
+        "description": "检查真实案例"
+      },
+      {
+        "name": "audit_packet_runner.mjs",
+        "size": 1915,
+        "description": "运行审计包"
+      },
+      {
+        "name": "check_capture_intake.mjs",
+        "size": 1533,
+        "description": "检查捕获输入"
+      },
+      {
+        "name": "profile_audit_packets.mjs",
+        "size": 1374,
+        "description": "分析审计包性能"
+      },
+      {
+        "name": "benchmark_audit_sdk.mjs",
+        "size": 1758,
+        "description": "基准测试审计 SDK"
+      },
+      {
+        "name": "run_mercury_skill_test.mjs",
+        "size": 1535,
+        "description": "运行 Mercury 技能测试"
+      },
+      {
+        "name": "model_config.mjs",
+        "size": 2697,
+        "description": "模型配置"
+      },
+      {
+        "name": "incremental_common.mjs",
+        "size": 1580,
+        "description": "增量通用模块"
+      },
+      {
+        "name": "sync_skills.mjs",
+        "size": 1129,
+        "description": "同步技能到本机"
+      },
+      {
+        "name": "check_mercury_skills.mjs",
+        "size": 1414,
+        "description": "检查 Mercury 技能"
+      },
+      {
+        "name": "install_git_hooks.mjs",
+        "size": 525,
+        "description": "安装 Git hooks"
+      },
+      {
+        "name": "start_mercury_provider.mjs",
+        "size": 1717,
+        "description": "启动 Mercury LLM 提供者"
+      },
+      {
+        "name": "rebuild_index_incremental.mjs",
+        "size": 1000,
+        "description": "增量重建索引"
+      },
+      {
+        "name": "test_ark_coding_plan.mjs",
+        "size": 946,
+        "description": "测试 Ark 编码计划"
+      }
+    ]
+  },
+  "configuration": {
+    "path": "config/",
+    "description": "配置系统",
+    "files": [
+      {
+        "name": "project-meta.json",
+        "size": 846,
+        "description": "项目元信息（名称、版本、策略、上游关系）"
+      },
+      {
+        "name": "mercury-capabilities.json",
+        "size": 4483,
+        "description": "能力列表（对话、文件管理、Git、技能等）"
+      },
+      {
+        "name": "methods.json",
+        "size": 4446,
+        "description": "分析方法配置（V8.0-V8.5 人格、Agent 上下文策略）"
+      },
+      {
+        "name": "model-providers.json",
+        "size": 3939,
+        "description": "LLM 模型提供者配置"
+      },
+      {
+        "name": "integrations.json",
+        "size": 1252,
+        "description": "集成配置（gbrain、OpenClaw、GitHub 等）"
+      },
+      {
+        "name": "memory-architecture.json",
+        "size": 2127,
+        "description": "记忆架构配置"
+      },
+      {
+        "name": "memory-targets.json",
+        "size": 1666,
+        "description": "记忆目标配置"
+      },
+      {
+        "name": "rule-routing.json",
+        "size": 2204,
+        "description": "规则路由配置"
+      },
+      {
+        "name": "upstream-mercury-agent.json",
+        "size": 1943,
+        "description": "上游 mercury-agent 集成配置"
+      },
+      {
+        "name": "architecture-entrypoints.json",
+        "size": 2457,
+        "description": "架构入口点配置"
+      },
+      {
+        "name": "permissions.json",
+        "size": 1189,
+        "description": "权限配置"
+      },
+      {
+        "name": "preferences.json",
+        "size": 1132,
+        "description": "用户偏好配置"
+      },
+      {
+        "name": "state-machine.json",
+        "size": 681,
+        "description": "状态机配置"
+      }
+    ]
+  },
+  "skill_system": {
+    "path": "08_skills/",
+    "description": "技能系统：专项能力模块",
+    "skills": [
+      {
+        "name": "mercury-lab",
+        "description": "Mercury Lab 工作流入口"
+      },
+      {
+        "name": "mercury-evidence-chain",
+        "description": "证据链构建 + A/B/C choices"
+      },
+      {
+        "name": "mercury-memory-gate",
+        "description": "四档路由（accept/revise/quarantine/discard）"
+      },
+      {
+        "name": "mercury-case-capture",
+        "description": "AI 输出 + 审计结果保存为 case folder"
+      },
+      {
+        "name": "fact-cleaner",
+        "description": "事实清洗"
+      },
+      {
+        "name": "redteam-auditor",
+        "description": "红队审计"
+      },
+      {
+        "name": "constraint-checker",
+        "description": "约束检查"
+      },
+      {
+        "name": "equilibrium-explainer",
+        "description": "均衡解释"
+      },
+      {
+        "name": "action-translator",
+        "description": "动作转换"
+      },
+      {
+        "name": "cycle-02-curator",
+        "description": "Cycle 02 管理"
+      }
+    ]
+  },
+  "cases_library": {
+    "path": "cases/",
+    "cases": [
+      "agent-overgeneralization-001",
+      "agent-project-summary-001",
+      "ai-coding-test-passing-but-wrong",
+      "fde-customer-delivery-001",
+      "memory-pollution-001",
+      "multi-agent-source-laundering",
+      "openclaw-supported-memory-write",
+      "openclaw-unsupported-memory-write",
+      "time-sensitive-memory-expiry",
+      "valid-project-decision-001"
+    ]
+  },
+  "npm_scripts": [
+    {
+      "command": "npm run dashboard",
+      "description": "启动本地仪表板（http://127.0.0.1:4788）"
+    },
+    {
+      "command": "npm run doctor",
+      "description": "运行项目诊断工具"
+    },
+    {
+      "command": "npm run validate",
+      "description": "验证项目工件完整性"
+    },
+    {
+      "command": "npm run validate:incr",
+      "description": "增量验证（更快速）"
+    },
+    {
+      "command": "npm run test",
+      "description": "运行所有测试"
+    },
+    {
+      "command": "npm run test:fidelity",
+      "description": "运行 F1-F5 忠实度与稳定性测试"
+    },
+    {
+      "command": "npm run test:sdk",
+      "description": "测试 SDK API"
+    },
+    {
+      "command": "npm run test:evidence",
+      "description": "测试证据链"
+    },
+    {
+      "command": "npm run audit",
+      "description": "运行审计包"
+    },
+    {
+      "command": "npm run audit:profile",
+      "description": "分析审计包性能"
+    },
+    {
+      "command": "npm run report",
+      "description": "生成审计报告"
+    },
+    {
+      "command": "npm run audit:flow",
+      "description": "模拟记忆流程"
+    },
+    {
+      "command": "npm run cases:build",
+      "description": "构建真实案例"
+    },
+    {
+      "command": "npm run cases:check",
+      "description": "检查真实案例"
+    },
+    {
+      "command": "npm run benchmark:audit",
+      "description": "基准测试审计 SDK"
+    },
+    {
+      "command": "npm run benchmark:v2",
+      "description": "基准测试 V2 路径"
+    },
+    {
+      "command": "npm run sync:skills",
+      "description": "同步技能到本机"
+    },
+    {
+      "command": "npm run skills:check",
+      "description": "检查 Mercury 技能"
+    },
+    {
+      "command": "npm run index",
+      "description": "重建项目索引"
+    },
+    {
+      "command": "npm run guide:latest",
+      "description": "生成最新指南"
+    },
+    {
+      "command": "npm run cycle:status",
+      "description": "Cycle 02 状态检查"
+    },
+    {
+      "command": "npm run cycle:check",
+      "description": "Cycle 02 全面检查"
+    },
+    {
+      "command": "npm run capture",
+      "description": "捕获 AI 对话"
+    },
+    {
+      "command": "npm run capture:dropzone",
+      "description": "捕获对话到 dropzone"
+    },
+    {
+      "command": "npm run export:memory",
+      "description": "导出记忆包"
+    },
+    {
+      "command": "npm run export:gbrain",
+      "description": "导出记忆包（gbrain 格式）"
+    },
+    {
+      "command": "npm run demo:starter",
+      "description": "运行入门演示"
+    },
+    {
+      "command": "npm run demo:memory-hook",
+      "description": "演示记忆写入 hook"
+    },
+    {
+      "command": "npm run demo:openclaw",
+      "description": "演示 OpenClaw hook"
+    },
+    {
+      "command": "npm run demo:a2a",
+      "description": "演示 Agent-to-Agent 消息"
+    },
+    {
+      "command": "npm run check:upstream",
+      "description": "检查上游 mercury-agent"
+    },
+    {
+      "command": "npm run release:gate",
+      "description": "发布门禁检查"
+    },
+    {
+      "command": "npm run v8:analyze",
+      "description": "运行 V8 分析"
+    },
+    {
+      "command": "npm run goal:validate",
+      "description": "验证目标"
+    }
+  ],
+  "entry_points": {
+    "sdk_import": "import { fullAudit, buildAdmissionContract } from \"@GlimpseGate/admission-lab\";",
+    "npm_install": "npm install @GlimpseGate/admission-lab",
+    "dashboard": "http://127.0.0.1:4788/lite.html",
+    "github": "https://github.com/peeptime/GlimpseGate-admission-lab"
+  }
+}
