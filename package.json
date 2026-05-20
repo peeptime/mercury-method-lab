@@ -1,7 +1,7 @@
 {
   "name": "@GlimpseGate/admission-lab",
-  "version": "2.1.6",
-  "codename": "Quick Intake Feedback",
+  "version": "2.2.0",
+  "codename": "SPEC-First + Shared Language",
   "releaseDate": "2026-05-20",
   "private": true,
   "type": "module",

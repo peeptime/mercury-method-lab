@@ -1,11 +1,13 @@
-# Mercury Admission Lab
+# GlimpseGate Admission Lab
 
 **Send AI outputs through an evidence gate before deciding whether they deserve durable memory.**
 
-Formerly: `Mercury Method Lab`
+Formerly: `Mercury Method Lab` · `Mercury Admission Lab`
 Repository: `peeptime/GlimpseGate-admission-lab`
-Version: `2.1.6`
-Latest release: [v2.1.6 Architecture Migration](https://github.com/peeptime/GlimpseGate-admission-lab/releases/tag/v2.1.6)
+Version: `2.2.0`
+Latest release: [v2.2.0 SPEC-First + Shared Language](https://github.com/peeptime/GlimpseGate-admission-lab/releases/tag/v2.2.0)
+
+**Core Docs:** [SPEC.md](SPEC.md) · [CONTEXT.md](CONTEXT.md)
 
 **Architecture Map**: [HTML (human)](architecture.html) · [JSON (agent)](architecture.json)
 

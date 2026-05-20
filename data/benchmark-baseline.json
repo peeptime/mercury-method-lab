@@ -1,0 +1,68 @@
+{
+  "timestamp": "2026-05-20T16:08:07.150Z",
+  "functions": {
+    "audit": {
+      "name": "audit",
+      "iterations": 2000,
+      "total_ms": 134.78,
+      "avg_ms": 0.07,
+      "ops_per_sec": 14838.89
+    },
+    "auditMemoryWrite": {
+      "name": "auditMemoryWrite",
+      "iterations": 2000,
+      "total_ms": 127.52,
+      "avg_ms": 0.06,
+      "ops_per_sec": 15683.61
+    },
+    "buildEvidenceChain": {
+      "name": "buildEvidenceChain",
+      "iterations": 2000,
+      "total_ms": 121.72,
+      "avg_ms": 0.06,
+      "ops_per_sec": 16431.75
+    },
+    "buildAdmissionContract": {
+      "name": "buildAdmissionContract",
+      "iterations": 2000,
+      "total_ms": 113.18,
+      "avg_ms": 0.06,
+      "ops_per_sec": 17671.14
+    },
+    "verifyAuditStability": {
+      "name": "verifyAuditStability",
+      "iterations": 2000,
+      "total_ms": 83.67,
+      "avg_ms": 0.04,
+      "ops_per_sec": 23904.8
+    },
+    "quickStabilityCheck": {
+      "name": "quickStabilityCheck",
+      "iterations": 2000,
+      "total_ms": 82.17,
+      "avg_ms": 0.04,
+      "ops_per_sec": 24339.37
+    },
+    "full_pipeline": {
+      "name": "full_pipeline",
+      "iterations": 2000,
+      "total_ms": 97.82,
+      "avg_ms": 0.05,
+      "ops_per_sec": 20446.45
+    },
+    "auditWithStabilityCheck_skip": {
+      "name": "auditWithStabilityCheck_skip",
+      "iterations": 2000,
+      "total_ms": 144.09,
+      "avg_ms": 0.07,
+      "ops_per_sec": 13879.91
+    },
+    "auditWithStabilityCheck_full": {
+      "name": "auditWithStabilityCheck_full",
+      "iterations": 2000,
+      "total_ms": 234.34,
+      "avg_ms": 0.12,
+      "ops_per_sec": 8534.76
+    }
+  }
+}

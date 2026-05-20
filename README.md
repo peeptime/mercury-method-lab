@@ -1,13 +1,14 @@
-# Mercury Admission Lab
+# GlimpseGate Admission Lab
 
-**把 AI 输出先送过证据门,再决定它能以什么身份进入长期记忆。**
+**把 AI 输出先送过证据门，再决定它能以什么身份进入长期记忆。**
 
-Formerly: `Mercury Method Lab`
+Formerly: `Mercury Method Lab` · `Mercury Admission Lab`
 Repository: `peeptime/GlimpseGate-admission-lab`
-Version: `2.1.6`
-Latest release: [v2.1.6 Architecture Migration](https://github.com/peeptime/GlimpseGate-admission-lab/releases/tag/v2.1.6)
+Version: `2.2.0`
+Latest release: [v2.2.0 SPEC-First + Shared Language](https://github.com/peeptime/GlimpseGate-admission-lab/releases/tag/v2.2.0)
 
 **架构映射**：[HTML（人工阅读）](architecture.html) · [JSON（智能体使用）](architecture.json)
+**核心文档**：[SPEC.md](SPEC.md) · [CONTEXT.md](CONTEXT.md)
 
 ```yaml
 provenance:
@@ -18,7 +19,7 @@ provenance:
   review_note: |
     This project is still an AI-assisted method lab. It does not claim
     third-party validation, production adoption, or human-reviewed authority.
-  audit_ref: docs/ITERATION-GUIDE-2.1.0.md
+  audit_ref: docs/ITERATION-GUIDE-LATEST.md
 ```
 
 ---
