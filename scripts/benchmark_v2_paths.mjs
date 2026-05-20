@@ -1,9 +1,9 @@
 /**
  * benchmark_v2_paths.mjs
  *
- * v2.1.6 Performance Benchmark
+ * v2.1.7 Performance Benchmark
  *
- * Benchmarks all 5 core SDK functions individually and as an end-to-end pipeline.
+ * Benchmarks all core SDK functions individually and as an end-to-end pipeline.
  * Saves a baseline record to data/benchmark-baseline.json for trend comparison.
  *
  * Usage:
@@ -15,7 +15,8 @@ import { performance } from "node:perf_hooks";
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { audit, auditMemoryWrite, buildAdmissionContract, buildEvidenceChain, verifyAuditStability, applyStabilityGate } from "../src/mercury-audit/index.mjs";
+import { audit, auditMemoryWrite, buildAdmissionContract, buildEvidenceChain, verifyAuditStability, applyStabilityGate, quickStabilityCheck } from "../src/mercury-audit/index.mjs";
+import { auditWithStabilityCheck } from "../src/mercury-audit/fidelity-stability.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = join(__dirname, "..");
@@ -72,7 +73,7 @@ function benchmark(name, fn, warmup = 3) {
   };
 }
 
-// ── Run individual benchmarks ───────────────────────────────────
+// ── Synchronous benchmarks ──────────────────────────────────────
 const auditResult = benchmark("audit", (ctx) => audit(ctx.content, ctx));
 const memoryWriteResult = benchmark("auditMemoryWrite", (ctx) => auditMemoryWrite(ctx));
 const evidenceChainResult = benchmark("buildEvidenceChain", (ctx) => {
@@ -85,22 +86,54 @@ const admissionContractResult = benchmark("buildAdmissionContract", (ctx) => {
   return buildAdmissionContract(chain, { choice_id: "A" });
 });
 const stabilityResult = benchmark("verifyAuditStability", (ctx) => {
-  const r1 = auditMemoryWrite(ctx);
-  const r2 = auditMemoryWrite(ctx);
-  return verifyAuditStability(r1, { secondAudit: r2 });
+  const r = auditMemoryWrite(ctx);
+  return verifyAuditStability(r);
 });
 
-// ── Pipeline benchmark (full end-to-end) ───────────────────────
+// v2.1.7 new: quickStabilityCheck — single audit result, no second run
+const quickStabilityResult = benchmark("quickStabilityCheck", (ctx) => {
+  const r = auditMemoryWrite(ctx);
+  return quickStabilityCheck(r);
+});
+
+// ── Pipeline benchmark ───────────────────────────────────────────
 function runPipeline(ctx) {
   const r = auditMemoryWrite(ctx);
   const chain = buildEvidenceChain(r.packet, r);
   const contract = buildAdmissionContract(chain, { choice_id: "A" });
-  const stability = verifyAuditStability(r, { secondAudit: r });
+  const stability = verifyAuditStability(r);
   applyStabilityGate(r, stability);
   return contract;
 }
 
 const pipelineResult = benchmark("full_pipeline", runPipeline);
+
+// ── Async benchmarks (auditWithStabilityCheck) ──────────────────
+async function benchmarkAsync(name, fn, warmup = 2) {
+  for (let w = 0; w < warmup; w++) await fn(fixtures[w % fixtures.length]);
+  const start = performance.now();
+  for (let i = 0; i < iterations; i++) {
+    await fn(fixtures[i % fixtures.length]);
+  }
+  const totalMs = performance.now() - start;
+  return {
+    name,
+    iterations,
+    total_ms: round(totalMs),
+    avg_ms: round(totalMs / iterations),
+    ops_per_sec: round((iterations / totalMs) * 1000),
+  };
+}
+
+// auditWithStabilityCheck skipSecond=true: one fullAudit + quick check (fast path)
+const skipSecondResult = await benchmarkAsync("auditWithStabilityCheck_skip", async (ctx) => {
+  return auditWithStabilityCheck(ctx.content, ctx, { skipSecondAudit: true });
+});
+
+// auditWithStabilityCheck full: two fullAudit + verify (non-determinism detection)
+const fullCheckResult = await benchmarkAsync("auditWithStabilityCheck_full", async (ctx) => {
+  return auditWithStabilityCheck(ctx.content, ctx);
+});
 
 // ── Load previous baseline ──────────────────────────────────────
 let previous = null;
@@ -117,28 +150,31 @@ function diff(current, prev) {
   return { previous_avg_ms: prev.avg_ms, change_pct: pct, direction: pct > 0 ? "slower" : pct < 0 ? "faster" : "same" };
 }
 
+const syncFns = {
+  audit: auditResult,
+  auditMemoryWrite: memoryWriteResult,
+  buildEvidenceChain: evidenceChainResult,
+  buildAdmissionContract: admissionContractResult,
+  verifyAuditStability: stabilityResult,
+  quickStabilityCheck: quickStabilityResult,
+  full_pipeline: pipelineResult,
+};
+
+const asyncFns = {
+  auditWithStabilityCheck_skip: skipSecondResult,
+  auditWithStabilityCheck_full: fullCheckResult,
+};
+
 const results = {
   version: JSON.parse(readFileSync(join(root, "package.json"), "utf8")).version,
   timestamp: new Date().toISOString(),
   node_version: process.version,
   iterations,
-  functions: {
-    audit: auditResult,
-    auditMemoryWrite: memoryWriteResult,
-    buildEvidenceChain: evidenceChainResult,
-    buildAdmissionContract: admissionContractResult,
-    verifyAuditStability: stabilityResult,
-    full_pipeline: pipelineResult,
-  },
+  functions: { ...syncFns, ...asyncFns },
   comparison: {
-    vs_previous: {
-      audit: diff(auditResult, previous?.functions?.audit),
-      auditMemoryWrite: diff(memoryWriteResult, previous?.functions?.auditMemoryWrite),
-      buildEvidenceChain: diff(evidenceChainResult, previous?.functions?.buildEvidenceChain),
-      buildAdmissionContract: diff(admissionContractResult, previous?.functions?.buildAdmissionContract),
-      verifyAuditStability: diff(stabilityResult, previous?.functions?.verifyAuditStability),
-      full_pipeline: diff(pipelineResult, previous?.functions?.full_pipeline),
-    }
+    vs_previous: Object.fromEntries(
+      [...Object.entries(syncFns), ...Object.entries(asyncFns)].map(([k, v]) => [k, diff(v, previous?.functions?.[k])])
+    )
   },
   note: "Local structural benchmark. No external LLM, browser, network, or storage adapter included."
 };
@@ -149,20 +185,31 @@ try {
   writeFileSync(baselinePath, JSON.stringify({ timestamp: results.timestamp, functions: results.functions }, null, 2), "utf8");
 } catch { /* ignore */ }
 
-// ── Print results ──────────────────────────────────────────────
+// ── Print JSON ────────────────────────────────────────────────
 console.log(JSON.stringify(results, null, 2));
 
-// Pretty-print summary table
-console.log("\n" + "─".repeat(70));
-console.log("  Function               avg_ms    ops/sec    vs_prev");
-console.log("─".repeat(70));
-for (const [name, r] of Object.entries(results.functions)) {
+// ── Pretty-print summary table ───────────────────────────────
+const allFns = [
+  ...Object.entries(syncFns),
+  ...Object.entries(asyncFns),
+];
+
+console.log("\n" + "─".repeat(75));
+console.log("  Function                       avg_ms    ops/sec    vs_prev");
+console.log("─".repeat(75));
+for (const [name, r] of allFns) {
   const d = results.comparison.vs_previous[name];
   const prev = d ? `  ${d.change_pct > 0 ? "+" : ""}${d.change_pct}%` : "        -";
-  console.log(`  ${name.padEnd(22)} ${String(r.avg_ms).padStart(7)}ms  ${String(r.ops_per_sec).padStart(7)}/s${prev}`);
+  const tag = asyncFns[name] ? " ⚡async" : "";
+  console.log(`  ${(name + tag).padEnd(28)} ${String(r.avg_ms).padStart(6)}ms  ${String(r.ops_per_sec).padStart(7)}/s${prev}`);
 }
-console.log("─".repeat(70));
+console.log("─".repeat(75));
 console.log(`  Iterations: ${iterations}  |  Node: ${process.version}  |  v${results.version}`);
-console.log("");
+
+// ── Performance insight ─────────────────────────────────────
+const skip = skipSecondResult.ops_per_sec;
+const full = fullCheckResult.ops_per_sec;
+const base = stabilityResult.ops_per_sec;
+console.log(`\n  Insight: auditWithStabilityCheck skip=${skip}/s  full=${full}/s  vs stableVerify=${base}/s`);
 
 function round(v) { return Math.round(v * 100) / 100; }

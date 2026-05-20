@@ -18,7 +18,12 @@ import { detectMetaAuditContent, extractProblemResolutionPairs } from "./meta-au
 import { verifyReportFidelity, applyFidelityGate } from "./fidelity.mjs";
 import { buildIterationTracker, getUnresolvedProblems } from "./iteration-track.mjs";
 import { generateTraceReport, renderTraceMarkdown, generateFidelityChecklist } from "./trace.mjs";
-import { verifyAuditStability, applyStabilityGate } from "./fidelity-stability.mjs";
+import {
+  verifyAuditStability,
+  applyStabilityGate,
+  quickStabilityCheck,
+  auditWithStabilityCheck
+} from "./fidelity-stability.mjs";
 
 export const MERCURY_AUDIT_API_VERSION = "0.7.0";
 
@@ -61,7 +66,9 @@ export {
   buildIterationTracker,
   // F5
   verifyAuditStability,
-  applyStabilityGate
+  applyStabilityGate,
+  quickStabilityCheck,
+  auditWithStabilityCheck
 };
 
 export function createAuditPacket(content, context = {}) {
