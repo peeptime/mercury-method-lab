@@ -14,8 +14,33 @@
  */
 
 import { detectMetaAuditContent } from "./meta-audit.mjs";
+import { readFileSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 
-const STABILITY_THRESHOLD = 0.8;
+// Load routing config from rule-routing.json (v0.2+ centralizes thresholds and downgrade chain)
+let STABILITY_THRESHOLD = 0.8;
+let DOWNGRADE_CHAIN = { accept: "revise", revise: "quarantine", quarantine: "quarantine", discard: "discard" };
+try {
+  const __dirname = dirname(fileURLToPath(import.meta.url));
+  const configPath = join(__dirname, "..", "..", "config", "rule-routing.json");
+  const config = JSON.parse(readFileSync(configPath, "utf8"));
+  if (config?.stability_checks?.stability_threshold != null) {
+    STABILITY_THRESHOLD = config.stability_checks.stability_threshold;
+  }
+  if (config?.routing_downgrade_chain) {
+    const chain = config.routing_downgrade_chain.chain || ["accept", "revise", "quarantine"];
+    const chainMap = {};
+    for (let i = 0; i < chain.length - 1; i++) {
+      chainMap[chain[i]] = chain[i + 1];
+    }
+    chainMap.discard = "discard";
+    chainMap.quarantine = "quarantine";
+    DOWNGRADE_CHAIN = chainMap;
+  }
+} catch {
+  // Fallback to hardcoded values if config unavailable
+}
 
 /**
  * Main stability verification function.
@@ -282,13 +307,7 @@ function calculateStabilityScore(inconsistencies) {
 
 function downgradeRouting(original) {
   // discard is terminal — never downgrade further
-  if (original === "discard") return "discard";
-  const map = {
-    accept: "revise",
-    revise: "quarantine",
-    quarantine: "quarantine"
-  };
-  return map[original] || original;
+  return DOWNGRADE_CHAIN[original] || original;
 }
 
 function buildRecommendation(score, inconsistencies) {

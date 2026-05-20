@@ -1,6 +1,137 @@
 {
-  "version": "0.1",
-  "default_policy": "Route by task type, evidence state, and risk level. Do not activate all skills for every request.",
+  "version": "0.2",
+  "description": "v2.1.6: Added routing downgrade chain and stability thresholds from fidelity-stability.mjs. These were previously hardcoded; now they are centralized here.",
+
+  "routing_decisions": {
+    "accept": {
+      "label": "Accept — proceed with memory write",
+      "gate": "passes_fidelity AND passes_stability"
+    },
+    "revise": {
+      "label": "Revise — requires revision before admission",
+      "gate": "fails_fidelity OR unstable"
+    },
+    "quarantine": {
+      "label": "Quarantine — block admission until human review",
+      "gate": "fails_fidelity AND unstable OR high_risk AND insufficient_evidence"
+    },
+    "discard": {
+      "label": "Discard — terminal, never enters memory",
+      "gate": "terminal (no admission path)"
+    }
+  },
+
+  "routing_downgrade_chain": {
+    "description": "Downgrade chain applied when fidelity_score < fidelity_threshold OR stability_score < stability_threshold. Discard is terminal and never downgrades.",
+    "chain": ["accept", "revise", "quarantine"],
+    "terminal_state": "discard",
+    "example": {
+      "unstable_accept": "accept → revise",
+      "unstable_revise": "revise → quarantine",
+      "unstable_quarantine": "quarantine → quarantine (unchanged)",
+      "unstable_discard": "discard → discard (terminal)"
+    }
+  },
+
+  "stability_checks": {
+    "stability_threshold": 0.8,
+    "description": "stability_score < 0.8 triggers routing downgrade",
+    "checks": [
+      {
+        "id": "routing_inconsistency",
+        "description": "Two identical audit runs produce different routing decisions",
+        "severity_mapping": {
+          "accept_vs_discard": "critical",
+          "accept_vs_quarantine": "high",
+          "revise_vs_quarantine": "medium",
+          "revise_vs_accept": "low"
+        }
+      },
+      {
+        "id": "confidence_routing_mismatch",
+        "description": "confidence_score and routing_decision contradict each other",
+        "example": "confidence: high + routing: discard → inconsistency"
+      },
+      {
+        "id": "blocker_mismatch",
+        "description": "Same material produces different blockers across runs",
+        "threshold": "mismatch_ratio > 0"
+      },
+      {
+        "id": "low_fidelity_accept",
+        "description": "Low fidelity score combined with accept decision",
+        "condition": "fidelity_score < 0.8 AND routing_decision = accept"
+      }
+    ]
+  },
+
+  "fidelity_gate": {
+    "fidelity_threshold": 0.8,
+    "description": "fidelity_score < 0.8 triggers revise routing and human_review_required = true",
+    "signals": [
+      {
+        "id": "source_laundering",
+        "description": "AI rephrases source material without attribution",
+        "indicator": "model_framing present AND source_refs empty"
+      },
+      {
+        "id": "overgeneralization",
+        "description": "Local evidence presented as universal claim",
+        "indicator": "contains absolute_terms AND source_refs empty"
+      },
+      {
+        "id": "confidence_inflation",
+        "description": "AI assigns higher confidence than evidence supports",
+        "indicator": "confidence > evidence_strength"
+      }
+    ]
+  },
+
+  "evidence_requirements_by_type": {
+    "fact": {
+      "requires_evidence": true,
+      "min_source_refs": 1,
+      "evidence_strength": ["verified", "strong"]
+    },
+    "hypothesis": {
+      "requires_evidence": false,
+      "allows_conditional": true,
+      "note": "Can be admitted as hypothesis with usage constraints"
+    },
+    "attribution": {
+      "requires_evidence": true,
+      "requires_source_link": true
+    },
+    "interpretation": {
+      "requires_evidence": false,
+      "requires_boundary": true
+    },
+    "open_question": {
+      "requires_evidence": false,
+      "requires_framing": true
+    },
+    "preference": {
+      "requires_evidence": false,
+      "requires_user_choice": true
+    },
+    "decision_record": {
+      "requires_evidence": true,
+      "requires_user_choice": true
+    },
+    "temporary_note": {
+      "requires_evidence": false,
+      "requires_expiry": true
+    },
+    "reference": {
+      "requires_evidence": false,
+      "requires_provenance_type": true,
+      "procedural_knowledge": {
+        "provenance_type": "procedural_knowledge",
+        "requires_usage_constraints": true
+      }
+    }
+  },
+
   "routes": [
     {
       "id": "factual-cleaning",

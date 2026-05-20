@@ -1,7 +1,7 @@
 {
   "project_name": "Mercury Admission Lab",
   "package_name": "@GlimpseGate/admission-lab",
-  "version": "2.1.5",
+  "version": "2.1.6",
   "codename": "Admission Contract",
   "status": "v2-admission-contract",
   "position": "A choice-gated knowledge admission protocol for deciding how AI-generated claims may enter memory.",

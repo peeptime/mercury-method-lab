@@ -1,8 +1,8 @@
 {
   "name": "@GlimpseGate/admission-lab",
-  "version": "2.1.5",
+  "version": "2.1.6",
   "codename": "Quick Intake Feedback",
-  "releaseDate": "2026-05-13",
+  "releaseDate": "2026-05-20",
   "private": true,
   "type": "module",
   "description": "Choice-gated knowledge admission protocol for deciding how AI-generated claims may enter memory.",
